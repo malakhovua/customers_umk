@@ -1,0 +1,22 @@
+
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Наименование:</strong>
+  <%= @product.title %>
+</p>
+
+<p>
+  <strong>Описание:</strong>
+  <%= @product.description %>
+</p>
+<p>
+  <strong>Цена:</strong>
+  <%= @product.price %>
+</p>
+
+<p>
+  <%= image_tag(@product.image_url, class:"img-thumbnail",size: "400x400") %>
+</p>
+<%= link_to 'Редактировать', edit_product_path(@product) %> |
+<%= link_to 'Назад', products_path %>

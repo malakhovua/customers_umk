@@ -1,0 +1,55 @@
+
+<h2> Корзина заказчика</h2>
+
+<!-- End -->
+<div class="pb-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
+
+        <!-- Shopping cart table -->
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col" class="border-0 bg-light">
+                <div class="p-2 px-3 text-uppercase">Продукция</div>
+              </th>
+              <th scope="col" class="border-0 bg-light">
+                <div class="py-2 text-uppercase">Цена</div>
+              </th>
+              <th scope="col" class="border-0 bg-light">
+                <div class="py-2 text-uppercase">Количество</div>
+              </th>
+              <th scope="col" class="border-0 bg-light">
+                <div class="py-2 text-uppercase">Удалить</div>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <%= render(cart.line_items)%>
+            </tbody>
+          </table>
+        </div>
+        <!-- End -->
+      </div>
+    </div>
+    <div class="row py-5 p-4 bg-white rounded shadow-sm">
+
+      <div class="col-lg-6">
+        <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Общая стоимость заказа</div>
+        <div class="p-4">
+          <ul class="list-unstyled mb-4">
+            <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Итого</strong>
+              <h5 class="font-weight-bold"><%= sprintf("%0.02f грн.",@cart.total_price)%></h5>
+            </li>
+          </ul><a href="#" class="btn btn-dark rounded-pill py-2 btn-block">Оформить заказ</a>
+        </div>
+      </div>
+    </div>
+    <%= button_to 'Очистить корзину', cart, method: :delete,
+                  data: {confirm: 'Вы уверены?'} %>
+    <%= link_to "Продолжить покупку", castomer_index_path%>
+  </div>
+</div>
+</div>

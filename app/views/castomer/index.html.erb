@@ -1,0 +1,36 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Продукция</h1>
+
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>Наименование</th>
+    <th>Описание</th>
+    <th></th>
+    <th>Цена</th>
+    <th colspan="3"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <%cache @products do%>
+    <% @products.each do |product| %>
+        <%cache product do%>
+        <tr class= >
+          <td><%= product.title %></td>
+          <td><%= product.description %></td>
+          <td><%= image_tag(product.image_url, class:"img-thumbnail",size: "200x200") %></td>
+          <td><%= sprintf("%0.02f грн.", product.price) %></td>
+          <td> <%= button_to 'В корзину', line_items_path(product_id: product),remote: true%></td>
+        </tr>
+      <%end%>
+    <% end %>
+  <%end%>
+  </tbody>
+</table>
+
+<br>
+
+
+<%= link_to 'Добавить товар', new_product_path %>

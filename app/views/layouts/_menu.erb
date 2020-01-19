@@ -1,0 +1,27 @@
+<nav class="navbar navbar-light fixed-top" style="background-color: #e3f2fd;">
+  <form class="form-inline">
+    <input class="form-control mr-sm-2" type="search" placeholder="Поиск" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
+  </form>
+  <% if logged_in? %>
+    <div id="user_cart">
+      <div id="user">
+        <div id="user_avatar">
+      <%= image_tag('user.png', class:"img-thumbnail",size: "30x30") %>
+        </div>
+        <div id="user_name">
+          <%= link_to current_user.name, account_path(current_user)%>
+        </div>
+      </div>
+  <%end%>
+  <div id="cart_qty">
+    <%= link_to '', @cart, class: 'fa fa-shopping-cart', style: 'font-size:25px;color:dodgerblue;hover:text_decoration:none' %>
+    <%if @cart %>
+      <div id="cart_total_quantity">
+        <%= link_to @cart.total_quantity, @cart %>
+
+        </div>
+    <% end %>
+  </div>
+  </div>
+</nav>

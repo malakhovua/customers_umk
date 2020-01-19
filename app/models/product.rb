@@ -1,0 +1,19 @@
+class Product < ApplicationRecord
+  validates :title, :description, :image_url, presence: true
+  validates :price, numericality: {greate_than_or_equel_to: 0.01}
+  validates :image_url, allow_blank: true, format: {
+      with: %r{\.(gif|jpg|png)\Z}i,
+      massege: 'must be a URL for GIF, JPG or PNG image.'
+  }
+  has_many :line_items
+  before_destroy :ensure_not_ref_by_any_line_item
+
+private
+
+def ensure_not_ref_by_any_line_item
+  unless line_items.empty?
+    error.add(:base, 'Line Items present')
+    throw :abort
+    end
+  end
+end
