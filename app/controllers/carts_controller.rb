@@ -58,7 +58,7 @@ class CartsController < ApplicationController
     @cart.destroy if @cart.id == session[:cart_id]
     session[:cart_id] = nil
     respond_to do |format|
-      format.html { redirect_to castomer_index_url, notice: 'Ваша корзина была полностью очищена.' }
+      format.html { redirect_to customer_index_url, notice: 'Ваша корзина была полностью очищена.' }
       format.json { head :no_content }
     end
   end
@@ -79,7 +79,7 @@ class CartsController < ApplicationController
 
   def invalid_cart
     logger.error "Attemp to access invalid cart #{params[:id]}"
-    redirect_to castomer_index_url, notice: 'Ошибка доступа к корзине'
+    redirect_to customer_index_url, notice: 'Ошибка доступа к корзине'
 
   end
 

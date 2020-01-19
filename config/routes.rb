@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   resources :carts
   resources :products
   resources :users
-  root 'castomer#index', as: 'castomer_index'
+  root 'customer#index', as: 'customer_index'
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
