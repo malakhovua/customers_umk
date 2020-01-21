@@ -1,6 +1,10 @@
 @import "font-awesome";
 @import "bootstrap";
 
+.container-fluid {
+  margin-top: 80px;
+}
+
 #cart_total_quantity{
   display: inline-block;
   position: relative;
