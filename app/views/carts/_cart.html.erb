@@ -43,7 +43,8 @@
             <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Итого</strong>
               <h5 class="font-weight-bold"><%= sprintf("%0.02f грн.",@cart.total_price)%></h5>
             </li>
-          </ul><a href="#" class="btn btn-dark rounded-pill py-2 btn-block">Оформить заказ</a>
+          </ul>
+          <%=link_to "Оформить заказ", new_order_path, method: :get, class: "btn btn-dark rounded-pill py-2 btn-block"%>
         </div>
       </div>
     </div>

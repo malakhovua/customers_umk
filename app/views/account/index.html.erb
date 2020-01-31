@@ -4,4 +4,6 @@
 
 <h1>Добро пожаловать  <%= current_user.name %>!</h1>
 <%=link_to 'Перейти к товарам', customer_index_url%> <br>
-<%= link_to "Выйти", logout_path, method: :delete %>
+<%= link_to 'Выйти', logout_path, method: :delete %> <br>
+<%= link_to 'К списку заказов', orders_url %> <br>
+<%= link_to 'К списку клиентов', clients_url%>

@@ -13,7 +13,8 @@
 
   <div class="field">
     <%= form.label :client_id %>
-    <%= form.text_field :client_id %>
+    <%=  select_tag 'Клиент', options_from_collection_for_select(@clients, "id", "name")%>
+
   </div>
 
   <div class="field">
@@ -28,7 +29,7 @@
 
   <div class="field">
     <%= form.label :user %>
-    <%= form.text_field :user %>
+    <%=  select_tag 'Клиент', options_from_collection_for_select(@users, "id", "name")%>
   </div>
 
   <div class="field">
