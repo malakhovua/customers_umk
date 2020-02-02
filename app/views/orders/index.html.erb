@@ -17,10 +17,10 @@
   <tbody>
     <% @orders.each do |order| %>
       <tr>
-        <td><%= order.client %></td>
+        <td><%= order.client.name %></td>
         <td><%= order.date %></td>
         <td><%= order.shipping_address %></td>
-        <td><%= order.user %></td>
+        <td><%= order.user.name %></td>
         <td><%= order.comments %></td>
         <td><%= link_to 'Show', order %></td>
         <td><%= link_to 'Edit', edit_order_path(order) %></td>

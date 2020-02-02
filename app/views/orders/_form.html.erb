@@ -12,9 +12,8 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :client_id %>
-    <%=  select_tag 'Клиент', options_from_collection_for_select(@clients, "id", "name")%>
-
+    <% clients_array = Client.all.map { |client| [client.name, client.id] } %>
+    <%= form.select(:client_id, options_for_select(clients_array)) %>
   </div>
 
   <div class="field">
@@ -28,8 +27,7 @@
   </div>
 
   <div class="field">
-    <%= form.label :user %>
-    <%=  select_tag 'Клиент', options_from_collection_for_select(@users, "id", "name")%>
+    <%= current_user.name%>
   </div>
 
   <div class="field">

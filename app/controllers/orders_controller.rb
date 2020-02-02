@@ -1,10 +1,11 @@
 class OrdersController < ApplicationController
+
   include CurrentCart
 
-  before_action :set_cart, only: [:new, :create]
+  before_action :set_cart
+
   before_action  :ensure_cart_isnt_empty, only: :new
-
-
+  before_action :initialize_collections, only: [:new, :create, :update]
   before_action :set_order, only: [:show, :edit, :update, :destroy]
 
   # GET /orders
@@ -21,8 +22,6 @@ class OrdersController < ApplicationController
   # GET /orders/new
   def new
     @order = Order.new
-    @clients = Client.all
-    @users = User.all
   end
 
   # GET /orders/1/edit
@@ -33,12 +32,14 @@ class OrdersController < ApplicationController
   # POST /orders.json
   def create
     @order = Order.new(order_params)
-    @clients = Client.all
-    @users = User.all
+    @order.add_line_items_from_cart(@cart)
 
     respond_to do |format|
       if @order.save
-        format.html { redirect_to @order, notice: 'Order was successfully created.' }
+        Cart.destroy(session[:cart_id])
+        session[:cart_id] = nil
+        format.html { redirect_to customer_index_url,
+                                  notice: 'Благодарим за Ваш заказ.' }
         format.json { render :show, status: :created, location: @order }
       else
         format.html { render :new }
@@ -73,6 +74,10 @@ class OrdersController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+  def initialize_collections
+    @clients = Client.all
+  end
+
     def ensure_cart_isnt_empty
       if @cart.line_items.empty?
         redirect_to customer_index_url, notice:  'Ваша корзина пуста'
@@ -85,6 +90,7 @@ class OrdersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_params
-      params.require(:order).permit(:client_id, :date, :shipping_address, :user, :comments)
+      user = User.find_by(id: session[:user_id])
+      params.require(:order).permit(:client_id, :date, :shipping_address, :comments).merge!({user: user})
     end
 end

@@ -13,8 +13,8 @@
 ActiveRecord::Schema.define(version: 2020_01_20_211333) do
 
   create_table "carts", force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "clients", force: :cascade do |t|
@@ -29,8 +29,8 @@ ActiveRecord::Schema.define(version: 2020_01_20_211333) do
   create_table "line_items", force: :cascade do |t|
     t.integer "product_id"
     t.integer "cart_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "quantity", default: 1
     t.integer "order_id"
     t.index ["cart_id"], name: "index_line_items_on_cart_id"
@@ -55,15 +55,15 @@ ActiveRecord::Schema.define(version: 2020_01_20_211333) do
     t.text "description"
     t.string "image_url"
     t.decimal "price", precision: 8, scale: 2
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "password_digest"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
