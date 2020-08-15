@@ -32,3 +32,6 @@
 
 #idea
 /.idea/*
+
+#imgs
+/app/assets/images

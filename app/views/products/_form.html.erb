@@ -31,6 +31,16 @@
     <%= form.text_field :price%>
   </div>
 
+  <div class="field">
+    <%= form.label :parent %>
+    <%= form.text_area :parent_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :IsFolder %>
+    <%= form.check_box :is_folder %>
+  </div>
+
   <div >
     <%= form.submit %>
   </div>

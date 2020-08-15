@@ -20,6 +20,11 @@
   <%= @order.user.name %>
 </p>
 
+<tbody>
+<%= render(@order.line_items)%>
+</tbody>
+<h5 class="font-weight-bold"><%= sprintf("%0.02f грн.",@order.total_price)%></h5>
+<h5 class="font-weight-bold"><%=@order.total_quantity%></h5>
 <p>
   <strong>Comments:</strong>
   <%= @order.comments %>
