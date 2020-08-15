@@ -1,8 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :prices
-  resources :pricetypes
-  resources :packs
   resources :orders
   resources :clients
   get 'account' => 'account#index'

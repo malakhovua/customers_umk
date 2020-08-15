@@ -27,16 +27,12 @@ class LineItemsController < ApplicationController
   # POST /line_items
   # POST /line_items.json
   def create
-    product = Product.find(params[:id])
-    unless params[:pack_id].nil?
-      pack = Pack.find(params[:pack_id])
-      @line_item = @cart.add_product(product, pack)
-    else
-      @line_item = @cart.add_product(product,nil)
-    end
+    product = Product.find(params[:product_id])
+    @line_item = @cart.add_product(product)
+
     respond_to do |format|
       if @line_item.save
-        format.html { redirect_to customer_index_url }
+        format.html { redirect_to customer_index_url}
         format.js
         format.json { render :show, status: :created, location: @line_item }
       else
@@ -71,14 +67,13 @@ class LineItemsController < ApplicationController
   end
 
   private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_line_item
+      @line_item = LineItem.find(params[:id])
+    end
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_line_item
-    @line_item = LineItem.find(params[:id])
-  end
-
-  # Never trust parameters from the scary internet, only allow the white list through.
-  def line_item_params
-    params.require(:line_item).permit(:product_id, :pack_id)
-  end
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def line_item_params
+      params.require(:line_item).permit(:product_id)
+    end
 end
