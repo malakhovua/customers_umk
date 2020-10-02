@@ -1,21 +1,41 @@
 @import "font-awesome";
 @import "bootstrap";
 
+//navbar
+div.next {
+  background-color: lightblue;
+  width: 100%;
+  height: 60rem;
+}
+
+.container {
+  padding: 0px;
+}
+
+nav.navbar {
+  width: inherit;
+  top: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+//navbar
+
 .container-fluid {
   margin-top: 80px;
 }
 
+//sidebar
 #cart_total_quantity{
   display: inline-block;
   position: relative;
   text-align: center;
   right: 25px;
-  top: -18px;
+  top: -23px;
   width: 20px;
   height: 20px;
   border: 2px solid white;
   border-radius: 50%;
-  color: dodgerblue;
+  color: black;
   background: white;
   font-size: 12px;
 }
@@ -34,6 +54,198 @@
 }
 
 #user_name {
-  font-size: 15px;
+  font-size: 20px;
+  color: white;
 }
+//sidebar
+
+//+sidebar tree
+
+/* Remove default bullets */
+ul, #myUL {
+  list-style-type: none;
+}
+
+/* Remove margins and padding from the parent ul */
+#myUL {
+  margin: 0;
+  padding: 0;
+}
+
+/* Style the caret/arrow */
+.caret {
+  cursor: pointer;
+  user-select: none; /* Prevent text selection */
+}
+
+/* Create the caret/arrow with a unicode, and style it */
+.caret::before {
+  content: "\25B6";
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+/* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+.caret-down::before {
+  transform: rotate(90deg);
+}
+
+/* Hide the nested list */
+.nested {
+  display: none;
+}
+
+/* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+.active {
+  display: block;
+}
+
+//-sidebar tree
+
+
+//card
+
+.card {
+  position: relative;
+  min-width: 300px;
+  height: auto;
+  overflow: hidden;
+  border-radius: 15px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  box-shadow: 0 10px 15px rgba(0,0,0,0.3);
+  transition: .5s;
+}
+.card:hover {
+  .card-img-top{
+    transform: scale(1.2);
+  }
+  transform:scale(1.1);
+}
+
+.card-img-top{
+  transition: .5s;
+}
+
+//card
+
+//customer
+
+.wrapper {
+  display: flex;
+  width: 100%;
+}
+
+#sidebar {
+  width: 250px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 999;
+  background: #7386D5;
+  color: #fff;
+  transition: all 0.3s;
+}
+
+#sidebar.active {
+  margin-left: -250px;
+}
+
+a[data-toggle="collapse"] {
+  position: relative;
+}
+
+.dropdown-toggle::after {
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+@media (max-width: 768px) {
+  #sidebar {
+    margin-left: -250px;
+  }
+  #sidebar.active {
+    margin-left: 0;
+  }
+}
+
+
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #fafafa;
+}
+
+p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1em;
+  font-weight: 300;
+  line-height: 1.7em;
+  color: #999;
+}
+
+a, a:hover, a:focus {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+#sidebar {
+  /* don't forget to add all the previously mentioned styles here too */
+  background: rgba(21,57,76,0.7);;
+  color: #fff;
+  transition: all 0.3s;
+}
+
+#sidebar .sidebar-header {
+  padding: 20px;
+  background: rgba(21,57,76,0.7);;
+}
+
+#sidebar ul.components {
+  padding: 20px 0;
+  border-bottom: 1px solid #47748b;
+}
+
+#sidebar ul p {
+  color: #fff;
+  padding: 10px;
+}
+
+#sidebar ul li a {
+  padding: 10px;
+  font-size: 1.1em;
+  display: block;
+}
+#sidebar ul li a:hover {
+  color: #7386D5;
+  background: #fff;
+}
+
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+  color: #fff;
+  background: rgba(21,57,76,0.7);
+}
+ul ul a {
+  font-size: 0.9em !important;
+  padding-left: 30px !important;
+  background: #6d7fcc;
+}
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: ghostwhite;
+  color: white;
+  text-align: center;
+}
+//end customer
+
 

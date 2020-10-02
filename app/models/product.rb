@@ -15,12 +15,65 @@ class Product < ApplicationRecord
 
   scope :roots, -> { where(parent_id: nil) }
 
-private
+  paginates_per 50
+  max_paginates_per 100
 
-def ensure_not_ref_by_any_line_item
-  unless line_items.empty?
-    error.add(:base, 'Line Items present')
-    throw :abort
+  def self.get_price (prod_id=0, pricetype_id=22)
+    text_query = 'SELECT
+    pr.value,
+    pr.product_id,
+    pr.period
+    FROM
+    prices AS pr
+    WHERE pr.product_id = %d
+    AND pr.pricetype_id = %d
+    LIMIT 1'
+    text_query = sprintf(text_query,prod_id, pricetype_id)
+
+    result = ActiveRecord::Base.connection.exec_query(text_query)
+
+    if result[0].nil?
+      0.to_f
+    else
+      result[0]['value'].to_f
+    end
+
+  end
+
+  def self.get_childs_product (parent_id)
+    Product.where(:products => {is_folder:true, parent_id:parent_id}).order("title")
+  end
+
+  def self.get_packs_product (product_id)
+
+    text_query = 'SELECT
+       p.id,
+       p.title,
+       p.image_url,
+       p.description,
+       p.price,
+		   p.parent_id,
+		   perents.title AS parents_name,
+       pcs.name AS pack_name,
+       pcs.product_id,
+       pcs.id as pack_id
+       FROM products as p
+       LEFT JOIN packs AS pcs ON p.id = pcs.product_id
+		   LEFT JOIN products AS perents ON p.parent_id = perents.id
+		   WHERE p.is_folder = false
+       AND NOT pcs.id = 0
+	     AND p.id = %d'
+    text_query = sprintf(text_query, product_id)
+    result = ActiveRecord::Base.connection.exec_query(text_query)
+    return result
+  end
+
+  private
+
+  def ensure_not_ref_by_any_line_item
+    unless line_items.empty?
+      error.add(:base, 'Line Items present')
+      throw :abort
     end
   end
 end

@@ -13,7 +13,7 @@
   <% else %>
     <td class="border-0 align-middle"></td>
   <% end %>
-  <td class="border-0 align-middle"><strong><%= sprintf("%0.02f грн.", line_item.product.price) %></strong></td>
+  <td class="border-0 align-middle"><strong><%= sprintf("%0.02f грн.", Product.get_price(line_item.product.id))%></strong></td>
   <td class="border-0 align-middle"><strong><%= line_item.quantity %></strong></td>
   <td class="border-0 align-middle"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td>
 </tr>

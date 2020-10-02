@@ -1,13 +1,17 @@
-<nav class="navbar navbar-light fixed-top" style="background-color: #e3f2fd;">
+
+<nav class="navbar fixed-top navbar-light" style="background-color: maroon;">
   <form class="form-inline">
-    <input class="form-control mr-sm-2" type="search" placeholder="Поиск" aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
+    <button type="button" id="sidebarCollapse" class="btn btn-outline-light" style="margin: 10px">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <input class="form-control mr-sm-2" type="search" placeholder="Наименование" aria-label="Search">
+    <button class="btn btn-outline-light" type="submit">Поиск</button>
   </form>
   <% if logged_in? %>
     <div id="user_cart">
       <div id="user">
         <div id="user_avatar">
-      <%= image_tag('user.png', class:"img-thumbnail",size: "30x30") %>
+          <%= image_tag('user.png', class:"img-thumbnail",size: "40x40") %>
         </div>
         <div id="user_name">
           <%= link_to current_user.name, account_path(current_user)%>
@@ -15,13 +19,13 @@
       </div>
   <%end%>
   <div id="cart_qty">
-    <%= link_to '', @cart, class: 'fa fa-shopping-cart', style: 'font-size:25px;color:dodgerblue;hover:text_decoration:none' %>
+    <%= link_to '', @cart, class: 'fa fa-shopping-cart', style: 'font-size:40px;color:dark;hover:text_decoration:none, color:white; ' %>
     <%if @cart %>
       <div id="cart_total_quantity">
         <%= link_to @cart.total_quantity, @cart %>
-
-        </div>
+      </div>
     <% end %>
   </div>
   </div>
+
 </nav>

@@ -1,38 +1,134 @@
-<p id="notice"><%= notice %></p>
 
-<h1>Продукция</h1>
+<%= render partial: "layouts/menu" %>
 
-<table class="table table-striped">
-  <thead>
-  <tr>
-    <th>Наименование</th>
-    <th>Описание</th>
-    <th>Упаковка</th>
-    <th></th>
-    <th>Цена</th>
-    <th colspan="3"></th>
-  </tr>
-  </thead>
+<%def draw_tree (node_id, node_title, qty)%>
+  <% childs = Product.get_childs_product(node_id)%>
+  <% if childs.empty?%>
 
-  <tbody>
-  <%cache @products do%>
-    <% @products.each do |product| %>
-        <%cache product do%>
-        <tr class=>
-          <td><%= product['title'] %></td>
-          <td><%= product['description'] %></td>
-          <td><%= product['pack_name'] %></td>
-          <td><%= image_tag(product['image_url'], class:"img-thumbnail",size: "200x200") %></td>
-          <td><%= sprintf("%0.02f грн.", product['price']) %></td>
-          <td> <%= button_to 'В корзину', line_items_path({:id => product['id'], :pack_id => product['pack_id']}),remote: true%></td>
-        </tr>
-      <%end%>
-    <% end %>
+    <li><%=node_title%></li>
+
+  <% else %>
+    <li><span class="caret"> <%=node_title%></span>
+      <ul class="nested">
+        <% qty = qty + 1%>
   <%end%>
-  </tbody>
-</table>
 
-<br>
+  <% childs.each do |node|%>
+    <% draw_tree(node.id, node.title,qty)%>
+  <%end %>
+
+<%end%>
 
 
-<%= link_to 'Добавить товар', new_product_path %>
+
+<ul id="myUL">
+  <%qty = 0%>
+  <%draw_tree(17, "Продукция", qty)%>
+</ul>
+
+<div class="wrapper" >
+  <!-- Sidebar -->
+  <nav id="sidebar" class="active">
+
+    <div class="sidebar-header" style="margin-top: 70px">
+      <h3>Отбор продукции</h3>
+    </div>
+    <ul class="list-unstyled components">
+      <p>Группы продукции:</p>
+
+      <li class="active">
+        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Готовая продукция</a>
+        <ul class="collapse list-unstyled" id="homeSubmenu">
+          <li>
+            <ul id="myUL">
+              <li><span class="caret">Beverages</span>
+                <ul class="nested">
+                  <li>Water</li>
+                  <li>Coffee</li>
+                  <li><span class="caret">Tea</span>
+                    <ul class="nested">
+                      <li>Black Tea</li>
+                      <li>White Tea</li>
+                      <li><span class="caret">Green Tea</span>
+                        <ul class="nested">
+                          <li>Sencha</li>
+                          <li>Gyokuro</li>
+                          <li>Matcha</li>
+                          <li>Pi Lo Chun</li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        <a href="#">About</a>
+      </li>
+      <li>
+        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
+        <ul class="collapse list-unstyled" id="pageSubmenu">
+          <li>
+            <a href="#">Page 1</a>
+          </li>
+          <li>
+            <a href="#">Page 2</a>
+          </li>
+          <li>
+            <a href="#">Page 3</a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Portfolio</a>
+      </li>
+      <li>
+        <a href="#">Contact</a>
+      </li>
+    </ul>
+  </nav>
+  <!-- Page Content -->
+  <div id="content" style="margin-left: 40px">
+    <div class="row">
+      <%cache @products do%>
+        <% @products.each do |product| %>
+          <%cache product do%>
+            <div class="card" style="width: 18rem; margin: 10px">
+              <%= image_tag(product['image_url'], class:"card-img-top",size: "200x200") %>
+              <div class="card-body">
+                  <h5 class="card-title"><%= product['title'] %></h5>
+                <p class="card-text"><%= product['parent_name']%></p>
+
+                  <p style="color: #B00100;font-size:25px"><%= sprintf("%0.02f грн.", Product.get_price(product['id']))%>
+                  <a class="fa fa-heart" aria-hidden="true" style="font-size: 25px; color: #B00100; margin-left: 10px"></a>
+                  <%= link_to '', line_items_path({:id => product['id'], :pack_id => product['pack_id']}),remote: true,
+                              method: :post, class: 'fa fa-cart-plus', style: 'margin-left:10px;font-size:30px;color:#B00100;' %>
+                  </p>
+              </div>
+              <ul class="list-group list-group-flush">
+                <%packs = Product.get_packs_product(product['id'])%>
+                <%packs.each do |pack|%>
+                  <li class="list-group-item"> <%= pack['pack_name'] %>
+                    <p style="color: forestgreen;font-size:25px"><%= sprintf("%0.02f грн.", Product.get_price(product['id'])) %>
+                      <a class="fa fa-heart" aria-hidden="true" style="font-size: 25px; margin-left: 10px"></a>
+                      <%= link_to '',line_items_path({:id => product['id'], :pack_id => product['pack_id']}),remote: true,
+                                method: :post,class: 'fa fa-cart-plus', style: 'font-size:25px;hover:text_decoration:none' %>
+                    </p>
+                  </li>
+                  <%end%>
+                </ul>
+            </div>
+          <%end%>
+        <% end %>
+      <%end%>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+    <span class="text-muted"><%= paginate @products%></span>
+</footer>

@@ -7,7 +7,7 @@ class Unf
 
   def get_products
 
-    res = connect_1c.get('http://relay3.kumk.com.ua:8088/NMFC_dev/hs/site-api/products')
+    res = connect_1c.get('http://relay3.kumk.com.ua:8088/nmfc_dev_20/hs/site-api/products')
 
     data = JSON.parse res.body
 
@@ -24,6 +24,7 @@ class Unf
       prod[:description] = 'description'
       prod[:is_folder] = p['is_folder'].to_i == 0 ? false : true
       prod[:parent_id] = p['parent_id'].to_i
+      prod[:parent_name] = p['parent_name']
       prod[:price] = 0.01
       prod[:created_at] = Time.now
 
@@ -56,7 +57,7 @@ class Unf
 
   def get_packs
 
-    res = connect_1c.get('http://relay3.kumk.com.ua:8088/NMFC_dev/hs/site-api/packs')
+    res = connect_1c.get('http://relay3.kumk.com.ua:8088/nmfc_dev_20/hs/site-api/packs')
 
     data = JSON.parse res.body
 
@@ -79,7 +80,7 @@ class Unf
 
   def get_prices
 
-    res = connect_1c.get('http://relay3.kumk.com.ua:8088/NMFC_dev/hs/site-api/price')
+    res = connect_1c.get('http://relay3.kumk.com.ua:8088/nmfc_dev_20/hs/site-api/price')
 
     data = JSON.parse res.body
 
@@ -107,7 +108,7 @@ class Unf
 
   def get_price_types
 
-    res = connect_1c.get('http://relay3.kumk.com.ua:8088/NMFC_dev/hs/site-api/pricetype')
+    res = connect_1c.get('http://relay3.kumk.com.ua:8088/nmfc_dev_20/hs/site-api/pricetype')
 
     data = JSON.parse res.body
 
@@ -131,6 +132,15 @@ class Unf
     conn.basic_auth('admin', '911*')
     conn.response :json, :content_type => /\bjson$/
     conn
+  end
+
+  def  clear_img_url
+    products = Product.all
+    products.each do |prod|
+      prod[:image_url] = 'image_url.jpg'
+      prod.save
+    end
+
   end
 
 end
