@@ -1,0 +1,7 @@
+$("#modal-window").html("<%= escape_javascript(render 'line_items/modal_qty',
+locals: {product_id:@product_id, pack_id:@pack_id, product_name:@product_name, unit:@unit, units_list:@units_list}) %>");
+$('#modal-window').hide();
+
+
+
+

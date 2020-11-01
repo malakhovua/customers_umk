@@ -1,6 +1,7 @@
 <tr>
   <th scope="row" class="border-0">
     <div class="p-2">
+
       <%= image_tag(line_item.product.image_url, class: "img-thumbnail", size: "100x100") %>
       <div class="ml-3 d-inline-block align-middle">
         <h5 class="mb-0"><a href="#" class="text-dark d-inline-block align-middle"><%= line_item.product.title %></a>
@@ -13,7 +14,9 @@
   <% else %>
     <td class="border-0 align-middle"></td>
   <% end %>
+  <td class="border-0 align-middle"><strong><%= number_field_tag 'qty'+line_item.id.to_s, line_item.quantity,:step => 0.01, class: "form-control", id: "num_field" %></strong></td>
   <td class="border-0 align-middle"><strong><%= sprintf("%0.02f грн.", Product.get_price(line_item.product.id))%></strong></td>
-  <td class="border-0 align-middle"><strong><%= line_item.quantity %></strong></td>
-  <td class="border-0 align-middle"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td>
+  <% unit_ref = Unit.find(line_item.unit_id) %>
+  <td class="border-0 align-middle"><strong><%= unit_ref.name%></strong></td>
+  <td class="border-0 align-middle"> <i><%= link_to '',line_item_path(line_item), method: :delete, class: 'fa fa-trash', style: 'color: red;', remote:true%></i> </td>
 </tr>

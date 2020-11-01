@@ -14,7 +14,6 @@
 //= require jquery3
 //= require popper
 //= require bootstrap-sprockets
-
 //= require jquery
 //= require jquery-ui
 //= require rails-ujs
@@ -22,13 +21,15 @@
 //= require turbolinks
 //= require_tree .
 
+$('.has-clear input[type="text"]').on('input propertychange', function() {
+    var $this = $(this);
+    var visible = Boolean($this.val());
+    $this.siblings('.form-control-clear').toggleClass('hidden', !visible);
+}).trigger('propertychange');
 
-    var toggler = document.getElementsByClassName("caret");
-    var i;
+$('.form-control-clear').click(function() {
+    $(this).siblings('input[type="text"]').val('')
+        .trigger('propertychange').focus();
+});
 
-    for (i = 0; i < toggler.length; i++) {
-    toggler[i].addEventListener("click", function() {
-    this.parentElement.querySelector(".nested").classList.toggle("active");
-    this.classList.toggle("caret-down");
-  });
-}
+

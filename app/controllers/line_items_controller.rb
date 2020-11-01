@@ -28,11 +28,14 @@ class LineItemsController < ApplicationController
   # POST /line_items.json
   def create
     product = Product.find(params[:id])
+    qty = params[:qty].to_f
+    unit_id = params[:units].to_i
+
     unless params[:pack_id].nil?
       pack = Pack.find(params[:pack_id])
-      @line_item = @cart.add_product(product, pack)
+      @line_item = @cart.add_product(product, pack,qty,unit_id)
     else
-      @line_item = @cart.add_product(product,nil)
+      @line_item = @cart.add_product(product,nil,qty,unit_id)
     end
     respond_to do |format|
       if @line_item.save
@@ -63,10 +66,34 @@ class LineItemsController < ApplicationController
   # DELETE /line_items/1
   # DELETE /line_items/1.json
   def destroy
+    @cart = Cart.find(session[:cart_id])
     @line_item.destroy
     respond_to do |format|
-      format.html { redirect_to line_items_url, notice: 'Line item was successfully destroyed.' }
+      if @cart.total_quantity == 0.to_f
+        @cart.destroy
+        format.html { redirect_to customer_index_url, notice: 'Ваша корзина была полностью очищена.' }
+      end
+      format.html { redirect_to cart_path(@cart), notice: 'Строка удалена.' }
       format.json { head :no_content }
+    end
+  end
+
+  def modal_product_qty
+    @qty = 1
+    @product_id = params[:id]
+    @pack_id = params[:pack_id]
+    @product_name = params[:product_name]
+    @unit_id = Unit.find_by(name:params[:unit_name]).id
+    @units_list = Unit.all
+    @product = Product.all
+
+    if params[:pack_name] != ""
+         @product_name = @product_name + ' (' + params[:pack_name] + ')'
+    end
+
+    respond_to do |format|
+      format.html
+      format.js
     end
   end
 

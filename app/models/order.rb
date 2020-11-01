@@ -11,11 +11,11 @@ class Order < ApplicationRecord
   end
 
   def total_price
-    line_items.to_a.sum { |item| item.total_price}
+    line_items.to_a.sum { |item| item.total_price (item.product.id)}
   end
 
   def total_quantity
-    line_items.to_a.sum { |item| item.total_quantity}
+    line_items.to_a.sum { |item| item.total_quantity }
   end
 
 end

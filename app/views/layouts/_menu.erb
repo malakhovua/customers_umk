@@ -1,30 +1,39 @@
-
 <nav class="navbar fixed-top navbar-light" style="background-color: maroon;">
-  <form class="form-inline">
+
+  <%= form_tag(customer_index_path, method: :get, class: 'form-inline') do %>
     <button type="button" id="sidebarCollapse" class="btn btn-outline-light" style="margin: 10px">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <input class="form-control mr-sm-2" type="search" placeholder="Наименование" aria-label="Search">
-    <button class="btn btn-outline-light" type="submit">Поиск</button>
-  </form>
+    <div style="display: flex;margin-right: -20px;">
+      <%= text_field_tag :Product_name, params[:Product_name], placeholder: 'Наименование', class: 'form-control mr-sm-2' %>
+      <%= link_to '', customer_index_path, class: 'fa fa-times-circle', style: 'font-size:20px;margin-right:5px;margin-top: 9px;position:relative;
+    left: -33px;color:dark;aria-hidden="true"' %>
+    </div>
+    <%= submit_tag 'Поиск', name: nil, class: 'btn btn-outline-light' %>
+  <% end %>
+
   <% if logged_in? %>
     <div id="user_cart">
-      <div id="user">
-        <div id="user_avatar">
-          <%= image_tag('user.png', class:"img-thumbnail",size: "40x40") %>
+      <%= link_to account_path(current_user), :action => 'go' do %>
+        <div id="user">
+          <div id="user_avatar">
+            <%= image_tag('user.png', class: "img-thumbnail", size: "40x40") %>
+          </div>
+          <div id="user_name">
+            <%=current_user.name%>
+          </div>
         </div>
-        <div id="user_name">
-          <%= link_to current_user.name, account_path(current_user)%>
-        </div>
-      </div>
-  <%end%>
+      <% end %>
+  <% end %>
   <div id="cart_qty">
     <%= link_to '', @cart, class: 'fa fa-shopping-cart', style: 'font-size:40px;color:dark;hover:text_decoration:none, color:white; ' %>
-    <%if @cart %>
+
+    <%= link_to @cart, :action => 'go' do %>
       <div id="cart_total_quantity">
-        <%= link_to @cart.total_quantity, @cart %>
+        <%= sprintf("%0.02f",@cart.total_quantity)%>
       </div>
     <% end %>
+
   </div>
   </div>
 

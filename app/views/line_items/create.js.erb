@@ -1,4 +1,1 @@
-
-//$('#cart').html("<%=j render(@cart)%>");
-$('#cart_total_quantity').html("<%= @cart.total_quantity %>")
-
+$('#cart_total_quantity').html("<%= sprintf("%0.02f",@cart.total_quantity)%>");

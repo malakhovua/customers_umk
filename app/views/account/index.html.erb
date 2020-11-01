@@ -1,7 +1,70 @@
+<div class="container">
+  <div class="jumbotron jumbotron-fluid" style="background-color:azure;box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);     margin-top: 35px;
+      margin-bottom: 60px;">
+    <div class="container">
+      <h2 class="display-10 text-center">Добро пожаловать на сайт заказов "УМК"!</h2>
+      <h1 class="display-10 text-center">Вы вошли как <%= current_user.name%>.</h1>
+      <p class="lead"> </p>
+    </div>
+  </div>
+  <div class="row">
+    <%= link_to customer_index_url,class: "col-md-4", :action => 'go' do %>
+    <div class="card border-info mb-3" style="max-width: 18rem;">
+      <div class="card-body text-info">
+        <h5 class="card-title text-center">Оформить заказ</h5>
+        <p class="card-text text-center"><i class="fa fa-shopping-basket" aria-hidden="true" style="font-size: 60px; color: darkturquoise;"></i></p>
+      </div>
+    </div>
+  <% end %>
+    <%= link_to orders_url,class: "col-md-4", :action => 'go' do %>
+      <div class="card border-info mb-3" style="max-width: 18rem;">
+        <div class="card-body text-info">
+          <h5 class="card-title text-center">Мои заказы</h5>
+          <p class="card-text text-center"><i class="fa fa-file-text-o" aria-hidden="true" style="font-size: 60px; color: darkturquoise;"></i></p>
+        </div>
+      </div>
+    <% end %>
+    <%= link_to clients_url,class: "col-md-4", :action => 'go' do %>
+      <div class="card border-info mb-3" style="max-width: 18rem;">
+        <div class="card-body text-info">
+          <h5 class="card-title text-center">Покупатели</h5>
+          <p class="card-text text-center"><i class="fa fa-address-book-o" aria-hidden="true" style="font-size: 60px; color: darkturquoise;"></i></p>
+        </div>
+      </div>
+    <% end %>
+    <%= link_to '#',class: "col-md-4", :action => 'go' do %>
+      <div class="card border-info mb-3" style="max-width: 18rem;">
+        <div class="card-body text-info">
+          <h5 class="card-title text-center">Профиль</h5>
+          <p class="card-text text-center"><i class="fa fa-user-circle-o" aria-hidden="true" style="font-size: 60px; color: darkturquoise;"></i></p>
+        </div>
+      </div>
+    <% end %>
+    <%= link_to '#',class: "col-md-4", :action => 'go' do %>
+      <div class="card border-info mb-3" style="max-width: 18rem;">
+        <div class="card-body text-info">
+          <h5 class="card-title text-center">Администрирование</h5>
+          <p class="card-text text-center"><i class="fa fa-wrench" aria-hidden="true" style="font-size: 60px; color: darkturquoise;"></i></p>
+        </div>
+      </div>
+    <% end %>
+    <%= link_to logout_path ,class: "col-md-4", method: :delete, :action => 'go' do %>
+      <div class="card border-info mb-3" style="max-width: 18rem;">
+        <div class="card-body text-info">
+          <h5 class="card-title text-center">Выйти</h5>
+          <p class="card-text text-center"><i class="fa fa-sign-out" aria-hidden="true" style="font-size: 60px; color: darkturquoise;"></i></p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
 
 
-<h1>Добро пожаловать  <%= current_user.name %>!</h1>
-<%=link_to 'Перейти к товарам', customer_index_url%> <br>
-<%= link_to 'Выйти', logout_path, method: :delete %> <br>
-<%= link_to 'К списку заказов', orders_url %> <br>
-<%= link_to 'К списку клиентов', clients_url%>
+
+
+
+
+
+
+
+

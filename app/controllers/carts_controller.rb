@@ -41,9 +41,16 @@ class CartsController < ApplicationController
   # PATCH/PUT /carts/1
   # PATCH/PUT /carts/1.json
   def update
+
+    @cart.line_items.each do |line_item|
+      line_item.quantity = params['qty'+line_item.id.to_s].to_f
+      line_item.save
+    end
+
     respond_to do |format|
       if @cart.update(cart_params)
-        format.html { redirect_to @cart, notice: 'Cart was successfully updated.' }
+        format.html { redirect_to @cart, notice: 'Корзина была обновлена!'}
+        format.js
         format.json { render :show, status: :ok, location: @cart }
       else
         format.html { render :edit }
@@ -51,6 +58,7 @@ class CartsController < ApplicationController
       end
     end
   end
+
 
   # DELETE /carts/1
   # DELETE /carts/1.json

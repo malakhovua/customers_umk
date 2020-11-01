@@ -1,34 +1,50 @@
-<p id="notice"><%= notice %></p>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"> <%= link_to 'К списку заказов', orders_path, class: "btn btn-link" %></li>
+    <li class="breadcrumb-item"><%= link_to 'Редактировать заказ', edit_order_path(@order), class: "btn btn-link"%></li>
+  </ol>
+</nav>
+<div class="container">
+  <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
 
-<p>
-  <strong>Client:</strong>
-  <%= @order.client.name %>
-</p>
+  <p id="notice"><%= notice %></p>
+    <h2>Заказ покупателя №<%= @order.id%> от <%= @order.date %></h2>
+    <br>
+  <h6>
+    <strong>Покупатель:</strong>
+    <%= @order.client.name %>
+  </h6>
 
-<p>
-  <strong>Date:</strong>
-  <%= @order.date %>
-</p>
+  <h6>
+    <strong>Адрес доставки:</strong>
+    <%= @order.shipping_address %>
+  </h6>
 
-<p>
-  <strong>Shipping address:</strong>
-  <%= @order.shipping_address %>
-</p>
-
-<p>
-  <strong>User:</strong>
-  <%= @order.user.name %>
-</p>
-
-<tbody>
-<%= render(@order.line_items)%>
-</tbody>
-<h5 class="font-weight-bold"><%= sprintf("%0.02f грн.",@order.total_price)%></h5>
-<h5 class="font-weight-bold"><%=@order.total_quantity%></h5>
-<p>
-  <strong>Comments:</strong>
-  <%= @order.comments %>
-</p>
-
-<%= link_to 'Edit', edit_order_path(@order) %> |
-<%= link_to 'Back', orders_path %>
+  <h6>
+    <strong>Создал:</strong>
+    <%= @order.user.name %>
+  </h6>
+  <h6>
+    <strong>Комментарий:</strong>
+    <%= @order.comments %>
+  </h6>
+    <br>
+  <table class="table table-bordered">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Наименованиу</th>
+    <th scope="col">Упаковка</th>
+    <th scope="col">Количество</th>
+    <th scope="col">Ед.</th>
+    <th scope="col">Цена</th>
+    <th scope="col">Сумма</th>
+  </tr>
+  </thead>
+    <%= render partial: 'orders/line_items'%>
+  </table>
+    <br>
+    <h5 >Общее количество товара: <%= sprintf("%0.02f кг",@order.total_quantity) %></h5>
+  <h5>На сумму: <%= sprintf("%0.02f грн.", @order.total_price) %></h5>
+</div>
+</div>

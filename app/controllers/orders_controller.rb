@@ -4,7 +4,7 @@ class OrdersController < ApplicationController
 
   before_action :set_cart
 
-  before_action  :ensure_cart_isnt_empty, only: :new
+  before_action :ensure_cart_isnt_empty, only: :new
   before_action :initialize_collections, only: [:new, :create, :update]
   before_action :set_order, only: [:show, :edit, :update, :destroy]
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_27_150832) do
+ActiveRecord::Schema.define(version: 2020_11_01_131704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,18 +30,29 @@ ActiveRecord::Schema.define(version: 2020_09_27_150832) do
     t.boolean "is_folder"
   end
 
+  create_table "favorite_products", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "product_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_favorite_products_on_product_id"
+    t.index ["user_id"], name: "index_favorite_products_on_user_id"
+  end
+
   create_table "line_items", force: :cascade do |t|
     t.bigint "product_id"
     t.bigint "cart_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "quantity", default: 1
+    t.float "quantity", default: 0.0
     t.bigint "order_id"
     t.bigint "pack_id"
+    t.bigint "unit_id"
     t.index ["cart_id"], name: "index_line_items_on_cart_id"
     t.index ["order_id"], name: "index_line_items_on_order_id"
     t.index ["pack_id"], name: "index_line_items_on_pack_id"
     t.index ["product_id"], name: "index_line_items_on_product_id"
+    t.index ["unit_id"], name: "index_line_items_on_unit_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -95,6 +106,12 @@ ActiveRecord::Schema.define(version: 2020_09_27_150832) do
     t.string "parent_name"
   end
 
+  create_table "units", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "password_digest"
@@ -102,9 +119,12 @@ ActiveRecord::Schema.define(version: 2020_09_27_150832) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "favorite_products", "products"
+  add_foreign_key "favorite_products", "users"
   add_foreign_key "line_items", "carts"
   add_foreign_key "line_items", "orders"
   add_foreign_key "line_items", "packs"
+  add_foreign_key "line_items", "units"
   add_foreign_key "orders", "clients"
   add_foreign_key "orders", "users"
   add_foreign_key "prices", "packs"

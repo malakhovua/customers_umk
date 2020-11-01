@@ -1,46 +1,51 @@
-<%= form_with(model: order, local: true) do |form| %>
+<%= form_with(model: order, local: true,) do |form| %>
   <% if order.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(order.errors.count, "error") %> prohibited this order from being saved:</h2>
 
       <ul>
-      <% order.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% order.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="form-row">
+    <div class="form-group row">
+    <label for="example-date-input" class="col-2 col-form-label">Дата</label>
+    <div class="col-10">
+      <%= form.date_field :date, class: "form-control", type:"date", value: DateTime.now.strftime("%Y-%m-%d"), id:"example-date-input"%>
+    </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Покупатель:</label>
     <% clients_array = Client.all.map { |client| [client.name, client.id] } %>
-    <%= form.select(:client_id, options_for_select(clients_array)) %>
+    <%= form.select(:client_id, options_for_select(clients_array),{},{ :class => 'form-control' })%>
   </div>
 
-  <div class="field">
-    <%= form.label :date %>
-    <%= form.date_select :date %>
+  <div class="form-group" >
+    <label>Адрес доставки:</label>
+    <%= form.text_field :shipping_address,class: "form-control", id: "inputAddress", placeholder: "Город, улица ..."%>
   </div>
 
-  <div class="field">
-    <%= form.label :shipping_address %>
-    <%= form.text_area :shipping_address %>
+  <div class="form-group" >
+    <div class="field">
+      <label>Комментарий:</label>
+      <%= form.text_area :comments, class: "form-control", id: "exampleFormControlTextarea1", rows:"3"%>
+    </div>
   </div>
 
-  <div class="field">
-    <%= current_user.name%>
-  </div>
-
-  <div class="field">
-    <%= form.label :comments %>
-    <%= form.text_area :comments %>
-  </div>
-
-  <div class="field">
-    <%= form.label :comments %>
-    <%= form.text_area :comments %>
+  <div class="form-group">
+    <label>Пользователь:</label>
+    <div class="form-control field">
+      <%= current_user.name %>
+    </div>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit value: "Сохранить заказ", class: "btn btn-primary"%>
   </div>
 <% end %>

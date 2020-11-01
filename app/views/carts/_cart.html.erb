@@ -1,13 +1,24 @@
-
-<h2> Корзина заказчика</h2>
-
 <!-- End -->
+<%= form_tag cart_path, method: :put, remote: true do %>
 <div class="pb-5">
   <div class="container">
+    <div class="row" style="margin-bottom: 20px">
+      <div>
+        <%= link_to " Продолжить покупку", customer_index_path, class: "fa fa-shopping-basket", style: "margin: 10px;
+    font-size: 25px;
+    color: dodgerblue;" %>
+      </div>
+      <div>
+        <%= link_to ' Очистить корзину', cart, method: :delete,
+                    data: {confirm: 'Вы уверены?'}, class: "fa fa-trash", style: "margin: 10px;font-size: 25px;color: red;" %>
+      </div>
+    </div>
+    <h2 class="text-center" style="margin-bottom: 15px"> Корзина заказчика</h2>
+    <div style="margin: 10px">
+      <%=submit_tag 'Применить изменения', class: "btn btn-success"%>
+    </div>
     <div class="row">
       <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
-
-        <!-- Shopping cart table -->
         <div class="table-responsive">
           <table class="table">
             <thead>
@@ -19,24 +30,30 @@
                 <div class="p-2 px-3 text-uppercase">Упаковка</div>
               </th>
               <th scope="col" class="border-0 bg-light">
-                <div class="py-2 text-uppercase">Цена</div>
-              </th>
-              <th scope="col" class="border-0 bg-light">
                 <div class="py-2 text-uppercase">Количество</div>
               </th>
               <th scope="col" class="border-0 bg-light">
-                <div class="py-2 text-uppercase">Удалить</div>
+                <div class="py-2 text-uppercase">Цена</div>
+              </th>
+              <th scope="col" class="border-0 bg-light">
+                <div class="py-2 text-uppercase">Ед.</div>
+              </th>
+              <th scope="col" class="border-0 bg-light">
+                <div class="py-2 text-uppercase"></div>
               </th>
             </tr>
             </thead>
             <tbody>
-            <%= render(cart.line_items)%>
+            <%= render(cart.line_items) %>
             </tbody>
           </table>
         </div>
         <!-- End -->
       </div>
     </div>
+
+<% end #form_tag%>
+
     <div class="row py-5 p-4 bg-white rounded shadow-sm">
 
       <div class="col-lg-6">
@@ -44,16 +61,14 @@
         <div class="p-4">
           <ul class="list-unstyled mb-4">
             <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Итого</strong>
-              <h5 class="font-weight-bold"><%= sprintf("%0.02f грн.",@cart.total_price)%></h5>
+              <h5 class="font-weight-bold"><%= sprintf("%0.02f грн.", @cart.total_price) %></h5>
             </li>
           </ul>
-          <%=link_to "Оформить заказ", new_order_path, method: :get, class: "btn btn-dark rounded-pill py-2 btn-block"%>
+          <%= link_to "Оформить заказ", new_order_path, method: :get, class: "btn btn-primary rounded-pill py-2 btn-block" %>
         </div>
       </div>
     </div>
-    <%= button_to 'Очистить корзину', cart, method: :delete,
-                  data: {confirm: 'Вы уверены?'} %>
-    <%= link_to "Продолжить покупку", customer_index_path%>
+
   </div>
 </div>
 </div>

@@ -4,28 +4,28 @@
 <%= form_tag do%>
 <body>
 <div id="login">
-  <h3 class="text-center text-white pt-5">Login form</h3>
+  <h3 class="text-center text-white pt-5"></h3>
   <div class="container">
     <div id="login-row" class="row justify-content-center align-items-center">
       <div id="login-column" class="col-md-6">
         <div id="login-box" class="col-md-12">
           <form id="login-form" class="form" action="" method="post">
-            <h3 class="text-center text-info">Login</h3>
+            <h3 class="text-center text-info">Войти</h3>
             <div class="form-group">
-              <label for="username" class="text-info">Username:</label><br>
+              <label for="username" class="text-info">Имя пользователя:</label><br>
               <%=text_field_tag :name, params[:name], id: "username", class: "form-control" %>
             </div>
             <div class="form-group">
-              <label for="password" class="text-info">Password:</label><br>
+              <label for="password" class="text-info">Пароль:</label><br>
               <%= password_field_tag :password, params[:password], id: "password", class: "form-control"%>
             </div>
             <div class="form-group">
-              <label for="remember-me" class="text-info"><span>Remember me</span> <span><input id="remember-me" name="remember-me" type="checkbox"></span></label><br>
+              <!--<label for="remember-me" class="text-info"><span>Remember me</span> <span><input id="remember-me" name="remember-me" type="checkbox"></span></label><br>-->
               <%= submit_tag "Войти", class: "btn btn-info btn-md" %>
             </div>
-            <div id="register-link" class="text-right">
-              <a href="#" class="text-info">Register here</a>
-            </div>
+            <!-- <div id="register-link" class="text-right">
+               <a href="#" class="text-info">Register here</a>
+             </div>-->
           </form>
         </div>
       </div>

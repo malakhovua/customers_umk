@@ -12,6 +12,7 @@ class Product < ApplicationRecord
   has_many :subs, class_name: 'Product', foreign_key: :parent_id
   belongs_to :superior, class_name: 'Product', foreign_key: :parent_id, optional: true
   has_many :price
+  has_many :favorite_products, dependent: :destroy
 
   scope :roots, -> { where(parent_id: nil) }
 

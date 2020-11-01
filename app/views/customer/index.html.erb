@@ -1,134 +1,78 @@
+<div class="container-fluid">
+  <%= render partial: "layouts/menu" %>
 
-<%= render partial: "layouts/menu" %>
+  <!-- Modal -->
+  <div class="modal fade" id="modal-window" tabindex="-1"
+       role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <%= render partial: 'line_items/modal_qty', locals: {product_id: '37124'} %>
+  </div>
+  <!-- Modal -->
 
-<%def draw_tree (node_id, node_title, qty)%>
-  <% childs = Product.get_childs_product(node_id)%>
-  <% if childs.empty?%>
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar" class="active">
 
-    <li><%=node_title%></li>
-
-  <% else %>
-    <li><span class="caret"> <%=node_title%></span>
-      <ul class="nested">
-        <% qty = qty + 1%>
-  <%end%>
-
-  <% childs.each do |node|%>
-    <% draw_tree(node.id, node.title,qty)%>
-  <%end %>
-
-<%end%>
-
-
-
-<ul id="myUL">
-  <%qty = 0%>
-  <%draw_tree(17, "Продукция", qty)%>
-</ul>
-
-<div class="wrapper" >
-  <!-- Sidebar -->
-  <nav id="sidebar" class="active">
-
-    <div class="sidebar-header" style="margin-top: 70px">
-      <h3>Отбор продукции</h3>
-    </div>
-    <ul class="list-unstyled components">
-      <p>Группы продукции:</p>
-
-      <li class="active">
-        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Готовая продукция</a>
-        <ul class="collapse list-unstyled" id="homeSubmenu">
-          <li>
-            <ul id="myUL">
-              <li><span class="caret">Beverages</span>
-                <ul class="nested">
-                  <li>Water</li>
-                  <li>Coffee</li>
-                  <li><span class="caret">Tea</span>
-                    <ul class="nested">
-                      <li>Black Tea</li>
-                      <li>White Tea</li>
-                      <li><span class="caret">Green Tea</span>
-                        <ul class="nested">
-                          <li>Sencha</li>
-                          <li>Gyokuro</li>
-                          <li>Matcha</li>
-                          <li>Pi Lo Chun</li>
-                        </ul>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-            </ul>
+      <div class="sidebar-header" style="margin-top: 70px">
+        <h3>Фильтр продукции</h3>
+      </div>
+      <ul class="list-unstyled components">
+        <p>Категории:</p>
+        <li>
+        <%= form_tag(customer_index_path, method: :get) do %>
+          <%= select_tag "group", options_from_collection_for_select(@products_group, "id", "title", params[:group]),
+                         {:class => 'form-control'} %>
+          <div class="form-check", style="margin: 5px">
+            <%= check_box_tag :favorite, value =1, params[:favorite], class:"form-check-input" %>
+            <label class="form-check-label" for="defaultCheck1">
+              Только избранные товары
+            </label>
+          </div>
+          <%= button_to "  Применить  ", customer_index_path, method: :get, class: 'btn btn-primary', style: "margin: 5px;" %>
+          <%= button_to "Показать все", customer_index_path, method: :get, class: 'btn btn-primary', style: "margin: 5px;" %>
           </li>
-        </ul>
-      </li>
-
-      <li>
-        <a href="#">About</a>
-      </li>
-      <li>
-        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
-        <ul class="collapse list-unstyled" id="pageSubmenu">
-          <li>
-            <a href="#">Page 1</a>
-          </li>
-          <li>
-            <a href="#">Page 2</a>
-          </li>
-          <li>
-            <a href="#">Page 3</a>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <a href="#">Portfolio</a>
-      </li>
-      <li>
-        <a href="#">Contact</a>
-      </li>
-    </ul>
-  </nav>
-  <!-- Page Content -->
-  <div id="content" style="margin-left: 40px">
-    <div class="row">
-      <%cache @products do%>
-        <% @products.each do |product| %>
-          <%cache product do%>
-            <div class="card" style="width: 18rem; margin: 10px">
-              <%= image_tag(product['image_url'], class:"card-img-top",size: "200x200") %>
-              <div class="card-body">
+          <% end %>
+      </ul>
+    </nav>
+    <div id="content" style="margin-left: 40px">
+      <div class="row">
+        <% cache @products do %>
+          <% @products.each do |product| %>
+            <% cache product do %>
+              <div class="card" style="width: 18rem; margin: 10px">
+                <%= image_tag(product['image_url'], class: "card-img-top", size: "200x200") %>
+                <div class="card-body">
                   <h5 class="card-title"><%= product['title'] %></h5>
-                <p class="card-text"><%= product['parent_name']%></p>
-
-                  <p style="color: #B00100;font-size:25px"><%= sprintf("%0.02f грн.", Product.get_price(product['id']))%>
-                  <a class="fa fa-heart" aria-hidden="true" style="font-size: 25px; color: #B00100; margin-left: 10px"></a>
-                  <%= link_to '', line_items_path({:id => product['id'], :pack_id => product['pack_id']}),remote: true,
-                              method: :post, class: 'fa fa-cart-plus', style: 'margin-left:10px;font-size:30px;color:#B00100;' %>
+                  <p class="card-text"><%= product['parent_name'] %></p>
+                  <p style="color: #B00100;font-size:25px"><%= sprintf("%0.02f грн.", Product.get_price(product['id'])) %>
+                    <% style_string = @favorite_products.find_by(product_id: product.id, user_id:@current_user.id).nil? ? "font-size: 25px; margin-left: 10px; color: #a4a5b1" : "font-size: 25px; margin-left: 10px; color: #B00100"  %>
+                    <%= link_to '', favorite_products_path({:favorite_product=>{:user_id=>@current_user.id, :product_id => product.id}}),
+                                method: :post, class: "fa fa-heart", id: "heard_"+product.id.to_s,
+                        style: style_string,
+                                remote: true%>
+                    <%= link_to '', modal_product_qty_path(:id => product['id'], :pack_id => nil, :product_name => product['title'], :pack_name => '', :unit_name=> 'кг'), class: 'fa fa-cart-plus', style: 'margin-left:10px;font-size:30px;color:#B00100;',
+                                :data => {:toggle => 'modal', :target => '#modal-window'}, remote: true %>
                   </p>
-              </div>
-              <ul class="list-group list-group-flush">
-                <%packs = Product.get_packs_product(product['id'])%>
-                <%packs.each do |pack|%>
-                  <li class="list-group-item"> <%= pack['pack_name'] %>
-                    <p style="color: forestgreen;font-size:25px"><%= sprintf("%0.02f грн.", Product.get_price(product['id'])) %>
-                      <a class="fa fa-heart" aria-hidden="true" style="font-size: 25px; margin-left: 10px"></a>
-                      <%= link_to '',line_items_path({:id => product['id'], :pack_id => product['pack_id']}),remote: true,
-                                method: :post,class: 'fa fa-cart-plus', style: 'font-size:25px;hover:text_decoration:none' %>
-                    </p>
-                  </li>
-                  <%end%>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <% packs = Product.get_packs_product(product['id']) %>
+                  <% packs.each do |pack| %>
+                    <li class="list-group-item"> <%= pack['pack_name'] %>
+                      <p style="color: forestgreen;font-size:25px"><%= sprintf("%0.02f грн.", Product.get_price(product['id'])) %>
+                        <%= link_to '', modal_product_qty_path(:id => product['id'], :pack_id => pack['pack_id'], :product_name => product['title'], :pack_name => pack['pack_name'], :unit_name=> 'шт'), class: 'fa fa-cart-plus', style: 'margin-left:10px;font-size:30px;color: forestgreen;',
+                                    :data => {:toggle => 'modal', :target => '#modal-window'}, remote: true %>
+                      </p>
+                    </li>
+                  <% end %>
                 </ul>
-            </div>
-          <%end%>
+              </div>
+            <% end %>
+          <% end %>
         <% end %>
-      <%end%>
+      </div>
     </div>
   </div>
-</div>
 
-<footer class="footer">
-    <span class="text-muted"><%= paginate @products%></span>
-</footer>
+  <footer class="footer">
+    <span class="text-muted"><%= paginate @products %></span>
+  </footer>
+</div>
