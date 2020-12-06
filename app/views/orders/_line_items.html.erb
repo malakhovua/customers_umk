@@ -8,7 +8,9 @@
     <% else %>
       <td></td>
     <% end %>
+  <td><strong><%= check_box_tag "","", line_item.stick, :disabled => true%></strong></td>
     <td><strong><%= line_item.quantity %></strong></td>
+  <td><strong><%= line_item.amount %></strong></td>
   <% unit_ref = Unit.find(line_item.unit_id) %>
   <td><strong><%= unit_ref.name%></strong></td>
     <td><strong><%= sprintf("%0.02f грн.", Product.get_price(line_item.product.id)) %></strong></td>

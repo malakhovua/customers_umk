@@ -42,7 +42,7 @@ class Product < ApplicationRecord
   end
 
   def self.get_childs_product (parent_id)
-    Product.where(:products => {is_folder:true, parent_id:parent_id}).order("title")
+    Product.where(:products => {is_folder:true, unf_parent_id:parent_id}).order("title")
   end
 
   def self.get_packs_product (product_id)
@@ -59,7 +59,7 @@ class Product < ApplicationRecord
        pcs.product_id,
        pcs.id as pack_id
        FROM products as p
-       LEFT JOIN packs AS pcs ON p.id = pcs.product_id
+       LEFT JOIN packs AS pcs ON p.unf_id = pcs.product_id
 		   LEFT JOIN products AS perents ON p.parent_id = perents.id
 		   WHERE p.is_folder = false
        AND NOT pcs.id = 0
@@ -68,6 +68,7 @@ class Product < ApplicationRecord
     result = ActiveRecord::Base.connection.exec_query(text_query)
     return result
   end
+
 
   private
 

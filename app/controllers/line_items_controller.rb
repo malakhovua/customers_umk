@@ -33,9 +33,9 @@ class LineItemsController < ApplicationController
 
     unless params[:pack_id].nil?
       pack = Pack.find(params[:pack_id])
-      @line_item = @cart.add_product(product, pack,qty,unit_id)
+      @line_item = @cart.add_product(product, pack,qty,unit_id, pack.type_id)
     else
-      @line_item = @cart.add_product(product,nil,qty,unit_id)
+      @line_item = @cart.add_product(product,nil,qty,unit_id,0)
     end
     respond_to do |format|
       if @line_item.save

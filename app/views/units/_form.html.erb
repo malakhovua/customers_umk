@@ -1,4 +1,5 @@
 <%= form_with(model: unit, local: true) do |form| %>
+  <div class="form-group">
   <% if unit.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(unit.errors.count, "error") %> prohibited this unit from being saved:</h2>
@@ -12,11 +13,17 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :name %>
+    <%= form.label :Наименование %>
     <%= form.text_field :name %>
   </div>
 
+  <div class="field">
+    <%= form.label :Штучный %>
+    <%= form.check_box :piece %>
+  </div>
+
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit 'Сохранить' %>
   </div>
 <% end %>
+</div>

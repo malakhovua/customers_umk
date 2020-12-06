@@ -8,7 +8,9 @@
     remote:        data-remote
 -%>
 
-<span class="page-link<%= ' current' if page.current? %>">
-  <%= link_to_unless page.current?, page, url, {remote: remote, rel: page.rel} %>
-</span>
+<li class="<%=page.current? ? 'page-item active':'page-item'%>">
+  <span class="page-link">
+  <%= link_to_unless page.current?, page, url, {remote: remote, rel: page.rel}%>
+    </span>
+</li>
 

@@ -33,6 +33,8 @@ class OrdersController < ApplicationController
   def create
     @order = Order.new(order_params)
     @order.add_line_items_from_cart(@cart)
+    @order.stick = @cart.stick
+    @order.stick_pack = @cart.stick_pack
 
     respond_to do |format|
       if @order.save

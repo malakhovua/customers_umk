@@ -1,28 +1,48 @@
 <div class="container-fluid">
   <%= render partial: "layouts/menu" %>
 
-  <!-- Modal -->
+  <!-- Modal add qty -->
   <div class="modal fade" id="modal-window" tabindex="-1"
        role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <%= render partial: 'line_items/modal_qty', locals: {product_id: '37124'} %>
+    <%= render partial: 'line_items/modal_qty' %>
   </div>
   <!-- Modal -->
 
+  <!-- Modal  products tree -->
+  <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <%= render partial: 'products/product_tree_modal' %>
+  </div>
+
   <div class="wrapper">
+
     <!-- Sidebar -->
     <nav id="sidebar" class="active">
+
 
       <div class="sidebar-header" style="margin-top: 70px">
         <h3>Фильтр продукции</h3>
       </div>
+
       <ul class="list-unstyled components">
-        <p>Категории:</p>
+        <li> <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+            Выбор категории продукции
+          </button>
+        </li>
         <li>
-        <%= form_tag(customer_index_path, method: :get) do %>
-          <%= select_tag "group", options_from_collection_for_select(@products_group, "id", "title", params[:group]),
-                         {:class => 'form-control'} %>
-          <div class="form-check", style="margin: 5px">
-            <%= check_box_tag :favorite, value =1, params[:favorite], class:"form-check-input" %>
+          <%= form_tag(customer_index_path, method: :get) do %>
+          <li style="font-size: 25px;margin-top: 10px;">Категория:</li>
+          <li>
+            <div id="group_select">
+              <%= text_field_tag "group_id", params[:group_id], type: "hidden" %>
+              <%= text_field_tag "group", params[:group_name].nil? ? 'Без категории' : params[:group_name], :readonly => true, id: "group_tx_fld" %>
+            </div>
+          </li>
+          <li style="font-size: 25px;margin-top: 10px;">Покупатель:</li>
+          <li><%= select_tag 'client_id', options_from_collection_for_select(Client.all, 'id', 'name',params[:client_id]), class: "form-control form-control-sm",
+                             style: "background: rgba(40, 80, 90, 0.7); color: aliceblue;" %></li>
+          <div class="form-check" , style="margin: 5px">
+            <%= check_box_tag :favorite, value = 1, params[:favorite], class: "form-check-input" %>
             <label class="form-check-label" for="defaultCheck1">
               Только избранные товары
             </label>
@@ -30,9 +50,11 @@
           <%= button_to "  Применить  ", customer_index_path, method: :get, class: 'btn btn-primary', style: "margin: 5px;" %>
           <%= button_to "Показать все", customer_index_path, method: :get, class: 'btn btn-primary', style: "margin: 5px;" %>
           </li>
-          <% end %>
+        <% end %>
       </ul>
+
     </nav>
+
     <div id="content" style="margin-left: 40px">
       <div class="row">
         <% cache @products do %>
@@ -44,13 +66,13 @@
                   <h5 class="card-title"><%= product['title'] %></h5>
                   <p class="card-text"><%= product['parent_name'] %></p>
                   <p style="color: #B00100;font-size:25px"><%= sprintf("%0.02f грн.", Product.get_price(product['id'])) %>
-                    <% style_string = @favorite_products.find_by(product_id: product.id, user_id:@current_user.id).nil? ? "font-size: 25px; margin-left: 10px; color: #a4a5b1" : "font-size: 25px; margin-left: 10px; color: #B00100"  %>
-                    <%= link_to '', favorite_products_path({:favorite_product=>{:user_id=>@current_user.id, :product_id => product.id}}),
-                                method: :post, class: "fa fa-heart", id: "heard_"+product.id.to_s,
-                        style: style_string,
-                                remote: true%>
-                    <%= link_to '', modal_product_qty_path(:id => product['id'], :pack_id => nil, :product_name => product['title'], :pack_name => '', :unit_name=> 'кг'), class: 'fa fa-cart-plus', style: 'margin-left:10px;font-size:30px;color:#B00100;',
-                                :data => {:toggle => 'modal', :target => '#modal-window'}, remote: true %>
+                    <% style_string = @favorite_products.find_by(product_id: product.id, user_id: @current_user.id, client_id: @client_id).nil? ? "font-size: 25px; margin-left: 10px; color: #a4a5b1" : "font-size: 25px; margin-left: 10px; color: #B00100" %>
+                    <%= link_to '', favorite_products_path({ :favorite_product => { :user_id => @current_user.id, :product_id => product.id, :client_id => @client_id } }),
+                                method: :post, class: "fa fa-heart", id: "heard_" + product.id.to_s,
+                                style: style_string,
+                                remote: true %>
+                    <%= link_to '', modal_product_qty_path(:id => product['id'], :pack_id => nil, :product_name => product['title'], :pack_name => '', :unit_name => 'кг'), class: 'fa fa-cart-plus', style: 'margin-left:10px;font-size:30px;color:#B00100;',
+                                :data => { :toggle => 'modal', :target => '#modal-window' }, remote: true %>
                   </p>
                 </div>
                 <ul class="list-group list-group-flush">
@@ -58,8 +80,8 @@
                   <% packs.each do |pack| %>
                     <li class="list-group-item"> <%= pack['pack_name'] %>
                       <p style="color: forestgreen;font-size:25px"><%= sprintf("%0.02f грн.", Product.get_price(product['id'])) %>
-                        <%= link_to '', modal_product_qty_path(:id => product['id'], :pack_id => pack['pack_id'], :product_name => product['title'], :pack_name => pack['pack_name'], :unit_name=> 'шт'), class: 'fa fa-cart-plus', style: 'margin-left:10px;font-size:30px;color: forestgreen;',
-                                    :data => {:toggle => 'modal', :target => '#modal-window'}, remote: true %>
+                        <%= link_to '', modal_product_qty_path(:id => product['id'], :pack_id => pack['pack_id'], :product_name => product['title'], :pack_name => pack['pack_name'], :unit_name => 'шт'), class: 'fa fa-cart-plus', style: 'margin-left:10px;font-size:30px;color: forestgreen;',
+                                    :data => { :toggle => 'modal', :target => '#modal-window' }, remote: true %>
                       </p>
                     </li>
                   <% end %>

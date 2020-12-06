@@ -1,12 +1,16 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Packs</h1>
+<h1>Упаковка</h1>
 
 <table class="table">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Description</th>
+      <th>id</th>
+      <th>product_id</th>
+      <th>Наименование</th>
+      <th>Вес,шт</th>
+      <th>Описание</th>
+      <th>Код вида упаковки</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -14,8 +18,12 @@
   <tbody>
     <% @packs.each do |pack| %>
       <tr>
+        <td><%= pack.id%></td>
+        <td><%= pack.product_id%></td>
         <td><%= pack.name %></td>
+        <td><%= pack.weight %></td>
         <td><%= pack.description %></td>
+        <td><%= pack.type_id%></td>
         <td><%= link_to 'Show', pack %></td>
         <td><%= link_to 'Edit', edit_pack_path(pack) %></td>
         <td><%= link_to 'Destroy', pack, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -26,4 +34,4 @@
 
 <br>
 
-<%= link_to 'New Pack', new_pack_path %>
+<%= link_to 'Создать новую', new_pack_path %>

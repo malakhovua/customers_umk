@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_01_131704) do
+ActiveRecord::Schema.define(version: 2020_12_06_164128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,6 +18,8 @@ ActiveRecord::Schema.define(version: 2020_11_01_131704) do
   create_table "carts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "stick", default: false
+    t.boolean "stick_pack", default: false
   end
 
   create_table "clients", force: :cascade do |t|
@@ -28,6 +30,9 @@ ActiveRecord::Schema.define(version: 2020_11_01_131704) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_folder"
+    t.string "unf_id"
+    t.string "parent_id"
+    t.string "parent_name"
   end
 
   create_table "favorite_products", force: :cascade do |t|
@@ -35,6 +40,8 @@ ActiveRecord::Schema.define(version: 2020_11_01_131704) do
     t.bigint "product_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "client_id"
+    t.index ["client_id"], name: "index_favorite_products_on_client_id"
     t.index ["product_id"], name: "index_favorite_products_on_product_id"
     t.index ["user_id"], name: "index_favorite_products_on_user_id"
   end
@@ -48,6 +55,10 @@ ActiveRecord::Schema.define(version: 2020_11_01_131704) do
     t.bigint "order_id"
     t.bigint "pack_id"
     t.bigint "unit_id"
+    t.integer "pack_type_id"
+    t.integer "amount"
+    t.string "product_unf_id"
+    t.boolean "stick", default: false
     t.index ["cart_id"], name: "index_line_items_on_cart_id"
     t.index ["order_id"], name: "index_line_items_on_order_id"
     t.index ["pack_id"], name: "index_line_items_on_pack_id"
@@ -63,6 +74,8 @@ ActiveRecord::Schema.define(version: 2020_11_01_131704) do
     t.text "comments"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "stick", default: false
+    t.boolean "stick_pack", default: false
     t.index ["client_id"], name: "index_orders_on_client_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
@@ -72,7 +85,9 @@ ActiveRecord::Schema.define(version: 2020_11_01_131704) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "product_id"
+    t.string "product_id"
+    t.integer "type_id"
+    t.float "weight"
   end
 
   create_table "prices", force: :cascade do |t|
@@ -104,12 +119,16 @@ ActiveRecord::Schema.define(version: 2020_11_01_131704) do
     t.boolean "is_folder", default: false
     t.integer "parent_id"
     t.string "parent_name"
+    t.string "unf_id"
+    t.string "unf_parent_id"
+    t.float "weight"
   end
 
   create_table "units", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "piece"
   end
 
   create_table "users", force: :cascade do |t|
@@ -119,6 +138,7 @@ ActiveRecord::Schema.define(version: 2020_11_01_131704) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "favorite_products", "clients"
   add_foreign_key "favorite_products", "products"
   add_foreign_key "favorite_products", "users"
   add_foreign_key "line_items", "carts"

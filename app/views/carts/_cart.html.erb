@@ -15,7 +15,17 @@
     </div>
     <h2 class="text-center" style="margin-bottom: 15px"> Корзина заказчика</h2>
     <div style="margin: 10px">
-      <%=submit_tag 'Применить изменения', class: "btn btn-success"%>
+      <%=submit_tag 'Применить изменения', class: "btn btn-success" %>
+    </div>
+    <div class="d-inline-block">
+      <div class="form-check">
+        <%= check_box_tag 'stick', "", cart.stick%>
+        <label class="form-check-label" for="exampleCheck1">Стикеровать все</label>
+      </div>
+      <div class="form-check">
+        <%= check_box_tag 'stick_pack', "", cart.stick_pack%>
+        <label class="form-check-label" for="exampleCheck1">Стикеровать только в упаковке</label>
+      </div>
     </div>
     <div class="row">
       <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
@@ -27,10 +37,19 @@
                 <div class="p-2 px-3 text-uppercase">Продукция</div>
               </th>
               <th scope="col" class="border-0 bg-light">
+                <div class="py-2 text-uppercase">Вес, ед.</div>
+              </th>
+              <th scope="col" class="border-0 bg-light">
                 <div class="p-2 px-3 text-uppercase">Упаковка</div>
               </th>
               <th scope="col" class="border-0 bg-light">
-                <div class="py-2 text-uppercase">Количество</div>
+                <div class="py-2 text-uppercase">Количество, вес</div>
+              </th>
+              <th scope="col" class="border-0 bg-light">
+                <div class="py-2 text-uppercase">Количество, шт</div>
+              </th>
+              <th scope="col" class="border-0 bg-light">
+                <div class="py-2 text-uppercase">Стикировать</div>
               </th>
               <th scope="col" class="border-0 bg-light">
                 <div class="py-2 text-uppercase">Цена</div>
@@ -43,9 +62,11 @@
               </th>
             </tr>
             </thead>
+            <div id = "line_items_body">
             <tbody>
-            <%= render(cart.line_items) %>
+            <%= render(cart.line_items)%>
             </tbody>
+            </div>
           </table>
         </div>
         <!-- End -->
@@ -57,11 +78,14 @@
     <div class="row py-5 p-4 bg-white rounded shadow-sm">
 
       <div class="col-lg-6">
-        <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Общая стоимость заказа</div>
+        <div class="bg-light  px-4 py-3 text-uppercase font-weight-bold">Итого:</div>
         <div class="p-4">
           <ul class="list-unstyled mb-4">
-            <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Итого</strong>
-              <h5 class="font-weight-bold"><%= sprintf("%0.02f грн.", @cart.total_price) %></h5>
+            <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Общий вес:</strong>
+              <h5 class="font-weight-bold" id="footer_cart_qty"><%= sprintf("%0.02f кг.", @cart.total_quantity)%></h5>
+            </li>
+            <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Стоимость:</strong>
+              <h5 class="font-weight-bold" id="footer_cart_price"><%= sprintf("%0.02f грн.", @cart.total_price)%></h5>
             </li>
           </ul>
           <%= link_to "Оформить заказ", new_order_path, method: :get, class: "btn btn-primary rounded-pill py-2 btn-block" %>

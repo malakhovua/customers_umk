@@ -4,30 +4,33 @@ class CustomerController < ApplicationController
 
   def index
 
+    client_id = params[:client_id]
+
     @products = case params[:favorite]
 
                 when "1"
-                  if params[:group]
-                    Product.where(:products => {is_folder: false}).order("parent_id").where(parent_id: params[:group]).joins(:favorite_products).where(["Products.id = Favorite_products.product_id"]).page params[:page]
+                  if params[:group_id] !="" and params[:group_id] != nil
+                    Product.where(:products => {is_folder: false}).order("unf_parent_id").where(unf_parent_id: params[:group_id]).joins(:favorite_products).where(["Products.id = Favorite_products.product_id AND Favorite_products.client_id=#{client_id}"]).page params[:page]
                   elsif params[:Product_name]
                     Product.where('title ILIKE ?', "%#{params[:Product_name]}%").
-                        where(:products => {is_folder: false}).order("parent_id").joins(:favorite_products).where(["Products.id = Favorite_products.product_id"]).page params[:page]
+                        where(:products => {is_folder: false}).order("unf_parent_id").joins(:favorite_products).where(["Products.id = Favorite_products.product_id AND Favorite_products.client_id=#{client_id}"]).page params[:page]
                   else
-                    Product.where(:products => {is_folder: false}).order("parent_id").joins(:favorite_products).where(["Products.id = Favorite_products.product_id"]).page params[:page]
+                    Product.where(:products => {is_folder: false}).order("unf_parent_id").joins(:favorite_products).where(["Products.id = Favorite_products.product_id AND Favorite_products.client_id=#{client_id}"]).page params[:page]
                   end
                 else
-                  if params[:group]
-                    Product.where(:products => {is_folder: false}).order("parent_id").where(parent_id: params[:group]).page params[:page]
+                  if params[:group_id] !="" and params[:group_id] != nil
+                    Product.where(:products => {is_folder: false}).order("unf_parent_id").where(unf_parent_id: params[:group_id]).page params[:page]
                   elsif params[:Product_name]
                     Product.where('title ILIKE ?', "%#{params[:Product_name]}%").
-                        where(:products => {is_folder: false}).order("parent_id").page params[:page]
+                        where(:products => {is_folder: false}).order("unf_parent_id").page params[:page]
                   else
-                    Product.where(:products => {is_folder: false}).order("parent_id").page params[:page]
+                    Product.where(:products => {is_folder: false}).order("unf_parent_id").page params[:page]
                   end
                 end
 
-    @products_group = Product.where(:products => {is_folder: true}).order("id")
+    @products_group = Product.where(:products => {is_folder: true}).order("unf_id")
     @favorite_products =FavoriteProduct.all
+    @client_id =client_id
 
   end
 

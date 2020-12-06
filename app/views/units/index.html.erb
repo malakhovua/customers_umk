@@ -1,12 +1,13 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Units</h1>
+<h1>Единицы</h1>
 
-<table>
+<table class="table">
   <thead>
     <tr>
-      <th>Name</th>
-      <th colspan="3"></th>
+      <th>Наименование</th>
+      <th>Штучная ед.</th>
+      <th colspan="4"></th>
     </tr>
   </thead>
 
@@ -14,9 +15,10 @@
     <% @units.each do |unit| %>
       <tr>
         <td><%= unit.name %></td>
-        <td><%= link_to 'Show', unit %></td>
-        <td><%= link_to 'Edit', edit_unit_path(unit) %></td>
-        <td><%= link_to 'Destroy', unit, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= unit.piece %></td>
+        <td><%= link_to 'Просмотр', unit %></td>
+        <td><%= link_to 'Редактирование', edit_unit_path(unit) %></td>
+        <td><%= link_to 'Удалить', unit, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -24,4 +26,4 @@
 
 <br>
 
-<%= link_to 'New Unit', new_unit_path %>
+<%= link_to 'Новая единица', new_unit_path %>

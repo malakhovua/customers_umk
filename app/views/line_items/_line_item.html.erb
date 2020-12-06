@@ -9,14 +9,37 @@
       </div>
     </div>
   </th>
+  <td class="border-0 align-middle"><strong><%=line_item.pack.nil? ? line_item.product[:weight] : line_item.pack[:weight]%></td>
   <% unless line_item.pack.nil? %>
     <td class="border-0 align-middle"><strong><%= line_item.pack.name %></td>
   <% else %>
     <td class="border-0 align-middle"></td>
   <% end %>
-  <td class="border-0 align-middle"><strong><%= number_field_tag 'qty'+line_item.id.to_s, line_item.quantity,:step => 0.01, class: "form-control", id: "num_field" %></strong></td>
-  <td class="border-0 align-middle"><strong><%= sprintf("%0.02f грн.", Product.get_price(line_item.product.id))%></strong></td>
+  <% if line_item.quantity == 0 || line_item.quantity == nil %>
+    <td class="border-0 align-middle"><strong class="form-control" id="num_field" style="background-color: whitesmoke;"></strong></td>
+  <% else %>
+    <td class="border-0 align-middle">
+      <strong><%= number_field_tag 'qty' + line_item.id.to_s, line_item.quantity, :step => 0.01, class: "form-control", id: "num_field" %></strong>
+    </td>
+  <% end %>
+
+  <% if line_item.amount == 0 || line_item.amount == nil %>
+    <td class="border-0 align-middle"><strong class="form-control" id="num_field" style="background-color: whitesmoke;"></strong></td>
+  <% else %>
+    <td class="border-0 align-middle">
+      <strong><%= number_field_tag 'amount' + line_item.id.to_s, line_item.amount, :step => 1, class: "form-control", id: "num_field" %></strong>
+    </td>
+  <% end %>
+
+  <td class="border-0 align-middle">
+    <strong> <%= check_box_tag 'stick' + line_item.id.to_s, "" ,line_item.stick%></strong>
+  </td>
+
+  <td class="border-0 align-middle">
+    <strong><%= sprintf("%0.02f грн.", Product.get_price(line_item.product.id)) %></strong></td>
   <% unit_ref = Unit.find(line_item.unit_id) %>
-  <td class="border-0 align-middle"><strong><%= unit_ref.name%></strong></td>
-  <td class="border-0 align-middle"> <i><%= link_to '',line_item_path(line_item), method: :delete, class: 'fa fa-trash', style: 'color: red;', remote:true%></i> </td>
+  <td class="border-0 align-middle"><strong><%= unit_ref.name %></strong></td>
+  <td class="border-0 align-middle">
+    <i><%= link_to '', line_item_path(line_item), method: :delete, class: 'fa fa-trash', style: 'color: red;', remote: true %></i>
+  </td>
 </tr>

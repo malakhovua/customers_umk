@@ -7,7 +7,9 @@
     remote:        data-remote
 -%>
 
-<span class="page-link">
+<li class="page-item">
+  <span class="page-link">
   <%= link_to_unless current_page.first?, t('views.pagination.first').html_safe, url, remote: remote %>
-</span>
+    </span>
+</li>
 

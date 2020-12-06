@@ -1,13 +1,18 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Name:</strong>
+  <strong>Наименование:</strong>
   <%= @pack.name %>
 </p>
 
 <p>
-  <strong>Description:</strong>
+  <strong>Описание:</strong>
   <%= @pack.description %>
+</p>
+
+<p>
+  <strong>Код вида упаковки:</strong>
+  <%= @pack.type_id %>
 </p>
 
 <%= link_to 'Edit', edit_pack_path(@pack) %> |

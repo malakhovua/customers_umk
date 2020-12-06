@@ -42,8 +42,13 @@ class CartsController < ApplicationController
   # PATCH/PUT /carts/1.json
   def update
 
+    @cart.stick = !!params['stick']
+    @cart.stick_pack = !!params['stick_pack']
+
     @cart.line_items.each do |line_item|
       line_item.quantity = params['qty'+line_item.id.to_s].to_f
+      line_item.amount = params['amount'+line_item.id.to_s].to_f
+      line_item.stick  = !!params['stick'+line_item.id.to_s]
       line_item.save
     end
 

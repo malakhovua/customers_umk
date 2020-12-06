@@ -9,6 +9,12 @@ class LineItem < ApplicationRecord
   end
 
   def total_quantity
-    quantity
+    unit = Unit.find(unit_id)
+    if unit.piece
+      pack.nil? ? amount* product[:weight] :  amount * pack[:weight]
+    else
+      quantity
+    end
+
   end
 end

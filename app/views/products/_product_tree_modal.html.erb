@@ -1,0 +1,30 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLongTitle">Группы продукции</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div id="child_products">
+        <%level_arr = Array.new %>
+        <%level_arr[0] = "00000000017"%>
+        <% @groups = Product.get_childs_product("00000000017") %>
+        <ul>
+        <% @groups.each do |group| %>
+            <div><%= link_to '', return_child_products_path(:level_arr=>level_arr, :current_id=>group.unf_id,
+                                                                    :level=>0, :way =>"down"), class: "fa fa-folder", remote: true,
+                             style: "margin-right: 10px;color: dodgerblue;font-size: 30px;" %>
+            <%= link_to group.title, select_group_product_path(:group_name => group.title,
+                                                                :group_id => group.unf_id), remote: true,
+            style: "font-size: 20px;"%></div>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    </div>
+  </div>
+</div>

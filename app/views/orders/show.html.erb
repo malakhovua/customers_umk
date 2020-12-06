@@ -1,7 +1,7 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"> <%= link_to 'К списку заказов', orders_path, class: "btn btn-link" %></li>
-    <li class="breadcrumb-item"><%= link_to 'Редактировать заказ', edit_order_path(@order), class: "btn btn-link"%></li>
+    <li class="breadcrumb-item"> <%= link_to 'К списку заказов', orders_path, class: "btn btn-link" , style: "font-size: 20px"%></li>
+    <li class="breadcrumb-item"><%= link_to 'Редактировать заказ', edit_order_path(@order), class: "btn btn-link", style: "font-size: 20px"%></li>
   </ol>
 </nav>
 <div class="container">
@@ -28,6 +28,14 @@
     <strong>Комментарий:</strong>
     <%= @order.comments %>
   </h6>
+    <h6>
+      <strong>Стикеровать все:</strong>
+      <%= check_box_tag "","", @order.stick, :disabled => true%>
+    </h6>
+    <h6>
+      <strong>Стикеровать в упаковке:</strong>
+      <%= check_box_tag "","", @order.stick_pack, :disabled => true %>
+    </h6>
     <br>
   <table class="table table-bordered">
   <thead>
@@ -35,7 +43,9 @@
     <th scope="col">#</th>
     <th scope="col">Наименованиу</th>
     <th scope="col">Упаковка</th>
+    <th scope="col">Стик.</th>
     <th scope="col">Количество</th>
+    <th scope="col">Количество,шт</th>
     <th scope="col">Ед.</th>
     <th scope="col">Цена</th>
     <th scope="col">Сумма</th>

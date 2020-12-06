@@ -12,12 +12,19 @@
     <%= submit_tag 'Поиск', name: nil, class: 'btn btn-outline-light' %>
   <% end %>
 
+  <% unless params[:client_id].nil? %>
+    <% client = Client.find(params[:client_id]) %>
+    <div style="color: aliceblue"><%= "ПОКУПАТЕЛЬ: " + client.name %></div>
+    <%else%>
+    <div style="color: aliceblue">ПОКУПАТЕЛЬ НЕ ВЫБРАН.</div>
+  <% end %>
+
   <% if logged_in? %>
     <div id="user_cart">
       <%= link_to account_path(current_user), :action => 'go' do %>
         <div id="user">
           <div id="user_avatar">
-            <%= image_tag('user.png', class: "img-thumbnail", size: "40x40") %>
+            <%= image_tag("user.png", class: "img-thumbnail", size: "40x40") %>
           </div>
           <div id="user_name">
             <%=current_user.name%>
@@ -30,7 +37,7 @@
 
     <%= link_to @cart, :action => 'go' do %>
       <div id="cart_total_quantity">
-        <%= sprintf("%0.02f",@cart.total_quantity)%>
+        <%= sprintf("%0.02fкг",@cart.total_quantity)%>
       </div>
     <% end %>
 

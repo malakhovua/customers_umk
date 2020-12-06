@@ -13,23 +13,26 @@ class Unf
 
     data.each { |p|
 
-      if Product.where(:id => p['id'].to_i).present?
-        prod = Product.find_by(id: p['id'])
+      if Product.where(:unf_id => p['unf_id']).present?
+        prod = Product.find_by(unf_id: p['unf_id'])
       else
         prod = Product.new
       end
 
-      prod[:id] = p['id']
+      # prod[:id] = p['id']
+      #prod[:parent_id] = p['parent_id'].to_i
+      #prod[:price] = 0.01
+      prod[:unf_id] = p['unf_id']
+      prod[:unf_parent_id] = p['unf_parent_id']
       prod[:title] = p['title']
       prod[:description] = 'description'
       prod[:is_folder] = p['is_folder'].to_i == 0 ? false : true
-      prod[:parent_id] = p['parent_id'].to_i
       prod[:parent_name] = p['parent_name']
-      prod[:price] = 0.01
+      prod[:weight] = p['weight']
       prod[:created_at] = Time.now
 
       if p['binary_file'] == ''
-        prod.image_url = 'stop.png'
+        prod.image_url = 'image_url.jpg'
       else
         base64_image = p['binary_file']
         # decode64
@@ -37,18 +40,18 @@ class Unf
         # file type
         filetype = p['file_extension']
         # name the file
-        filename = './app/assets/images/' + p['id'].to_s
+        filename = './app/assets/images/' + p['unf_id']
 
         # write file
         file = filename << '.' << filetype
         File.open(file, 'wb') do |f|
           f.write(img_from_base64)
         end
-        prod.image_url = p['id'].to_s + '.' + filetype
+        prod.image_url = p['unf_id'] + '.' + filetype
       end
       #end file
       if prod[:is_folder] == true
-        prod.image_url = 'folder_01.jpg'
+        prod.image_url = 'folder.jpg'
       end
 
       prod.save
@@ -63,18 +66,48 @@ class Unf
 
     data.each { |p|
 
-      if Pack.where(:id => p['id']).present?
+      if Pack.where(:id => p['id'].to_i).present?
         pack = Pack.find_by(id: p['id'].to_i)
       else
         pack = Pack.new
       end
 
       pack[:id] = p['id'].to_i
+      pack[:type_id] = p['type_id'].to_i
       pack[:name] = p['name']
       pack[:description] = p['description']
-      pack[:product_id] = p['product_id'].to_i
+      pack[:product_id] = p['product_id']
+      pack[:weight] = p['weight']
       pack[:created_at] = Time.now
       pack.save
+    }
+  end
+
+  def get_clients
+
+    res = connect_1c.get('http://relay3.kumk.com.ua:8088/nmfc_dev_20/hs/site-api/clients')
+
+    data = JSON.parse res.body
+
+    data.each { |p|
+
+      if Client.where(:unf_id => p['unf_id']).present?
+        client = Client.find_by(unf_id: p['unf_id'])
+      else
+        client = Client.new
+      end
+
+      # client[:id] = p['id'].to_i
+      client[:unf_id] = p['unf_id']
+      client[:parent_id] = p['parent_id']
+      client[:parent_name] = p['parent_name']
+      client[:name] = p['name']
+      client[:address] = p['address']
+      client[:email] = p['email']
+      client[:phone] = p['phone']
+      client[:is_folder] = p['is_folder'].to_i == 0 ? false : true
+      client[:created_at] = Time.now
+      client.save
     }
   end
 
@@ -140,6 +173,29 @@ class Unf
       prod[:image_url] = 'image_url.jpg'
       prod.save
     end
+
+  end
+
+  def post_orders (date1, date2)
+
+    cont ='{"orders":['
+
+    orders = Order.all.where(:date => date1..date2)
+    first= true
+    orders.each do |order|
+      coma = first ? "" : ","
+      cont = cont + coma +
+          '{"header":' + order.to_json +
+          '"clien_unf_id":' + '"'+order.client['unf_id'].to_s + '"' +
+          ',"line_items": [' + order.line_items.to_json + "]" + "}"
+      first = false
+    end
+
+    cont = cont + "]}"
+    
+    resp = connect_1c.post('http://relay3.kumk.com.ua:8088/nmfc_dev_20/hs/site-api/orders', cont,
+                        "Content-Type" => "application/json")
+    resp
 
   end
 

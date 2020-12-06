@@ -1,7 +1,7 @@
 <nav aria-label="breadcrumb">
 <ol class="breadcrumb">
-  <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link"%></li>
-  <li class="breadcrumb-item"><%= link_to 'Продолжить покупку', customer_index_path, class: "btn btn-link"%></li>
+  <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link", style: "font-size: 20px"%></li>
+  <li class="breadcrumb-item"><%= link_to 'Продолжить покупку', customer_index_path, class: "btn btn-link", style: "font-size: 20px"%></li>
 </ol>
 </nav>
 <div class="container-fluid" style="margin-top: 0px">
@@ -11,6 +11,9 @@
   <thead>
     <tr>
       <th>#</th>
+      <th>unf_id</th>
+      <th>parent_id</th>
+      <th>Группа</th>
       <th>Наименование</th>
       <th>Адрес</th>
       <th>Email</th>
@@ -23,6 +26,9 @@
     <% @clients.each do |client| %>
       <tr>
         <td><%= client.id %></td>
+        <td><%= client.unf_id %></td>
+        <td><%= client.parent_id %></td>
+        <td><%= client.parent_name %></td>
         <td><%= client.name %></td>
         <td><%= client.address %></td>
         <td><%= client.email %></td>

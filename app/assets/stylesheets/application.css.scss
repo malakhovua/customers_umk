@@ -47,6 +47,14 @@ nav.navbar {
 }
 
 //sidebar
+#group_tx_fld{
+  margin: 10px;
+  background: rgba(40, 80, 90, 0.7);
+  color: #fff;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
 #cart_total_quantity{
   display: inline-block;
   position: relative;
@@ -59,7 +67,7 @@ nav.navbar {
   /* border-radius: 50%; */
   color: white;
   /* background: white; */
-  font-size: 21px;
+  font-size: 20px;
 }
 #cart_total_qty{
   margin-top: 4px;

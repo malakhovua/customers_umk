@@ -62,6 +62,30 @@ class ProductsController < ApplicationController
     end
   end
 
+  def return_child_products
+
+    @current_id = params[:current_id]
+    level  =  params[:way] == "down" ? params[:level].to_i + 1 : params[:level].to_i - 1
+    @level      = level
+    @level_arr = params[:level_arr]
+    @level_arr[level] = params[:current_id]
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
+  def select_group_product
+    @group_name = params[:group_name]
+    @group_id = params[:group_id]
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_product
