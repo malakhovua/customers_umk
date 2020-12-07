@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Node:</strong>
+  <%= @exch_node.node %>
+</p>
+
+<p>
+  <strong>Ser:</strong>
+  <%= @exch_node.ser %>
+</p>
+
+<p>
+  <strong>Cat:</strong>
+  <%= @exch_node.cat %>
+</p>
+
+<%= link_to 'Edit', edit_exch_node_path(@exch_node) %> |
+<%= link_to 'Back', exch_nodes_path %>

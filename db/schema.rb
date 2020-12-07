@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_06_164128) do
+ActiveRecord::Schema.define(version: 2020_12_07_160340) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,14 @@ ActiveRecord::Schema.define(version: 2020_12_06_164128) do
     t.string "unf_id"
     t.string "parent_id"
     t.string "parent_name"
+  end
+
+  create_table "exch_nodes", force: :cascade do |t|
+    t.string "node"
+    t.string "ser"
+    t.string "cat"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "favorite_products", force: :cascade do |t|

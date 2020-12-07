@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Exch Nodes</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Node</th>
+      <th>Ser</th>
+      <th>Cat</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @exch_nodes.each do |exch_node| %>
+      <tr>
+        <td><%= exch_node.node %></td>
+        <td><%= exch_node.ser %></td>
+        <td><%= exch_node.cat %></td>
+        <td><%= link_to 'Show', exch_node %></td>
+        <td><%= link_to 'Edit', edit_exch_node_path(exch_node) %></td>
+        <td><%= link_to 'Destroy', exch_node, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Exch Node', new_exch_node_path %>

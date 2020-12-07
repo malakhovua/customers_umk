@@ -1,0 +1,32 @@
+<%= form_with(model: exch_node, local: true) do |form| %>
+  <% if exch_node.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(exch_node.errors.count, "error") %> prohibited this exch_node from being saved:</h2>
+
+      <ul>
+      <% exch_node.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :node %>
+    <%= form.text_field :node %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ser %>
+    <%= form.text_field :ser %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cat %>
+    <%= form.text_field :cat %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

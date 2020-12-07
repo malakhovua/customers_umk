@@ -7,7 +7,7 @@ class Unf
 
   def get_products
 
-    res = connect_1c.get('http://relay3.kumk.com.ua:8088/nmfc_dev_20/hs/site-api/products')
+    res = connect_1c.get(get_unf_path'products')
 
     data = JSON.parse res.body
 
@@ -60,7 +60,7 @@ class Unf
 
   def get_packs
 
-    res = connect_1c.get('http://relay3.kumk.com.ua:8088/nmfc_dev_20/hs/site-api/packs')
+    res = connect_1c.get(get_unf_path'packs')
 
     data = JSON.parse res.body
 
@@ -85,7 +85,7 @@ class Unf
 
   def get_clients
 
-    res = connect_1c.get('http://relay3.kumk.com.ua:8088/nmfc_dev_20/hs/site-api/clients')
+    res = connect_1c.get(get_unf_path'clients')
 
     data = JSON.parse res.body
 
@@ -113,7 +113,7 @@ class Unf
 
   def get_prices
 
-    res = connect_1c.get('http://relay3.kumk.com.ua:8088/nmfc_dev_20/hs/site-api/price')
+    res = connect_1c.get(get_unf_path("price"))
 
     data = JSON.parse res.body
 
@@ -141,7 +141,7 @@ class Unf
 
   def get_price_types
 
-    res = connect_1c.get('http://relay3.kumk.com.ua:8088/nmfc_dev_20/hs/site-api/pricetype')
+    res = connect_1c.get(get_unf_path"pricetype")
 
     data = JSON.parse res.body
 
@@ -193,10 +193,16 @@ class Unf
 
     cont = cont + "]}"
     
-    resp = connect_1c.post('http://relay3.kumk.com.ua:8088/nmfc_dev_20/hs/site-api/orders', cont,
+    resp = connect_1c.post(get_unf_path("orders"), cont,
                         "Content-Type" => "application/json")
     resp
 
+  end
+
+  def get_unf_path (method)
+    unf_base = ExchNode.first();
+    path_string = unf_base.ser + "/" + unf_base.cat + "/" + method
+    path_string
   end
 
 end
