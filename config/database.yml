@@ -28,8 +28,8 @@ test:
 production:
   adapter: postgresql
   encoding: unicode
-  database: umkwork
+  database: umk_site
   pool: 5
   username: postgres
-  password: Rtyuehe19$
+  password: Rtyuehe20$
   host:    localhost
