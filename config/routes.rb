@@ -34,7 +34,7 @@ Rails.application.routes.draw do
   resources :products
   resources :users
 
-  
+  root 'account#index1', as: 'account_index1'
   #root 'customer#index', as: 'customer_index'
 
 
