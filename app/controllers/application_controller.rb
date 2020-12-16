@@ -1,11 +1,12 @@
 class ApplicationController < ActionController::Base
-  #before_action :authorize
+  before_action :authorize
 
   protected
 
   def authorize
     unless User.find_by(id: session[:user_id])
       redirect_to login_url , notice: "Пожалуйста залогинтесь."
+      else
     end
   end
 
