@@ -127,7 +127,7 @@ ActiveRecord::Schema.define(version: 2020_12_07_160340) do
     t.boolean "is_folder", default: false
     t.integer "parent_id"
     t.string "parent_name"
-    t.string "unf_id"
+    t.string "я"
     t.string "unf_parent_id"
     t.float "weight"
   end

@@ -14,7 +14,7 @@
         <ul>
         <% @groups.each do |group| %>
             <div><%= link_to '', return_child_products_path(:level_arr=>level_arr, :current_id=>group.unf_id,
-                                                                    :level=>0, :way =>"down"), class: "fa fa-folder", remote: true,
+                                                                    :level=>0, :way =>"down"), class: "fa fa-caret-square-o-down", remote: true,
                              style: "margin-right: 10px;color: dodgerblue;font-size: 30px;" %>
             <%= link_to group.title, select_group_product_path(:group_name => group.title,
                                                                 :group_id => group.unf_id), remote: true,

@@ -1,14 +1,14 @@
 <div id="child_products">
   <% if @level > 0 %>
-    <div><%= link_to Product.find_by(unf_parent_id:@level_arr[@level - 1]).title, return_child_products_path(:level_arr => @level_arr, :current_id => @level_arr[@level - 1],
-                                                      :level => @level, :way => "up"), class: "fa fa-folder-open", remote: true,
+    <div><%= link_to '..', return_child_products_path(:level_arr => @level_arr, :current_id => @level_arr[@level - 1],
+                                                      :level => @level, :way => "up"), class: "fa fa-caret-square-o-up", remote: true,
                     style: "argin-right: 10px;color: dodgerblue;font-size: 25px;margin-bottom: 10px;"%></div>
   <% end %>
   <% @groups = Product.get_childs_product(@level_arr[@level]) %>
   <ul>
     <% @groups.each do |group| %>
       <div><%= link_to "", return_child_products_path(:level_arr => @level_arr, :current_id => group.unf_id,
-                                                              :level => @level, :way => "down"), class: "fa fa-folder",remote: true,
+                                                              :level => @level, :way => "down"), class: "fa fa-caret-square-o-down",remote: true,
                       style: "margin-right: 10px;color: dodgerblue;font-size: 30px;"%>
 
       <%= link_to group.title, select_group_product_path(:group_name => group.title,
