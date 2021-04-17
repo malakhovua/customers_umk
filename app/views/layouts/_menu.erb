@@ -12,8 +12,8 @@
     <%= submit_tag 'Поиск', name: nil, class: 'btn btn-outline-light' %>
   <% end %>
 
-  <% unless params[:client_id].nil? %>
-    <% client = Client.find(params[:client_id]) %>
+  <% unless @cart.client_id.nil? %>
+    <% client = Client.find(@cart.client_id) %>
     <div style="color: aliceblue"><%= "ПОКУПАТЕЛЬ: " + client.name %></div>
     <%else%>
     <div style="color: aliceblue">ПОКУПАТЕЛЬ НЕ ВЫБРАН.</div>

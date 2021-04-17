@@ -1,1 +1,5 @@
+
 $('#cart_total_quantity').html("<%= sprintf("%0.02fкг",@cart.total_quantity)%>");
+$(document).ready(function(){
+    $('#modal-window').modal('hide');
+})

@@ -15,6 +15,5 @@ class LineItem < ApplicationRecord
     else
       quantity
     end
-
   end
 end

@@ -33,9 +33,9 @@ class LineItemsController < ApplicationController
 
     unless params[:pack_id].nil?
       pack = Pack.find(params[:pack_id])
-      @line_item = @cart.add_product(product, pack,qty,unit_id, pack.type_id)
+      @line_item = @cart.add_product(product, pack, qty, unit_id, pack.type_id)
     else
-      @line_item = @cart.add_product(product,nil,qty,unit_id,0)
+      @line_item = @cart.add_product(product, nil, qty, unit_id, 0)
     end
     respond_to do |format|
       if @line_item.save
@@ -83,12 +83,18 @@ class LineItemsController < ApplicationController
     @product_id = params[:id]
     @pack_id = params[:pack_id]
     @product_name = params[:product_name]
-    @unit_id = Unit.find_by(name:params[:unit_name]).id
+
+    unit = Unit.find_by(name: params[:unit_name])
+    unless unit.nil?
+      @unit_id = unit.id
+    else
+      @unit_id = ""
+    end
     @units_list = Unit.all
     @product = Product.all
 
     if params[:pack_name] != ""
-         @product_name = @product_name + ' (' + params[:pack_name] + ')'
+      @product_name = @product_name + ' (' + params[:pack_name] + ')'
     end
 
     respond_to do |format|

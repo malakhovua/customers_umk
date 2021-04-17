@@ -1,40 +1,46 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Український м'ясокомбінат</title>
-
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-
-  </head>
-
-  <header>
-
-  </header>
-
-  <body>
-    <%= yield %>
-  </body>
-
+<head>
+  <title>Український м'ясокомбінат</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-  <script type="text/javascript">
-      $(document).ready(function () {
-          $('#sidebarCollapse').on('click', function () {
-              $('#sidebar').toggleClass('active');
-          });
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+</head>
 
-      });
+<header>
+</header>
+<body>
+<%= yield %>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+    });
+    // focus on modal element
+    $('#modal-window').on('shown.bs.modal', function () {
+        $('#num_field').trigger('focus')
+    });
 
-      $('.has-clear input[type="text"]').on('input propertychange', function() {
-          var $this = $(this);
-          var visible = Boolean($this.val());
-          $this.siblings('.form-control-clear').toggleClass('hidden', !visible);
-      }).trigger('propertychange');
+    //clients list search
+    var select = document.getElementById("selectClient");
+    var oldOptions = Array.apply(undefined, select.options); // копируем все OPTION. По ним будем искать
 
-      $('.form-control-clear').click(function() {
-          $(this).siblings('input[type="text"]').val('')
-              .trigger('propertychange').focus();
-      });
-  </script>
+    document.getElementById('input_search_client').onkeyup = function(e) {
+        // спец. сочетания пропускаем
+        if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+        select.options.length = 0;
+        var regexp = new RegExp(this.value, "ig");
+        for (var i = 0; i < oldOptions.length; i++) {
+            if (oldOptions[i].innerText.search(regexp) >= 0) {
+                select.appendChild(oldOptions[i]);
+            }
+        }
+    };
+
+</script>
+</body>
+
 </html>
