@@ -56,6 +56,7 @@ class LineItemsController < ApplicationController
       if @line_item.update(line_item_params)
         format.html { redirect_to @line_item, notice: 'Line item was successfully updated.' }
         format.json { render :show, status: :ok, location: @line_item }
+        format.js
       else
         format.html { render :edit }
         format.json { render json: @line_item.errors, status: :unprocessable_entity }
@@ -75,6 +76,7 @@ class LineItemsController < ApplicationController
       end
       format.html { redirect_to cart_path(@cart), notice: 'Строка удалена.' }
       format.json { head :no_content }
+      format.js {}
     end
   end
 

@@ -1,3 +1,3 @@
+$('#cart_show').html("<%= escape_javascript render('carts/cart') %>")
 $('#footer_cart_qty').html("<%= sprintf("%0.02f кг.", @cart.total_quantity)%>");
 $('#footer_cart_price').html("<%= sprintf("%0.02f грн.", @cart.total_price)%>");
-

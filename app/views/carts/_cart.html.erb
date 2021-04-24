@@ -1,5 +1,5 @@
 <!-- End -->
-<%= form_tag cart_path, method: :put, remote: true do %>
+<%= form_tag cart_path, method: :put, id:"cartForm" do%>
 <div class="pb-5">
   <div class="container">
     <div class="row" style="margin-bottom: 20px">
@@ -9,21 +9,27 @@
     color: dodgerblue;" %>
       </div>
       <div>
-        <%= link_to ' Очистить корзину', cart, method: :delete,
+        <%= link_to ' Очистить корзину', @cart, method: :delete,
                     data: {confirm: 'Вы уверены?'}, class: "fa fa-trash", style: "margin: 10px;font-size: 25px;color: red;" %>
       </div>
     </div>
     <h2 class="text-center" style="margin-bottom: 15px"> Корзина заказчика</h2>
-    <div style="margin: 10px">
-      <%=submit_tag 'Применить изменения', class: "btn btn-success" %>
+    <% unless @cart.client_id.nil? %>
+      <% client = Client.find(@cart.client_id) %>
+      <h2 class="text-center" style="margin-bottom: 12px"><%=client.name %></h2>
+    <%else%>
+      <h2 class="text-center" style="margin-bottom: 12px">ПОКУПАТЕЛЬ НЕ ВЫБРАН.</h2>
+    <% end %>
+    <!--<div style="margin: 10px">
+     <%#=#submit_tag 'Применить изменения', class: "btn btn-success" %>
     </div>
-    <div class="d-inline-block">
+    --><div class="d-inline-block">
       <div class="form-check">
-        <%= check_box_tag 'stick', "", cart.stick%>
+        <%= check_box_tag 'stick', "", @cart.stick, :onclick=>"boxDisable();"%>
         <label class="form-check-label" for="exampleCheck1">Стикеровать все</label>
       </div>
       <div class="form-check">
-        <%= check_box_tag 'stick_pack', "", cart.stick_pack%>
+        <%= check_box_tag 'stick_pack', "", @cart.stick_pack, :onclick=>"boxDisable();"%>
         <label class="form-check-label" for="exampleCheck1">Стикеровать только в упаковке</label>
       </div>
     </div>
@@ -63,8 +69,8 @@
             </tr>
             </thead>
             <div id = "line_items_body">
-            <tbody>
-            <%= render(cart.line_items)%>
+            <tbody id="line_items">
+            <%= render(@cart.line_items)%>
             </tbody>
             </div>
           </table>
@@ -96,3 +102,26 @@
   </div>
 </div>
 </div>
+<script type="text/javascript">
+    //send form to server
+    function sendDataServer(){
+        var form = document.getElementById('cartForm');
+        var formData = new FormData(form)
+        Rails.ajax({
+            type: 'PUT',
+            url: '/carts/' + <%= @cart.id %>,
+            data: formData,
+            dataType: "json"
+        })
+    };
+
+    //cart onchange
+    function inputFieldOnChange(){
+        sendDataServer();
+    }
+
+    function boxDisable() {
+        sendDataServer();
+    };
+
+</script>

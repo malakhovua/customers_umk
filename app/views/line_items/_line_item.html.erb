@@ -1,7 +1,6 @@
 <tr>
   <th scope="row" class="border-0">
     <div class="p-2">
-
       <%= image_tag(line_item.product.image_url, class: "img-thumbnail", size: "100x100") %>
       <div class="ml-3 d-inline-block align-middle">
         <h5 class="mb-0"><a href="#" class="text-dark d-inline-block align-middle"><%= line_item.product.title %></a>
@@ -19,7 +18,7 @@
     <td class="border-0 align-middle"><strong class="form-control" id="num_field" style="background-color: whitesmoke;"></strong></td>
   <% else %>
     <td class="border-0 align-middle">
-      <strong><%= number_field_tag 'qty' + line_item.id.to_s, line_item.quantity, :step => 0.01, class: "form-control", id: "num_field" %></strong>
+      <strong id="cart_onchange"><%= number_field_tag 'qty' + line_item.id.to_s, line_item.quantity, :step => 0.01, class: "form-control", :onchange=>"inputFieldOnChange()"%></strong>
     </td>
   <% end %>
 
@@ -27,12 +26,12 @@
     <td class="border-0 align-middle"><strong class="form-control" id="num_field" style="background-color: whitesmoke;"></strong></td>
   <% else %>
     <td class="border-0 align-middle">
-      <strong><%= number_field_tag 'amount' + line_item.id.to_s, line_item.amount, :step => 1, class: "form-control", id: "num_field" %></strong>
+      <strong id="cart_onchange"><%= number_field_tag 'amount' + line_item.id.to_s, line_item.amount, :step => 1, class: "form-control", :onchange=>"inputFieldOnChange()" %></strong>
     </td>
   <% end %>
 
   <td class="border-0 align-middle">
-    <strong> <%= check_box_tag 'stick' + line_item.id.to_s, "" ,line_item.stick%></strong>
+    <strong id="cart_onchange_chkbx" > <%= check_box_tag 'stick' + line_item.id.to_s, "" ,line_item.stick, :onclick=>"boxDisable();"%></strong>
   </td>
 
   <td class="border-0 align-middle">

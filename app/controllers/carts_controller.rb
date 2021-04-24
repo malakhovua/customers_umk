@@ -55,15 +55,14 @@ class CartsController < ApplicationController
     respond_to do |format|
       if @cart.update(cart_params)
         format.html { redirect_to @cart, notice: 'Корзина была обновлена!'}
+        #format.json { render :show, status: :ok, location: @cart }
         format.js
-        format.json { render :show, status: :ok, location: @cart }
       else
         format.html { render :edit }
         format.json { render json: @cart.errors, status: :unprocessable_entity }
       end
     end
   end
-
 
   # DELETE /carts/1
   # DELETE /carts/1.json

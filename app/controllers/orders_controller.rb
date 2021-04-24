@@ -22,7 +22,7 @@ class OrdersController < ApplicationController
   # GET /orders/new
   def new
     @order = Order.new
-  end
+   end
 
   # GET /orders/1/edit
   def edit
@@ -35,6 +35,7 @@ class OrdersController < ApplicationController
     @order.add_line_items_from_cart(@cart)
     @order.stick = @cart.stick
     @order.stick_pack = @cart.stick_pack
+    @order.client_id = @cart.client_id
 
     respond_to do |format|
       if @order.save
