@@ -30,16 +30,19 @@ class LineItemsController < ApplicationController
     product = Product.find(params[:id])
     qty = params[:qty].to_f
     unit_id = params[:units].to_i
+    comment = params[:comment]
 
     unless params[:pack_id].nil?
       pack = Pack.find(params[:pack_id])
-      @line_item = @cart.add_product(product, pack, qty, unit_id, pack.type_id)
+      @line_item = @cart.add_product(product, pack, qty, unit_id, pack.type_id, comment)
     else
-      @line_item = @cart.add_product(product, nil, qty, unit_id, 0)
+      @line_item = @cart.add_product(product, nil, qty, unit_id, 0, comment)
     end
     respond_to do |format|
       if @line_item.save
         format.html { redirect_to customer_index_url }
+        format.html { redirect_to request.referer, alert: 'Message sent!' }
+        flash.alert = "User not found."
         format.js
         format.json { render :show, status: :created, location: @line_item }
       else
@@ -85,12 +88,20 @@ class LineItemsController < ApplicationController
     @product_id = params[:id]
     @pack_id = params[:pack_id]
     @product_name = params[:product_name]
+    @has_line_item = false
 
     unit = Unit.find_by(name: params[:unit_name])
-    unless unit.nil?
-      @unit_id = unit.id
+
+    if params[:pack_id].nil?
+      @has_line_item = @cart.has_line_item(@product_id, nil)
     else
+      @has_line_item = @cart.has_line_item(@product_id, @pack_id)
+    end
+
+    if unit.nil?
       @unit_id = ""
+    else
+      @unit_id = unit.id
     end
     @units_list = Unit.all
     @product = Product.all

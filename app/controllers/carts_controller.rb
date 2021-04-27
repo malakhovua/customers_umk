@@ -49,6 +49,7 @@ class CartsController < ApplicationController
       line_item.quantity = params['qty'+line_item.id.to_s].to_f
       line_item.amount = params['amount'+line_item.id.to_s].to_f
       line_item.stick  = !!params['stick'+line_item.id.to_s]
+      line_item.comment = params['comment'+line_item.id.to_s]
       line_item.save
     end
 

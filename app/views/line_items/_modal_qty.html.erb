@@ -19,8 +19,18 @@
                            {:class => 'form-control', :id => 'units'} %>
           </div>
         </div>
+          <br>
+        <div class="form-floating">
+          <%=text_field_tag "comment", "",class:"form-control", id:"floatingTextarea", placeholder:"Комментарий..." %>
+          </div>
+        <div class="form-floating">
+          <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+        </div>
       </form>
       </div>
+      <% if @has_line_item %>
+        <div class="modal-body" style="color: #B00100">Данный товар уже в корзине!!!</div>
+      <%end%>
       <div class="modal-footer">
         <%= submit_tag 'В корзину', class: 'btn btn-primary', id:'inCartSubmit' %>
         <%= submit_tag 'Закрыть', class: 'btn btn-primary', :data => {:dismiss => "modal"} %>
