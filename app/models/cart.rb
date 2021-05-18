@@ -29,6 +29,7 @@ class Cart < ApplicationRecord
         current_item.quantity = qty
       end
     end
+    current_item.recount = current_item.total_quantity
     current_item
   end
 

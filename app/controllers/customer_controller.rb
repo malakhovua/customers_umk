@@ -13,12 +13,12 @@ class CustomerController < ApplicationController
 
                 when "1"
                   if params[:group_id] != "" and params[:group_id] != nil
-                    Product.where(:products => { is_folder: false }).order("unf_parent_id").where(unf_parent_id: params[:group_id]).joins(:favorite_products).where(["Products.id = Favorite_products.product_id AND Favorite_products.client_id=#{client_id}"]).page params[:page]
+                    Product.distinct(:Product).where(:products => { is_folder: false }).order("unf_parent_id").where(unf_parent_id: params[:group_id]).joins(:favorite_products).where(["Products.id = Favorite_products.product_id  AND Favorite_products.client_id=#{@client_id}"]).page params[:page]
                   elsif params[:Product_name]
-                    Product.where('title ILIKE ?', "%#{params[:Product_name]}%").
-                      where(:products => { is_folder: false }).order("unf_parent_id").joins(:favorite_products).where(["Products.id = Favorite_products.product_id AND Favorite_products.client_id=#{@client_id}"]).page params[:page]
+                    Product.distinct(:Product).where('title ILIKE ?', "%#{params[:Product_name]}%").
+                      where(:products => { is_folder: false }).order("unf_parent_id").joins(:favorite_products).where(["Products.id = Favorite_products.product_id  AND Favorite_products.client_id=#{@client_id}"]).page params[:page]
                   else
-                    Product.where(:products => { is_folder: false }).order("unf_parent_id").joins(:favorite_products).where(["Products.id = Favorite_products.product_id AND Favorite_products.client_id=#{@client_id}"]).page params[:page]
+                    Product.distinct(:Product).where(:products => { is_folder: false }).order("unf_parent_id").joins(:favorite_products).where(["Products.id = Favorite_products.product_id AND Favorite_products.client_id=#{@client_id}"]).page params[:page]
                   end
                 else
                   if params[:group_id] != "" and params[:group_id] != nil

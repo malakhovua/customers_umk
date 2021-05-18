@@ -25,16 +25,25 @@ class FavoriteProductsController < ApplicationController
   # POST /favorite_products.json
   def create
 
-    @favorite_product = FavoriteProduct.find_by(product_id: favorite_product_params["product_id"],
-                                                user_id: favorite_product_params["user_id"],
-                                                client_id: favorite_product_params["client_id"] )
+    if favorite_product_params["pack_id"] == ""
+      @favorite_product = FavoriteProduct.find_by(product_id: favorite_product_params["product_id"],
+                                                  user_id: favorite_product_params["user_id"],
+                                                  client_id: favorite_product_params["client_id"])
+
+    else
+      @favorite_product = FavoriteProduct.find_by(product_id: favorite_product_params["product_id"],
+                                                  user_id: favorite_product_params["user_id"],
+                                                  client_id: favorite_product_params["client_id"],
+                                                  pack_id: favorite_product_params["pack_id"])
+
+    end
 
     if favorite_product_params["client_id"] == ""
       format.html { redirect_to request.referer, alert: 'Message sent!' }
       return
     end
 
-    @heard_id = "heard_"+favorite_product_params["product_id"]
+    @heard_id = "heard_" + favorite_product_params["product_id"] + favorite_product_params["pack_id"]
     unless @favorite_product.nil?
       @favorite_product.destroy
       @create = false
@@ -89,6 +98,6 @@ class FavoriteProductsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def favorite_product_params
-    params.require(:favorite_product).permit(:user_id, :product_id, :client_id)
+    params.require(:favorite_product).permit(:user_id, :product_id, :client_id, :pack_id)
   end
 end

@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :addresses
   resources :exch_nodes
   resources :units
   resources :favorite_products

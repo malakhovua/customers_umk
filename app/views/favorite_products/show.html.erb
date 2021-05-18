@@ -10,5 +10,11 @@
   <%= @favorite_product.product %>
 </p>
 
+<p>
+  <strong>Pack:</strong>
+  <%= @favorite_product.pack_id%>
+</p>
+
+
 <%= link_to 'Edit', edit_favorite_product_path(@favorite_product) %> |
 <%= link_to 'Back', favorite_products_path %>

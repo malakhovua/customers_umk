@@ -2,27 +2,33 @@
 
 <h1>Favorite Products</h1>
 
-<table>
+<table class="table">
   <thead>
-    <tr>
-      <th>User</th>
-      <th>Product</th>
-      <th>Client</th>
-      <th colspan="4"></th>
-    </tr>
+  <tr>
+    <th>User</th>
+    <th>Product</th>
+    <th>Pack</th>
+    <th>Client</th>
+    <th colspan="4"></th>
+  </tr>
   </thead>
 
   <tbody>
-    <% @favorite_products.each do |favorite_product| %>
-      <tr>
-        <td><%= favorite_product.user.name %></td>
-        <td><%= favorite_product.product.title%></td>
-        <td><%= favorite_product.client.name%></td>
-        <td><%= link_to 'Show', favorite_product %></td>
-        <td><%= link_to 'Edit', edit_favorite_product_path(favorite_product) %></td>
-        <td><%= link_to 'Destroy', favorite_product, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
+  <% @favorite_products.each do |favorite_product| %>
+    <tr>
+      <td><%= favorite_product.user.name %></td>
+      <td><%= favorite_product.product.title %></td>
+      <% if favorite_product.pack_id.nil? %>
+        <td>без упаковки</td>
+      <% else %>
+        <td><%= Pack.find(favorite_product.pack_id).name %></td>
+      <% end %>
+      <td><%= favorite_product.client.name %></td>
+      <td><%= link_to 'Show', favorite_product %></td>
+      <td><%= link_to 'Edit', edit_favorite_product_path(favorite_product) %></td>
+      <td><%= link_to 'Destroy', favorite_product, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
   </tbody>
 </table>
 

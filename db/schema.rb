@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_25_140836) do
+ActiveRecord::Schema.define(version: 2021_05_17_200939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "addresses", force: :cascade do |t|
+    t.string "description"
+    t.bigint "client_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_addresses_on_client_id"
+  end
 
   create_table "carts", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -51,7 +59,9 @@ ActiveRecord::Schema.define(version: 2021_04_25_140836) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "client_id"
+    t.bigint "pack_id"
     t.index ["client_id"], name: "index_favorite_products_on_client_id"
+    t.index ["pack_id"], name: "index_favorite_products_on_pack_id"
     t.index ["product_id"], name: "index_favorite_products_on_product_id"
     t.index ["user_id"], name: "index_favorite_products_on_user_id"
   end
@@ -70,6 +80,7 @@ ActiveRecord::Schema.define(version: 2021_04_25_140836) do
     t.string "product_unf_id"
     t.boolean "stick", default: false
     t.string "comment"
+    t.integer "recount"
     t.index ["cart_id"], name: "index_line_items_on_cart_id"
     t.index ["order_id"], name: "index_line_items_on_order_id"
     t.index ["pack_id"], name: "index_line_items_on_pack_id"
@@ -133,6 +144,7 @@ ActiveRecord::Schema.define(version: 2021_04_25_140836) do
     t.string "unf_id"
     t.string "unf_parent_id"
     t.float "weight"
+    t.string "full_name"
   end
 
   create_table "units", force: :cascade do |t|
@@ -149,8 +161,10 @@ ActiveRecord::Schema.define(version: 2021_04_25_140836) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "addresses", "clients"
   add_foreign_key "carts", "clients"
   add_foreign_key "favorite_products", "clients"
+  add_foreign_key "favorite_products", "packs"
   add_foreign_key "favorite_products", "products"
   add_foreign_key "favorite_products", "users"
   add_foreign_key "line_items", "carts"

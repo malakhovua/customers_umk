@@ -1,0 +1,58 @@
+<button onclick="onclickPopCart()" id="close_pop_cart" type="button" class="close" aria-label="Close">
+    <span aria-hidden="true">×</span>
+  </button>
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <p>Товар в корзине:</p>
+    <table class="table table-bordered table-hover">
+      <tbody>
+      <% @cart.line_items.each do |line| %>
+        <% pack_name = line.pack_id.nil? ? '' : " (" + Pack.find(line.pack_id).name + ") " %>
+        <tr>
+          <td class="align-middle"><%= line.product.title + pack_name %></td>
+          <td class="align-middle"><%= line.quantity.to_s + ' кг' %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<style>
+    #table-wrapper {
+        position: relative;
+    }
+
+    #table-scroll {
+        height: 120px;
+        overflow: auto;
+        margin-top: 30px;
+    }
+
+    #table-wrapper table {
+        width: 100%;
+
+    }
+
+    #table-wrapper table * {
+        background: #EDF68B;
+        color: black;
+    }
+
+    #table-wrapper table thead th .text {
+        position: absolute;
+        top: -20px;
+        z-index: 2;
+        height: 50%;
+        width: 35%;
+        border: 1px solid red;
+    }
+
+    .table th, .table td{
+        padding: 1px;
+    }
+
+    #pop_cart p {
+        margin-top: 1px;
+    }
+
+</style>

@@ -21,12 +21,9 @@
         </div>
           <br>
         <div class="form-floating">
-          <%=text_field_tag "comment", "",class:"form-control", id:"floatingTextarea", placeholder:"Комментарий..." %>
+          <%=text_area_tag "comment", "",class:"form-control", id:"floatingTextarea", placeholder:"Комментарий..." %>
           </div>
-        <div class="form-floating">
-          <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
-        </div>
-      </form>
+        </form>
       </div>
       <% if @has_line_item %>
         <div class="modal-body" style="color: #B00100">Данный товар уже в корзине!!!</div>

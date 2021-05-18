@@ -2,5 +2,11 @@
 $('#cart_total_quantity').html("<%= sprintf("%0.02fкг",@cart.total_quantity)%>");
 $(document).ready(function(){
     $('#modal-window').modal('hide');
-})
+  })
+
+$('#pop_cart').html(
+    "<%= j render :partial => 'carts/pop_cart' %>"
+);
+
+$('#table-scroll').css("height", "<%= @cart.line_items.size()>10? 750 : @cart.line_items.size()*80%>");
 
