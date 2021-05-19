@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_17_200939) do
+ActiveRecord::Schema.define(version: 2021_05_19_185825) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,7 +80,7 @@ ActiveRecord::Schema.define(version: 2021_05_17_200939) do
     t.string "product_unf_id"
     t.boolean "stick", default: false
     t.string "comment"
-    t.integer "recount"
+    t.float "recount"
     t.index ["cart_id"], name: "index_line_items_on_cart_id"
     t.index ["order_id"], name: "index_line_items_on_order_id"
     t.index ["pack_id"], name: "index_line_items_on_pack_id"
