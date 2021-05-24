@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   get 'admin/pricetypes_1c83' => 'admin#pricetypes_1c83', :as => :pricetypes_1c83
   get 'admin/prices_1c83' => 'admin#prices_1c83', :as => :prices_1c83
   get 'admin/orders_to_1c83' => 'admin#orders_to_1c83', :as => :orders_to_1c83
+  get 'admin/addresse_1c83' => 'admin#addresses_1c83', :as => :addresses_1c383
+
 
   get "line_items/modal_product_qty" => 'line_items#modal_product_qty', :as => :modal_product_qty
   get "products/return_child_products" => 'products#return_child_products', :as => :return_child_products

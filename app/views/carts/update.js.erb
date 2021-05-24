@@ -1,5 +1,8 @@
 $('#footer_cart_qty').html("<%= sprintf("%0.02f кг.", @cart.total_quantity)%>");
 $('#footer_cart_price').html("<%= sprintf("%0.02f грн.", @cart.total_price)%>");
 
-$('#line_items').html("<%= j render :partial => 'line_items/line_item' %>");
-
+<%@lines_hash.each_pair do |key, value|%>
+<%id = value[0] %>
+<%recount = value[1]%>
+$('#<%='recount' + id%>').html("<strong>" + "<%=recount%>" + "</strong>");
+<%end%>

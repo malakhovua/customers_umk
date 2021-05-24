@@ -45,6 +45,7 @@ class CartsController < ApplicationController
     @cart.stick = !!params['stick']
     @cart.stick_pack = !!params['stick_pack']
 
+    @lines_hash = Hash.new
     @cart.line_items.each do |line_item|
       line_item.quantity = params['qty'+line_item.id.to_s].to_f
       line_item.amount = params['amount'+line_item.id.to_s].to_f
@@ -52,6 +53,7 @@ class CartsController < ApplicationController
       line_item.comment = params['comment'+line_item.id.to_s]
       line_item.recount = line_item.total_quantity
       line_item.save
+      @lines_hash["item" + line_item.id.to_s] = [line_item.id.to_s, line_item.recount]
     end
 
     respond_to do |format|

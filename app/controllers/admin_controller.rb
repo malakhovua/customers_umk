@@ -27,7 +27,7 @@ class AdminController < ApplicationController
     end
   end
 
-  def pricetype_1c83
+  def pricetypes_1c83
     exchenge = Unf.new
     exchenge.get_price_types
     respond_to do |format|
@@ -42,6 +42,15 @@ class AdminController < ApplicationController
       format.js
     end
   end
+
+  def addresses_1c83
+    exchenge = Unf.new
+    exchenge.get_addresses
+    respond_to do |format|
+      format.js
+    end
+  end
+
 
   def orders_to_1c83
     date1 = params['date1']['date_1'].to_time

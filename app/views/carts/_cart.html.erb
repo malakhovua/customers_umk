@@ -1,127 +1,104 @@
 <!-- End -->
-<%= form_tag cart_path, method: :put, id: "cartForm" do %>
-  <div class="sticky-top" style="background-color: #F7F7F7">
-    <div class="row" style="margin-bottom: 20px">
-      <div>
-        <%= link_to " Продолжить покупку", customer_index_path, class: "fa fa-shopping-basket", style: "margin: 10px;
+<div id="cart_show">
+  <%= form_tag cart_path, method: :put, id: "cartForm" do %>
+    <div class="sticky-top" style="background-color: #F7F7F7">
+      <div class="row" style="margin-bottom: 20px">
+        <div>
+          <%= link_to " Продолжить покупку", customer_index_path, class: "fa fa-shopping-basket", style: "margin: 10px;
     font-size: 25px;
     color: dodgerblue;" %>
+        </div>
+        <div>
+          <%= link_to ' Очистить корзину', @cart, method: :delete,
+                      data: { confirm: 'Вы уверены?' }, class: "fa fa-trash", style: "margin: 10px;font-size: 25px;color: red;" %>
+        </div>
       </div>
-      <div>
-        <%= link_to ' Очистить корзину', @cart, method: :delete,
-                    data: { confirm: 'Вы уверены?' }, class: "fa fa-trash", style: "margin: 10px;font-size: 25px;color: red;" %>
+      <h2 class="text-center" style="margin-bottom: 15px"> Корзина заказчика</h2>
+      <% unless @cart.client_id.nil? %>
+        <% client = Client.find(@cart.client_id) %>
+        <h2 class="text-center" style="margin-bottom: 12px"><%= client.name %></h2>
+      <% else %>
+        <h2 class="text-center" style="margin-bottom: 12px">ПОКУПАТЕЛЬ НЕ ВЫБРАН.</h2>
+      <% end %>
+      <div class="d-inline-block">
+        <div class="form-check">
+          <%= check_box_tag 'stick', "", @cart.stick, :onclick => "boxDisable();" %>
+          <label class="form-check-label" for="exampleCheck1">Стикеровать все</label>
+        </div>
+        <div class="form-check">
+          <%= check_box_tag 'stick_pack', "", @cart.stick_pack, :onclick => "boxDisable();" %>
+          <label class="form-check-label" for="exampleCheck1">Стикеровать только в упаковке</label>
+        </div>
       </div>
     </div>
-    <h2 class="text-center" style="margin-bottom: 15px"> Корзина заказчика</h2>
-    <% unless @cart.client_id.nil? %>
-      <% client = Client.find(@cart.client_id) %>
-      <h2 class="text-center" style="margin-bottom: 12px"><%= client.name %></h2>
-    <% else %>
-      <h2 class="text-center" style="margin-bottom: 12px">ПОКУПАТЕЛЬ НЕ ВЫБРАН.</h2>
-    <% end %>
-    <div class="d-inline-block">
-      <div class="form-check">
-        <%= check_box_tag 'stick', "", @cart.stick, :onclick => "boxDisable();" %>
-        <label class="form-check-label" for="exampleCheck1">Стикеровать все</label>
+    <table class="table table-bordered table-hover">
+      <thead>
+      <tr>
+        <th scope="col" class="">
+          <div class="p-2 px-3 text-uppercase">Продукция</div>
+        </th>
+        <th scope="col" class="">
+          <div class="p-2 px-3 text-uppercase">Примечание</div>
+        </th>
+        <th scope="col" class="">
+          <div class="py-2 text-uppercase">Вес, ед.</div>
+        </th>
+        <th scope="col" class="">
+          <div class="p-2 px-3 text-uppercase">Упаковка</div>
+        </th>
+        <th scope="col" class="">
+          <div class="py-2 text-uppercase">Количество, вес</div>
+        </th>
+        <th scope="col" class="">
+          <div class="py-2 text-uppercase">Количество, шт</div>
+        </th>
+        <th scope="col" class="">
+          <div class="py-2 text-uppercase">Пересчет, кг</div>
+        </th>
+        <th scope="col" class="">
+          <div class="py-2 text-uppercase">Стикировать</div>
+        </th>
+        <th scope="col" class="">
+          <div class="py-2 text-uppercase">Цена</div>
+        </th>
+        <th scope="col" class="">
+          <div class="py-2 text-uppercase">Ед.</div>
+        </th>
+        <th scope="col" class="">
+          <div class="py-2 text-uppercase"></div>
+        </th>
+      </tr>
+      </thead>
+      <div id="line_items_body">
+        <tbody id="line_items">
+        <%= render(@cart.line_items) %>
+        </tbody>
       </div>
-      <div class="form-check">
-        <%= check_box_tag 'stick_pack', "", @cart.stick_pack, :onclick => "boxDisable();" %>
-        <label class="form-check-label" for="exampleCheck1">Стикеровать только в упаковке</label>
-      </div>
+    </table>
     </div>
-  </div>
-  <table class="table table-bordered table-hover">
-    <thead>
-    <tr>
-      <th scope="col" class="">
-        <div class="p-2 px-3 text-uppercase">Продукция</div>
-      </th>
-      <th scope="col" class="">
-        <div class="p-2 px-3 text-uppercase">Примечание</div>
-      </th>
-      <th scope="col" class="">
-        <div class="py-2 text-uppercase">Вес, ед.</div>
-      </th>
-      <th scope="col" class="">
-        <div class="p-2 px-3 text-uppercase">Упаковка</div>
-      </th>
-      <th scope="col" class="">
-        <div class="py-2 text-uppercase">Количество, вес</div>
-      </th>
-      <th scope="col" class="">
-        <div class="py-2 text-uppercase">Количество, шт</div>
-      </th>
-      <th scope="col" class="">
-        <div class="py-2 text-uppercase">Пересчет, кг</div>
-      </th>
-      <th scope="col" class="">
-        <div class="py-2 text-uppercase">Стикировать</div>
-      </th>
-      <th scope="col" class="">
-        <div class="py-2 text-uppercase">Цена</div>
-      </th>
-      <th scope="col" class="">
-        <div class="py-2 text-uppercase">Ед.</div>
-      </th>
-      <th scope="col" class="">
-        <div class="py-2 text-uppercase"></div>
-      </th>
-    </tr>
-    </thead>
-    <div id="line_items_body">
-      <tbody id="line_items">
-      <%= render(@cart.line_items) %>
-      </tbody>
-    </div>
-  </table>
-  </div>
-  <!-- End -->
-  </div>
-  </div>
+    <!-- End -->
+  <% end #form_tag %>
 
-<% end #form_tag %>
+  <script type="text/javascript">
+      //send form to server
+      function sendDataServer() {
+          var form = document.getElementById('cartForm');
+          var formData = new FormData(form)
+          Rails.ajax({
+              type: 'PUT',
+              url: '/carts/' + <%= @cart.id %>,
+              data: formData,
+              dataType: "json"
+          })
+      };
 
-<div class="row py-5 p-4 bg-white rounded shadow-sm">
+      //cart onchange
+      function inputFieldOnChange() {
+          sendDataServer();
+      }
 
-  <div class="col-lg-6">
-    <div class="bg-light  px-4 py-3 text-uppercase font-weight-bold">Итого:</div>
-    <div class="p-4">
-      <ul class="list-unstyled mb-4">
-        <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Общий вес:</strong>
-          <h5 class="font-weight-bold" id="footer_cart_qty"><%= sprintf("%0.02f кг.", @cart.total_quantity) %></h5>
-        </li>
-        <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Стоимость:</strong>
-          <h5 class="font-weight-bold" id="footer_cart_price"><%= sprintf("%0.02f грн.", @cart.total_price) %></h5>
-        </li>
-      </ul>
-      <%= link_to "Оформить заказ", new_order_path, method: :get, class: "btn btn-primary rounded-pill py-2 btn-block" %>
-    </div>
-  </div>
-</div>
+      function boxDisable() {
+          sendDataServer();
+      };
 
-</divcla>
-</div>
-</div>
-<script type="text/javascript">
-    //send form to server
-    function sendDataServer() {
-        var form = document.getElementById('cartForm');
-        var formData = new FormData(form)
-        Rails.ajax({
-            type: 'PUT',
-            url: '/carts/' + <%= @cart.id %>,
-            data: formData,
-            dataType: "json"
-        })
-    };
-
-    //cart onchange
-    function inputFieldOnChange() {
-        sendDataServer();
-    }
-
-    function boxDisable() {
-        sendDataServer();
-    };
-
-</script>
+  </script>

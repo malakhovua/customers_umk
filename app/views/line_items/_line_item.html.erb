@@ -35,7 +35,9 @@
     </td>
   <% end %>
   <td class="align-middle">
-    <strong id=""><%= number_field_tag 'recount' + line_item.id.to_s, line_item.recount, :step => 0.01, class: "form-control"%></strong>
+    <div id=<%='recount' + line_item.id.to_s %>>
+    <strong ><%=line_item.recount%></strong>
+    </div>
   </td>
   <td class="align-middle">
     <strong id="cart_onchange_chkbx" > <%= check_box_tag 'stick' + line_item.id.to_s, "" ,line_item.stick, :onclick=>"boxDisable();"%></strong>
@@ -46,6 +48,10 @@
   <% unit_ref = Unit.find(line_item.unit_id) %>
   <td class="align-middle"><strong><%= unit_ref.name %></strong></td>
   <td class="align-middle">
-    <i><%= link_to '', line_item_path(line_item), method: :delete, class: 'fa fa-trash', style: 'color: red;', remote: true %></i>
+    <% if @cart.line_items.size ==1 %>
+    <i><%= link_to '', line_item_path(line_item), method: :delete, class: 'fa fa-trash', style: 'color: red;'%></i>
+    <%else %>
+      <i><%= link_to '', line_item_path(line_item), method: :delete, class: 'fa fa-trash', style: 'color: red;', remote:true%></i>
+    <%end %>
   </td>
 </tr>

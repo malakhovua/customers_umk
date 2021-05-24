@@ -32,11 +32,11 @@ class LineItemsController < ApplicationController
     unit_id = params[:units].to_i
     comment = params[:comment]
 
-    unless params[:pack_id].nil?
+    if params[:pack_id].nil?
+      @line_item = @cart.add_product(product, nil, qty, unit_id, 0, comment)
+    else
       pack = Pack.find(params[:pack_id])
       @line_item = @cart.add_product(product, pack, qty, unit_id, pack.type_id, comment)
-    else
-      @line_item = @cart.add_product(product, nil, qty, unit_id, 0, comment)
     end
     respond_to do |format|
       if @line_item.save
@@ -75,11 +75,12 @@ class LineItemsController < ApplicationController
     respond_to do |format|
       if @cart.total_quantity == 0.to_f
         @cart.destroy
-        format.html { redirect_to customer_index_url, notice: 'Ваша корзина была полностью очищена.' }
+        format.html { redirect_to customer_index_url}
+      else
+        format.html { redirect_to user_url}
+        #format.json { head :no_content }
+        format.js
       end
-      format.html { redirect_to cart_path(@cart), notice: 'Строка удалена.' }
-      format.json { head :no_content }
-      format.js {}
     end
   end
 

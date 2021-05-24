@@ -23,6 +23,7 @@ class Unf
       #prod[:parent_id] = p['parent_id'].to_i
       #prod[:price] = 0.01
       prod[:unf_id] = p['unf_id']
+      prod[:deletion_mark] = p['deletion_mark'].to_i == 0 ? false : true
       prod[:unf_parent_id] = p['unf_parent_id']
       prod[:title] = p['title']
       prod[:description] = 'description'
@@ -74,6 +75,7 @@ class Unf
 
       pack[:id] = p['id'].to_i
       pack[:type_id] = p['type_id'].to_i
+      pack[:deletion_mark] = p['deletion_mark'].to_i == 0 ? false : true
       pack[:name] = p['name']
       pack[:description] = p['description']
       pack[:product_id] = p['product_id']
@@ -100,6 +102,7 @@ class Unf
       # client[:id] = p['id'].to_i
       client[:unf_id] = p['unf_id']
       client[:parent_id] = p['parent_id']
+      client[:deletion_mark] = p['deletion_mark'].to_i == 0 ? false : true
       client[:parent_name] = p['parent_name']
       client[:name] = p['name']
       client[:address] = p['address']
@@ -139,6 +142,42 @@ class Unf
     }
   end
 
+  def get_addresses
+=begin
+
+    t.string "description"
+    t.bigint "client_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "deletion_mark", default: false
+
+
+    res = connect_1c.get(get_unf_path("addresses"))
+
+    data = JSON.parse res.body
+
+    data.each { |p|
+
+      if Addresses.where(:id => p['id'].to_i).present?
+        addr = Price.find_by(id: p['id'])
+      else
+        addr = Address.new
+      end
+
+      addr[:id] = p['unf_id']
+      addr
+      unless p['pack_id'] = 0
+        price[:pack_id] = p['pack_id']
+      end
+      product = Product.find_by(id: p['product_id'])
+      price[:product_id] = p['product_id']
+      price[:value] = p['value']
+      price[:created_at] = Time.now
+      price.save!
+    }
+=end
+  end
+
   def get_price_types
 
     res = connect_1c.get(get_unf_path"pricetype")
@@ -154,6 +193,7 @@ class Unf
       end
 
       pricetype[:id] = p['id']
+      pricetype[:deletion_mark] = p['deletion_mark'].to_i == 0 ? false : true
       pricetype[:name] = p['name']
       pricetype.save!
     }
