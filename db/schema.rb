@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_23_195810) do
+ActiveRecord::Schema.define(version: 2021_05_25_185751) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,9 @@ ActiveRecord::Schema.define(version: 2021_05_23_195810) do
     t.string "parent_id"
     t.string "parent_name"
     t.boolean "deletion_mark", default: false
+    t.string "user_type"
+    t.bigint "user_id"
+    t.index ["user_type", "user_id"], name: "index_clients_on_user_type_and_user_id"
   end
 
   create_table "exch_nodes", force: :cascade do |t|

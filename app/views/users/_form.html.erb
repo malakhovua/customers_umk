@@ -1,70 +1,28 @@
+<%= form_with(model: user, local: true) do |form| %>
+  <div class="field">
+    <%= form.label :password %>
+    <%= form.password_field :password%>
+  </div>
+  <div class="field">
+    <%= form.label :password %>
+    <%= form.password_field :password_confirmation%>
+  </div>
+  <div class="field">
+    <%= form.submit "Создать Аккаунк"%>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+  <div class="field">
+  </div>
+<% end %>
+
+<% if user.errors.any? %>
+  <% user.errors.full_messages.each do |message| %>
+  <% end %>
+<% end %>
 
 
-  <div class="card bg-light">
-    <%= form_with(model: user, local: true) do |form| %>
-    <article class="card-body mx-auto" style="max-width: 400px;">
-      <h4 class="card-title mt-3 text-center">Создать аккаунт</h4>
-      <p class="text-center">Войдите с учетной записью</p>
-      <p>
-        <a href="" class="btn btn-block btn-twitter"> <i class="fab fa-twitter"></i>   Войти с Twitter</a>
-        <a href="" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i>   Войти с facebook</a>
-      </p>
-      <p class="divider-text">
-        <span class="bg-light">Или</span>
-      </p>
-      <form>
-        <div class="form-group input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
-          </div>
-          <%= form.text_field :name, class: "form-control", placeholder: "Полное имя" %>
-        </div> <!-- form-group// -->
-        <div class="form-group input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
-          </div>
-          <input name="" class="form-control" placeholder="Email адрес" type="email">
-        </div> <!-- form-group// -->
-        <div class="form-group input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
-          </div>
-          <select class="custom-select" style="max-width: 120px;">
-            <option selected="">+380</option>
-            <option value="1">+380</option>
-          </select>
-          <input name="" class="form-control" placeholder="номер тлф." type="text">
-        </div> <!-- form-group// -->
-        <div class="form-group input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
-          </div>
-          <%= form.password_field :password, class:"form-control", placeholder: "Создайте пароль" %>
-        </div> <!-- form-group// -->
-        <div class="form-group input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
-          </div>
-          <%= form.password_field :password_confirmation, class:"form-control", placeholder:"Повторите пароль"%>
-        </div> <!-- form-group// -->
-        <div class="form-group">
-          <%= form.submit "Создать Аккаунк", class: "btn btn-primary btn-block"%>
-        </div> <!-- form-group// -->
-        <p class="text-center">Уже имете Аккаун? <a href="">Войти</a> </p>
-      </form>
-    </article>
-  </div> <!-- card.// -->
-    <% end %>
-    <% if user.errors.any? %>
-      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong><%= pluralize(user.errors.count, "error")%></strong>
-        <% user.errors.full_messages.each do |message| %>
-          <p class="mb-0"> <%= message %></p>
-        <% end %>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    <% end %>
-</div>
 

@@ -19,9 +19,6 @@ class Unf
         prod = Product.new
       end
 
-      # prod[:id] = p['id']
-      #prod[:parent_id] = p['parent_id'].to_i
-      #prod[:price] = 0.01
       prod[:unf_id] = p['unf_id']
       prod[:deletion_mark] = p['deletion_mark'].to_i == 0 ? false : true
       prod[:unf_parent_id] = p['unf_parent_id']
@@ -143,14 +140,6 @@ class Unf
   end
 
   def get_addresses
-=begin
-
-    t.string "description"
-    t.bigint "client_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "deletion_mark", default: false
-
 
     res = connect_1c.get(get_unf_path("addresses"))
 
@@ -159,24 +148,18 @@ class Unf
     data.each { |p|
 
       if Addresses.where(:id => p['id'].to_i).present?
-        addr = Price.find_by(id: p['id'])
+        addr = Address.find_by(id: p['id'])
       else
         addr = Address.new
       end
 
       addr[:id] = p['unf_id']
-      addr
-      unless p['pack_id'] = 0
-        price[:pack_id] = p['pack_id']
-      end
-      product = Product.find_by(id: p['product_id'])
-      price[:product_id] = p['product_id']
-      price[:value] = p['value']
-      price[:created_at] = Time.now
-      price.save!
+      addr[:client_id] = p['client_id']
+      addr[:deletion_mark] = p['deletion_mark']
+      addr[:created_at] = Time.now
+      addr.save!
     }
-=end
-  end
+ end
 
   def get_price_types
 

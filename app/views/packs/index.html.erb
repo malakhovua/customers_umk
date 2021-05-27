@@ -5,8 +5,10 @@
 <table class="table">
   <thead>
     <tr>
+      <th>Пометка удаления</th>
       <th>id</th>
       <th>product_id</th>
+      <th>product</th>
       <th>Наименование</th>
       <th>Вес,шт</th>
       <th>Описание</th>
@@ -18,8 +20,10 @@
   <tbody>
     <% @packs.each do |pack| %>
       <tr>
+        <td><%= pack.deletion_mark%></td>
         <td><%= pack.id%></td>
         <td><%= pack.product_id%></td>
+        <td><%= pack.product.nil? ? '' : pack.product.title %></td>
         <td><%= pack.name %></td>
         <td><%= pack.weight %></td>
         <td><%= pack.description %></td>

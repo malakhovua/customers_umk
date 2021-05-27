@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_many :orders
+  belongs_to :client, polymorphic: true
   validates :name, presence: true, uniqueness: true
   has_secure_password
   after_destroy :ensure_an_admin_remains
