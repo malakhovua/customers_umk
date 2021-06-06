@@ -9,6 +9,7 @@
       <td></td>
     <% end %>
   <td><strong><%= check_box_tag "","", line_item.stick, :disabled => true%></strong></td>
+  <td><strong><%= line_item.recount %></strong></td>
     <td><strong><%= line_item.quantity %></strong></td>
   <td><strong><%= line_item.amount %></strong></td>
   <% unit_ref = Unit.find(line_item.unit_id) %>

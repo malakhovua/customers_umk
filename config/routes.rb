@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :packs
   resources :orders
   resources :clients
+
   get 'account' => 'account#index'
 
   get 'admin' => 'admin#index'
@@ -25,8 +26,11 @@ Rails.application.routes.draw do
   get "products/return_child_products" => 'products#return_child_products', :as => :return_child_products
   get "products/select_group_product" => 'products#select_group_product',   :as => :select_group_product
 
+  get "asighnclients/get_clients_list" => 'asighnclients#get_clients_list', :as => :get_clients_list
+  post "asighnclients/set_user_for_clients_list" => 'asighnclients#set_user_for_clients_list', :as => :set_user_for_clients_list
 
-          controller :sessions do
+
+  controller :sessions do
     get 'login'=> :new
     post 'login'=> :create
     delete 'logout'=> :destroy

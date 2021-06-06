@@ -1,7 +1,6 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"> <%= link_to 'К списку заказов', orders_path, class: "btn btn-link" , style: "font-size: 20px"%></li>
-    <li class="breadcrumb-item"><%= link_to 'Редактировать заказ', edit_order_path(@order), class: "btn btn-link", style: "font-size: 20px"%></li>
   </ol>
 </nav>
 <div class="container">
@@ -17,7 +16,7 @@
 
   <h6>
     <strong>Адрес доставки:</strong>
-    <%= @order.shipping_address %>
+    <%= @order.address_id.nil? ? 'Адрес не указан' : Address.find(@order.address_id).name %>
   </h6>
 
   <h6>
@@ -44,7 +43,8 @@
     <th scope="col">Наименованиу</th>
     <th scope="col">Упаковка</th>
     <th scope="col">Стик.</th>
-    <th scope="col">Количество</th>
+    <th scope="col">Количество, пересчет</th>
+    <th scope="col">Количество,кг</th>
     <th scope="col">Количество,шт</th>
     <th scope="col">Ед.</th>
     <th scope="col">Цена</th>

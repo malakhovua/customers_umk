@@ -24,6 +24,8 @@ class Unf
       prod[:unf_parent_id] = p['unf_parent_id']
       prod[:title] = p['title']
       prod[:description] = 'description'
+      prod[:full_name] = p['full_name']
+      prod[:order_id] = p['order_id']
       prod[:is_folder] = p['is_folder'].to_i == 0 ? false : true
       prod[:parent_name] = p['parent_name']
       prod[:weight] = p['weight']
@@ -147,14 +149,21 @@ class Unf
 
     data.each { |p|
 
-      if Addresses.where(:id => p['id'].to_i).present?
-        addr = Address.find_by(id: p['id'])
+      if Address.where(:unf_id => p['unf_id']).present?
+        addr = Address.find_by(unf_id: p['unf_id'])
       else
         addr = Address.new
       end
 
-      addr[:id] = p['unf_id']
-      addr[:client_id] = p['client_id']
+      client = Client.find_by(unf_id: p['owner_id'])
+      if client.nil?
+        next
+      end
+
+      addr[:client_id] = client.id
+      addr[:unf_id] = p['unf_id']
+      addr[:name] = p['name']
+      addr[:description] = p['Description']
       addr[:deletion_mark] = p['deletion_mark']
       addr[:created_at] = Time.now
       addr.save!

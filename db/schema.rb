@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_25_185751) do
+ActiveRecord::Schema.define(version: 2021_05_28_181901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,8 @@ ActiveRecord::Schema.define(version: 2021_05_25_185751) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deletion_mark", default: false
+    t.string "unf_id"
+    t.string "name"
     t.index ["client_id"], name: "index_addresses_on_client_id"
   end
 
@@ -104,6 +106,10 @@ ActiveRecord::Schema.define(version: 2021_05_25_185751) do
     t.boolean "stick", default: false
     t.boolean "stick_pack", default: false
     t.boolean "deletion_mark", default: false
+    t.bigint "address_id"
+    t.boolean "server_unf"
+    t.datetime "server_unf_date"
+    t.index ["address_id"], name: "index_orders_on_address_id"
     t.index ["client_id"], name: "index_orders_on_client_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
@@ -154,6 +160,7 @@ ActiveRecord::Schema.define(version: 2021_05_25_185751) do
     t.float "weight"
     t.string "full_name"
     t.boolean "deletion_mark", default: false
+    t.integer "order_id"
   end
 
   create_table "units", force: :cascade do |t|
@@ -168,6 +175,10 @@ ActiveRecord::Schema.define(version: 2021_05_25_185751) do
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "surname"
+    t.bigint "unit_id"
+    t.string "email"
+    t.index ["unit_id"], name: "index_users_on_unit_id"
   end
 
   add_foreign_key "addresses", "clients"
@@ -180,9 +191,11 @@ ActiveRecord::Schema.define(version: 2021_05_25_185751) do
   add_foreign_key "line_items", "orders"
   add_foreign_key "line_items", "packs"
   add_foreign_key "line_items", "units"
+  add_foreign_key "orders", "addresses"
   add_foreign_key "orders", "clients"
   add_foreign_key "orders", "users"
   add_foreign_key "prices", "packs"
   add_foreign_key "prices", "pricetypes"
   add_foreign_key "prices", "products"
+  add_foreign_key "users", "units"
 end

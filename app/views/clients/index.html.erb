@@ -11,6 +11,7 @@
   <thead>
     <tr>
       <th>id</th>
+      <th>Пометка удаления</th>
       <th>unf_id</th>
       <th>parent_id</th>
       <th>Группа</th>
@@ -26,6 +27,7 @@
     <% @clients.each do |client| %>
       <tr>
         <td><%= client.id %></td>
+        <td><%= client.deletion_mark %></td>
         <td><%= client.unf_id %></td>
         <td><%= client.parent_id %></td>
         <td><%= client.parent_name %></td>

@@ -15,7 +15,7 @@
             <%= number_field_tag 'qty', 0, :step => 0.01, class: "form-control", id: "num_field", placeholder: "0.01"%>
           </div>
           <div class="col">
-            <%= select_tag "units", options_from_collection_for_select(Unit.all, "id", "name", @unit_id),
+            <%= select_tag "units", options_from_collection_for_select(Unit.all, "id", "name", current_user.unit_id.nil? ? "1" : current_user.unit_id),
                            {:class => 'form-control', :id => 'units'} %>
           </div>
         </div>

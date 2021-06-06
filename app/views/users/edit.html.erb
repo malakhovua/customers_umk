@@ -1,6 +1,10 @@
-<h1>Editing User</h1>
+<div class="container">
+<h1>Редактировать пользователя:</h1>
+
+  <%= link_to 'Установить клиентов для пользователя', get_clients_list_path(user_id: @user.id), class: "btn btn-link"%>
 
 <%= render 'form', user: @user %>
+  <%= link_to 'К списку пользователей', users_path, class: "btn btn-link" %>
 
-<%= link_to 'Show', @user %> |
-<%= link_to 'Back', users_path %>
+</div>
+

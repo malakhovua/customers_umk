@@ -63,7 +63,8 @@ class Product < ApplicationRecord
 		   LEFT JOIN products AS perents ON p.parent_id = perents.id
 		   WHERE p.is_folder = false
        AND NOT pcs.id = 0
-	     AND p.id = %d'
+	     AND p.id = %d
+       AND p.deletion_mark = false'
     text_query = sprintf(text_query, product_id)
     result = ActiveRecord::Base.connection.exec_query(text_query)
     return result

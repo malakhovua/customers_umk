@@ -20,14 +20,24 @@
     </div>
   </div>
 
-  <div class="form-group">
+<!--  <div class="form-group">
     <label>Покупатель:</label>
-    <% clients_array = Client.all.map { |client| [client.name, client.id] } %>
-    <%= form.select(:client_id, options_for_select(clients_array, selected:@cart.client_id),{},{ :class => 'form-control' })%>
+    <%# #clients_array = Client.all.map { |client| [client.name, client.id] } %>
+    <%#= #form.select(:client_id, options_for_select(clients_array, selected:@cart.client_id),{},{ :class => 'form-control' })%>
+  </div>-->
+
+  <div class="form-control field">
+    <%= Client.find(@cart.client_id).name %>
+  </div>
+
+  <div class="form-group" id= "addresses_group">
+    <label>Адрес доставки:</label>
+    <% addresses_array = Address.where(:client_id => @cart.client_id).map { |address| [address.name, address.id] } %>
+    <%= form.select(:address_id, options_for_select(addresses_array, selected:@order.address_id),{},{ :class => 'form-control', :id => 'address_id' })%>
   </div>
 
   <div class="form-group" >
-    <label>Адрес доставки:</label>
+    <label>Адрес доставки(примечание):</label>
     <%= form.text_field :shipping_address,class: "form-control", id: "inputAddress", placeholder: "Город, улица ..."%>
   </div>
 

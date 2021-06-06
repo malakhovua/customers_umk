@@ -10,7 +10,7 @@
         <% pack_name = line.pack_id.nil? ? '' : " (" + Pack.find(line.pack_id).name + ") " %>
         <tr>
           <td class="align-middle"><%= line.product.title + pack_name %></td>
-          <td class="align-middle"><%= line.recount.to_s + ' кг' %></td>
+          <td class="align-middle"><%= display_recount(line.recount).to_s + ' кг' %></td>
         </tr>
       <% end %>
       </tbody>

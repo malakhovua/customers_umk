@@ -1,9 +1,17 @@
+<div class="container">
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Name:</strong>
-  <%= @user.name %>
+  <strong>Информация о пользователе:</strong>
+  <br>
+  Имя: <%= @user.name %>
+  <br>Фамилия: <%= @user.surname %>
+  <br>
+  email: <%= @user.email%>
+  <br>
+  Ед. подбора: <%= @user.unit_id.nil? ? 'Не выбрана' : Unit.find(@user.unit_id).name%>
 </p>
 
-<%= link_to 'Редактировать', edit_user_path(@user) %> |
-<%= link_to 'Назад', users_path %>
+<%= link_to 'Редактировать', edit_user_path(@user), class: "btn btn-link"%> |
+<%= link_to 'Назад', users_path , class: "btn btn-link"%>
+</div>

@@ -10,13 +10,14 @@
   <table class="table table-striped">
   <thead>
     <tr>
-      <th></th>
       <th>#</th>
       <th>Покупатель</th>
       <th>Дата</th>
-      <th>Адрес доставки</th>
+      <th>Адрес</th>
       <th>Создал</th>
       <th>Комментарий</th>
+      <th>1с</th>
+      <th>Время 1с</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -26,11 +27,13 @@
         <td><%= order.id%></td>
         <td><%= order.client.name %></td>
         <td><%= order.date %></td>
-        <td><%= order.shipping_address %></td>
+        <td><%= order.address_id.nil? ? "" : Address.find(order.address_id).name + order.shipping_address %></td>
         <td><%= order.user.name %></td>
         <td><%= order.comments %></td>
+        <td><%= order.server_unf%></td>
+        <td><%= order.server_unf_date%></td>
+
         <td><%= link_to '', order, class: "fa fa-file-text-o", style: "color:  #007bff;"%></td>
-        <td><%= link_to '', edit_order_path(order), class: "fa fa-pencil-square-o", style: "color:  #007bff;" %></td>
         <td><%= link_to '', order, method: :delete, data: { confirm: 'Are you sure?' }, class: "fa fa-trash", style: "color:  #007bff;"  %></td>
       </tr>
     <% end %>

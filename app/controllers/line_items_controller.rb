@@ -91,19 +91,12 @@ class LineItemsController < ApplicationController
     @product_name = params[:product_name]
     @has_line_item = false
 
-    unit = Unit.find_by(name: params[:unit_name])
-
     if params[:pack_id].nil?
       @has_line_item = @cart.has_line_item(@product_id, nil)
     else
       @has_line_item = @cart.has_line_item(@product_id, @pack_id)
     end
 
-    if unit.nil?
-      @unit_id = ""
-    else
-      @unit_id = unit.id
-    end
     @units_list = Unit.all
     @product = Product.all
 

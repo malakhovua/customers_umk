@@ -21,6 +21,13 @@ class OrdersController < ApplicationController
 
   # GET /orders/new
   def new
+    if @cart.client_id.nil?
+      respond_to do |format|
+          format.html { redirect_to customer_index_url,
+                                    notice: 'выберите покупателя.' }
+      end
+      return
+    end
     @order = Order.new
    end
 
@@ -76,6 +83,10 @@ class OrdersController < ApplicationController
     end
   end
 
+  def add_clients_to_user
+
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
   def initialize_collections
@@ -95,6 +106,6 @@ class OrdersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_params
       user = User.find_by(id: session[:user_id])
-      params.require(:order).permit(:client_id, :date, :shipping_address, :comments).merge!({user: user})
+      params.require(:order).permit(:client_id, :date, :shipping_address, :comments, :address_id).merge!({user: user})
     end
 end

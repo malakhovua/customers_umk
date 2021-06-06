@@ -1,0 +1,43 @@
+<%= form_with(url: set_user_for_clients_list_path) do |form|%>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link", style: "font-size: 20px"%></li>
+   </ol>
+</nav>
+<div class="container-fluid" style="margin-top: 0px">
+  <h1>Покупатели</h1>
+  <div class="form-group">
+    <label>Пользователь:</label>
+    <%usr_array = User.all.map { |usr| [usr.name, usr.id] } %>
+    <%=form.select(:user_id, options_for_select(usr_array, selected:@user.id),{},{ :class => 'form-control' })%>
+  </div>
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Код</th>
+      <th>Код_унф</th>
+      <th>Группа</th>
+      <th>Наименование</th>
+      <th>Установить пользователя</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @clients.each do |client| %>
+      <tr>
+        <td><%= client.id%></td>
+        <td><%= client.unf_id %></td>
+        <td><%= client.parent_name %></td>
+        <td><%= client.name %></td>
+        <td class="align-middle">
+          <strong id="cart_onchange_chkbx" > <%= check_box_tag 'client' + client.id.to_s, client.id %></strong>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <br>
+</div>
+<%end%>
