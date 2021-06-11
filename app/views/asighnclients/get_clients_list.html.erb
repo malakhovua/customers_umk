@@ -1,10 +1,12 @@
-<%= form_with(url: set_user_for_clients_list_path) do |form|%>
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link", style: "font-size: 20px"%></li>
-   </ol>
+    <li class="breadcrumb-item"><%= link_to 'Андминистрирование', admin_url, class: "btn btn-link", style: "font-size: 20px"%></li>
+  </ol>
 </nav>
-<div class="container-fluid" style="margin-top: 0px">
+<%= form_with(url: set_user_for_clients_list_path,  local: true) do |form|%>
+
+  <div class="container-fluid" style="margin-top: 0px">
   <h1>Покупатели</h1>
   <div class="form-group">
     <label>Пользователь:</label>
@@ -12,8 +14,21 @@
     <%=form.select(:user_id, options_for_select(usr_array, selected:@user.id),{},{ :class => 'form-control' })%>
   </div>
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit 'Назначить' %>
   </div>
+
+  <h1>Отбор по группе</h1>
+  <div class="form-group">
+    <label>Группы:</label>
+    <%client_groups = Client.where(:is_folder => true).order(:name).map { |cl| [cl.name, cl.unf_id] } %>
+    <%=form.select(:client_id, options_for_select(client_groups, @client_id),{},{ :class => 'form-control' })%>
+  </div>
+  <div class="actions">
+    <%= form.submit 'Применить отбор'%>
+    <strong id="cart_onchange_chkbx" > <%= check_box_tag 'setAllClients',1,false, :onclick => "toggle(this);"%></strong>
+  </div>
+
+
   <table class="table">
     <thead>
     <tr>
@@ -32,7 +47,7 @@
         <td><%= client.parent_name %></td>
         <td><%= client.name %></td>
         <td class="align-middle">
-          <strong id="cart_onchange_chkbx" > <%= check_box_tag 'client' + client.id.to_s, client.id %></strong>
+          <strong id="cart_onchange_chkbx" > <%= check_box_tag 'client' + client.id.to_s, client.id, false , class:"setClient" %></strong>
         </td>
       </tr>
     <% end %>
@@ -41,3 +56,12 @@
   <br>
 </div>
 <%end%>
+
+<script type="text/javascript">
+    function toggle(source) {
+        checkboxes = document.getElementsByClassName('setClient');
+        for(i=0; i<checkboxes.length; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+</script>

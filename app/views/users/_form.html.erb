@@ -30,10 +30,6 @@
   </div>
 <% end %>
 
-
-
-<p><%=@user.client%></p>
-
 <% if user.errors.any? %>
   <% user.errors.full_messages.each do |message| %>
     <p style="color: #B00100"><%= message %></p>

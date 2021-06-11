@@ -1,0 +1,31 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link", style: "font-size: 20px"%></li>
+    <li class="breadcrumb-item"><%= link_to 'Андминистрирование', admin_url, class: "btn btn-link", style: "font-size: 20px"%></li>
+    <li class="breadcrumb-item"><%= link_to 'Установить пользователя клиентам', get_clients_list_url(user_id: 1), class: 'btn btn-link', style: 'font-size: 25px;'%></li>
+    </ol>
+</nav>
+<p id="notice"><%= notice %></p>
+
+<h1>Клиенты пользователей</h1>
+
+<table class="table">
+  <thead>
+  <tr>
+    <th>Пользователь</th>
+    <th>Клиент</th>
+    <th>Группа</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  <% @asighnclients.each do |asighn_client| %>
+    <tr>
+      <td><%= asighn_client.user.name%></td>
+      <td><%= asighn_client.client.name%></td>
+      <td><%= asighn_client.client.parent_name%></td>
+      <td><%= link_to 'Удалить', delete_asighnclients_path(asighn_client), method: :delete%></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

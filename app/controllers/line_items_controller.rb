@@ -91,6 +91,14 @@ class LineItemsController < ApplicationController
     @product_name = params[:product_name]
     @has_line_item = false
 
+    if session[:user_id]
+        @current_user ||= User.find_by(id: session[:user_id])
+      end
+
+    unit_id = @current_user.unit_id.nil? ? '1' : @current_user.unit_id
+    @unit = Unit.find(unit_id)
+
+
     if params[:pack_id].nil?
       @has_line_item = @cart.has_line_item(@product_id, nil)
     else

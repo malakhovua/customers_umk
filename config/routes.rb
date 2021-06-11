@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   resources :clients
 
   get 'account' => 'account#index'
+  get 'asighnclients' => 'asighnclients#index'
 
   get 'admin' => 'admin#index'
   get 'admin/products_1c83' => 'admin#products_1c83', :as => :products_1c83
@@ -28,6 +29,7 @@ Rails.application.routes.draw do
 
   get "asighnclients/get_clients_list" => 'asighnclients#get_clients_list', :as => :get_clients_list
   post "asighnclients/set_user_for_clients_list" => 'asighnclients#set_user_for_clients_list', :as => :set_user_for_clients_list
+  delete '/asighnclients/:id', to: 'asighnclients#destroy', :as => :delete_asighnclients
 
 
   controller :sessions do
@@ -43,7 +45,6 @@ Rails.application.routes.draw do
 
 
   root 'customer#index', as: 'customer_index'
-
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

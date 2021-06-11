@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_28_181901) do
+ActiveRecord::Schema.define(version: 2021_06_08_182500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,15 @@ ActiveRecord::Schema.define(version: 2021_05_28_181901) do
     t.string "unf_id"
     t.string "name"
     t.index ["client_id"], name: "index_addresses_on_client_id"
+  end
+
+  create_table "asighnclients", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "client_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_asighnclients_on_client_id"
+    t.index ["user_id"], name: "index_asighnclients_on_user_id"
   end
 
   create_table "carts", force: :cascade do |t|
@@ -182,6 +191,8 @@ ActiveRecord::Schema.define(version: 2021_05_28_181901) do
   end
 
   add_foreign_key "addresses", "clients"
+  add_foreign_key "asighnclients", "clients"
+  add_foreign_key "asighnclients", "users"
   add_foreign_key "carts", "clients"
   add_foreign_key "favorite_products", "clients"
   add_foreign_key "favorite_products", "packs"

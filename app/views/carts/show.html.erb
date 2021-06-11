@@ -12,7 +12,7 @@
               <h5 class="font-weight-bold" id="footer_cart_price"><%= sprintf("%0.02f грн.", @cart.total_price) %></h5>
             </li>
           </ul>
-          <%= link_to "Оформить заказ", new_order_path, method: :get, class: "btn btn-primary rounded-pill py-2 btn-block" %>
+          <%= link_to "Оформить заказ", new_order_path, method: :get, class: "btn btn-primary rounded-pill py-2 btn-block" , data: @cart.client_id.nil?  ?  { confirm: 'Выберите покупателя' } : ""%>
         </div>
       </div>
     </div>

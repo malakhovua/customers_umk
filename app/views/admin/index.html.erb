@@ -41,6 +41,12 @@
           <%= link_to 'Клиенты', clients_url, class: 'btn btn-link', style: 'font-size: 25px;' %>
         </div>
         <div class="col-md-12" style="margin-top: 1px">
+          <%= link_to 'Клиенты пользователей', asighnclients_url, class: 'btn btn-link', style: 'font-size: 25px;' %>
+        </div>
+        <div class="col-md-12" style="margin-top: 1px">
+         <%= link_to 'Установить пользователя клиентам', get_clients_list_url(user_id: 1), class: 'btn btn-link', style: 'font-size: 25px;' %>
+        </div>
+        <div class="col-md-12" style="margin-top: 1px">
           <%= link_to 'Продукция', products_url, class: 'btn btn-link', style: 'font-size: 25px;' %>
         </div>
         <div class="col-md-12" style="margin-top: 1px">
