@@ -98,7 +98,6 @@ class Unf
         client = Client.new
       end
 
-      # client[:id] = p['id'].to_i
       client[:unf_id] = p['unf_id']
       client[:parent_id] = p['parent_id']
       client[:deletion_mark] = p['deletion_mark'].to_i == 0 ? false : true
@@ -212,7 +211,7 @@ class Unf
 
     cont ='{"orders":['
 
-    orders = Order.all.where(:date => date1..date2)
+    orders = Order.all.where(:date => date1..date2, :server_unf => nil )
     first= true
     orders.each do |order|
       coma = first ? "" : ","
@@ -227,8 +226,28 @@ class Unf
     
     resp = connect_1c.post(get_unf_path("orders"), cont,
                         "Content-Type" => "application/json")
+    if resp.nil?
+      resp
+    else
+      update_orders(resp)
+    end
+
     resp
 
+  end
+
+  def update_orders(resp)
+    data = JSON.parse resp.body
+
+    data.each { |p|
+
+      if Order.where(:id => p['id']).present?
+        ord = Order.find_by(id: p['id'])
+        ord[:server_unf] = p['server_unf'] == 1? true : false
+        ord[:server_unf_date] = p['server_unf_date']
+        ord.save!
+        end
+    }
   end
 
   def get_unf_path (method)

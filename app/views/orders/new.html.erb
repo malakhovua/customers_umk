@@ -1,17 +1,15 @@
-
 <div class="container">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><%= link_to 'К корзине',  @cart, class: "btn btn-link", style: "font-size: 20px"%></li>
+      <li class="breadcrumb-item"><%= link_to 'К корзине', @cart, class: "btn btn-link", style: "font-size: 20px" %></li>
     </ol>
   </nav>
   <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
-  <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
-  <h1>Заказ покупателя <%=@order.id %></h1>
-  <div class="form-group">
-    <%= render 'form', order: @order %>
+    <h1>Заказ покупателя <%= @order.id %></h1>
+    <div class="form-group">
+      <%= render 'form', order: @order %>
+    </div>
   </div>
 </div>
-  </div>
-</div>
+
 

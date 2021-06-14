@@ -1,66 +1,71 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link", style: "font-size: 20px"%></li>
-    <li class="breadcrumb-item"><%= link_to 'Андминистрирование', admin_url, class: "btn btn-link", style: "font-size: 20px"%></li>
+    <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link", style: "font-size: 20px" %></li>
+    <li class="breadcrumb-item"><%= link_to 'Андминистрирование', admin_url, class: "btn btn-link", style: "font-size: 20px" %></li>
   </ol>
 </nav>
-<%= form_with(url: set_user_for_clients_list_path,  local: true) do |form|%>
-
+<%= form_with(url: set_user_for_clients_list_path, local: true) do |form| %>
   <div class="container-fluid" style="margin-top: 0px">
-  <h1>Покупатели</h1>
-  <div class="form-group">
-    <label>Пользователь:</label>
-    <%usr_array = User.all.map { |usr| [usr.name, usr.id] } %>
-    <%=form.select(:user_id, options_for_select(usr_array, selected:@user.id),{},{ :class => 'form-control' })%>
-  </div>
-  <div class="actions">
-    <%= form.submit 'Назначить' %>
-  </div>
-
-  <h1>Отбор по группе</h1>
-  <div class="form-group">
-    <label>Группы:</label>
-    <%client_groups = Client.where(:is_folder => true).order(:name).map { |cl| [cl.name, cl.unf_id] } %>
-    <%=form.select(:client_id, options_for_select(client_groups, @client_id),{},{ :class => 'form-control' })%>
-  </div>
-  <div class="actions">
-    <%= form.submit 'Применить отбор'%>
-    <strong id="cart_onchange_chkbx" > <%= check_box_tag 'setAllClients',1,false, :onclick => "toggle(this);"%></strong>
-  </div>
-
-
-  <table class="table">
-    <thead>
-    <tr>
-      <th>Код</th>
-      <th>Код_унф</th>
-      <th>Группа</th>
-      <th>Наименование</th>
-      <th>Установить пользователя</th>
-    </tr>
-    </thead>
-    <tbody>
-    <% @clients.each do |client| %>
+    <div class="row" style="margin-bottom: 10px">
+      <div class="col">
+        <h5>Установить</h5>
+        <div class="form-group">
+          <label>Пользователь:</label>
+          <% usr_array = User.all.map { |usr| [usr.name, usr.id] } %>
+          <%= form.select(:user_id, options_for_select(usr_array, selected: @user.id), {}, { :class => 'form-control' }) %>
+        </div>
+        <div class="actions">
+          <%= form.submit 'Назначить пользователя', class:"btn btn-primary"%>
+        </div>
+      </div>
+      <div class="col">
+        <h5>Отбор</h5>
+        <div class="form-group">
+          <label>Группы:</label>
+          <% client_groups = Client.where(:is_folder => true).order(:name).map { |cl| [cl.name, cl.unf_id] } %>
+          <%= form.select(:client_id, options_for_select(client_groups, @client_id), {}, { :class => 'form-control' }) %>
+        </div>
+        <div class="actions">
+          <%= form.submit 'Применить отбор', class:"btn btn-primary" %>
+          <div id="check_all" style="float: right">
+          <h>Отметить(снять отметки) всех пользователей</h>
+          <strong id="cart_onchange_chkbx"> <%= check_box_tag 'setAllClients', 1, false, :onclick => "toggle(this);" %></strong>
+          </div>
+          </div>
+      </div>
+    </div>
+    <table class="table table-bordered">
+      <thead class="table table-dark">
       <tr>
-        <td><%= client.id%></td>
-        <td><%= client.unf_id %></td>
-        <td><%= client.parent_name %></td>
-        <td><%= client.name %></td>
-        <td class="align-middle">
-          <strong id="cart_onchange_chkbx" > <%= check_box_tag 'client' + client.id.to_s, client.id, false , class:"setClient" %></strong>
-        </td>
+        <th>Код</th>
+        <th>Код_унф</th>
+        <th>Группа</th>
+        <th>Наименование</th>
+        <th>Установить пользователя</th>
       </tr>
-    <% end %>
-    </tbody>
-  </table>
-  <br>
-</div>
-<%end%>
+      </thead>
+      <tbody>
+      <% @clients.each do |client| %>
+        <tr>
+          <td><%= client.id %></td>
+          <td><%= client.unf_id %></td>
+          <td><%= client.parent_name %></td>
+          <td><%= client.name %></td>
+          <td class="align-middle">
+            <strong id="cart_onchange_chkbx"> <%= check_box_tag 'client' + client.id.to_s, client.id, false, class: "setClient" %></strong>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <br>
+  </div>
+<% end %>
 
 <script type="text/javascript">
     function toggle(source) {
         checkboxes = document.getElementsByClassName('setClient');
-        for(i=0; i<checkboxes.length; i++) {
+        for (i = 0; i < checkboxes.length; i++) {
             checkboxes[i].checked = source.checked;
         }
     }

@@ -55,9 +55,9 @@ class AdminController < ApplicationController
   def orders_to_1c83
     date1 = params['date1']['date_1'].to_time
     date2 = params['date2']['date_2'].to_time
-    params
     exchenge = Unf.new
     exchenge.post_orders(date1, date2)
+    @orders = Order.all
     respond_to do |format|
       format.js
     end

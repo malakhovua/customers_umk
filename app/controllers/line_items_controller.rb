@@ -73,7 +73,7 @@ class LineItemsController < ApplicationController
     @cart = Cart.find(session[:cart_id])
     @line_item.destroy
     respond_to do |format|
-      if @cart.total_quantity == 0.to_f
+      if @cart.line_items.size() == 0
         @cart.destroy
         format.html { redirect_to customer_index_url}
       else

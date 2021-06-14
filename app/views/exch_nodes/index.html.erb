@@ -1,9 +1,13 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link", style: "font-size: 20px"%></li>
+    <li class="breadcrumb-item"><%= link_to 'Андминистрирование', admin_url, class: "btn btn-link", style: "font-size: 20px"%></li>
+  </ol>
+</nav>
 <p id="notice"><%= notice %></p>
-
-<h1>Exch Nodes</h1>
-
-<table>
-  <thead>
+<h1>Узлы обмена с 1с8.3</h1>
+<table class="table table-bordered">
+  <thead class="table table-dark">
     <tr>
       <th>Node</th>
       <th>Ser</th>

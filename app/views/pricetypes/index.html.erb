@@ -6,16 +6,14 @@
 </nav>
 <p id="notice"><%= notice %></p>
 
-<h1>Pricetypes</h1>
-
-<table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
+<h1>Типы цен</h1>
+<table class="table table-bordered">
+  <thead class="table table-dark">
+  <tr>
+    <th>Name</th>
       <th colspan="3"></th>
     </tr>
   </thead>
-
   <tbody>
     <% @pricetypes.each do |pricetype| %>
       <tr>

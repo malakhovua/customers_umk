@@ -12,12 +12,7 @@
       <form>
         <div class="form-row">
           <div class="col">
-            <%piece = if @unit.nil?
-                        false
-                      else
-                        @unit.piece ? true : false
-                      end%>
-            <%= number_field_tag 'qty', '',  :step => piece ? 1 : 0.01, class: "form-control", id: "num_field", placeholder: piece ? '1' : '0.01'%>
+            <%= number_field_tag 'qty', '',  :step => 0.01, class: "form-control", id: "num_field"%>
           </div>
           <div class="col">
             <%= select_tag "units", options_from_collection_for_select(Unit.all, "id", "name", current_user.unit_id.nil? ? "1" : current_user.unit_id),
