@@ -1,4 +1,6 @@
 <nav class="navbar fixed-top navbar-light" style="background-color: maroon;">
+
+
   <%= form_tag(customer_index_path, method: :get, class: 'form-inline') do %>
     <button type="button" id="sidebarCollapse" class="btn btn-outline-light" style="margin: 10px">
       <span class="navbar-toggler-icon"></span>
@@ -10,17 +12,16 @@
     </div>
     <%= submit_tag 'Поиск', name: nil, class: 'btn btn-outline-light' %>
   <% end %>
-
   <% unless @cart.client_id.nil? %>
     <% client = Client.find(@cart.client_id) %>
     <div style="color: aliceblue"><%= "ПОКУПАТЕЛЬ: " + client.name %></div>
   <% else %>
     <div style="color: aliceblue">ПОКУПАТЕЛЬ НЕ ВЫБРАН.</div>
   <% end %>
-
+  <%= link_to 'На главную', account_url, class: "nav-link active", style: 'position: absolute;right: 180px;color: white;'%>
   <% if logged_in? %>
     <div id="user_cart">
-      <%= link_to account_path(current_user), :action => 'go' do %>
+      <%= link_to edit_user_path(current_user), :action => 'go' do %>
         <div id="user">
           <div id="user_avatar">
             <%= image_tag("user.png", class: "img-thumbnail", size: "40x40") %>
@@ -43,7 +44,11 @@
   <div id="pop_cart">
       <%= render partial: ('carts/pop_cart') %>
   </div>
+
 </nav>
+
+
+
 <script type="text/javascript" charset="utf-8">
     $('#table-scroll').css("height", "<%= @cart.line_items.size()>10? 750 : (@cart.line_items.size() == 0? 35 : @cart.line_items.size()*80)%>");
 </script>

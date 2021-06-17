@@ -1,7 +1,7 @@
 class AsighnclientsController < ApplicationController
 
   def index
-    @asighnclients = Asighnclient.all.order(:user_id, :client_id)
+    @asighnclients = Asighnclient.all.order(:user_id, :client_id).page params[:page]
   end
 
   def destroy

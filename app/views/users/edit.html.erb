@@ -1,9 +1,14 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link", style: "font-size: 20px"%></li>
+    <li class="breadcrumb-item"><%= link_to 'Андминистрирование', admin_url, class: "btn btn-link", style: "font-size: 20px"%></li>
+  </ol>
+</nav>
 <div class="container">
 <h1>Редактировать пользователя:</h1>
 
   <%= link_to 'Установить клиентов для пользователя', get_clients_list_path(user_id: @user.id), class: "btn btn-link"%>
-
-<%= render 'form', user: @user %>
+  <%= render 'form', user: @user %>
   <%= link_to 'К списку пользователей', users_path, class: "btn btn-link" %>
 
 </div>

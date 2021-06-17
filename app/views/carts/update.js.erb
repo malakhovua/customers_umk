@@ -4,5 +4,5 @@ $('#footer_cart_price').html("<%= sprintf("%0.02f грн.", @cart.total_price)%>
 <%@lines_hash.each_pair do |key, value|%>
 <%id = value[0] %>
 <%recount = value[1]%>
-$('#<%='recount' + id%>').html("<strong>" + "<%=recount%>" + "</strong>");
+$('#<%='recount' + id%>').html("<strong>" + "<%=display_recount(recount)%>" + "</strong>");
 <%end%>

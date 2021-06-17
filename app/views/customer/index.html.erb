@@ -81,7 +81,7 @@
                   </p>
                 </div>
                 <ul class="list-group list-group-flush">
-                  <% packs = Product.get_packs_product(product['id']) %>
+                  <% packs = Product.get_packs_product(product['id'],@favorite, @client_id) %>
                   <% packs.each do |pack| %>
                     <li class="list-group-item"> <%= pack['pack_name'] %>
                       <p style="color: forestgreen;font-size:25px"><%= sprintf("%0.02f грн.", Product.get_price(product['id'])) %>

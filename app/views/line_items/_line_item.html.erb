@@ -12,7 +12,6 @@
   <th scope="row" class="align-middle">
     <%= text_field_tag("comment"  + line_item.id.to_s, line_item.comment, class:"form-control", :onchange=>"inputFieldOnChange()") %>
   </th>
-
   <td class="align-middle"><strong><%=line_item.pack.nil? ? line_item.product[:weight] : line_item.pack[:weight]%></td>
   <% unless line_item.pack.nil? %>
     <td class="align-middle"><strong><%= line_item.pack.name %></td>

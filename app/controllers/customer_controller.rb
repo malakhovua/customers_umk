@@ -3,6 +3,11 @@ class CustomerController < ApplicationController
   before_action :set_cart
 
   def index
+    @favorite = false
+
+    if params[:favorite] == 1.to_s
+      @favorite = true
+    end
     unless params[:client_id].nil?
       @client_id = params[:client_id]
     else

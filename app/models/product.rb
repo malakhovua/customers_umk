@@ -45,7 +45,8 @@ class Product < ApplicationRecord
     Product.where(:products => {is_folder:true, unf_parent_id:parent_id}).order("title")
   end
 
-  def self.get_packs_product (product_id)
+  def self.get_packs_product (product_id, favorite, client_id)
+
 
     text_query = 'SELECT
        p.id,
@@ -65,6 +66,7 @@ class Product < ApplicationRecord
        AND NOT pcs.id = 0
 	     AND p.id = %d
        AND p.deletion_mark = false'
+
     text_query = sprintf(text_query, product_id)
     result = ActiveRecord::Base.connection.exec_query(text_query)
     return result
