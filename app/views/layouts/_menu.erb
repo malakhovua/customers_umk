@@ -10,7 +10,10 @@
       <%= link_to '', customer_index_path, class: 'fa fa-times-circle', style: 'font-size:20px;margin-right:5px;margin-top: 9px;position:relative;
     left: -33px;color:dark;aria-hidden="true"' %>
     </div>
+    <div style="display: inherit;">
     <%= submit_tag 'Поиск', name: nil, class: 'btn btn-outline-light' %>
+      <%= link_to 'На главную', account_url, class: "nav-link active", style: "color:white"%>
+    </div>
   <% end %>
   <% unless @cart.client_id.nil? %>
     <% client = Client.find(@cart.client_id) %>
@@ -18,8 +21,7 @@
   <% else %>
     <div style="color: aliceblue">ПОКУПАТЕЛЬ НЕ ВЫБРАН.</div>
   <% end %>
-  <%= link_to 'На главную', account_url, class: "nav-link active", style: 'position: absolute;right: 180px;color: white;'%>
-  <% if logged_in? %>
+    <% if logged_in? %>
     <div id="user_cart">
       <%= link_to edit_user_path(current_user), :action => 'go' do %>
         <div id="user">
