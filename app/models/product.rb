@@ -46,8 +46,7 @@ class Product < ApplicationRecord
   end
 
   def self.get_packs_product (product_id, favorite, client_id)
-
-
+    
     text_query = 'SELECT
        p.id,
        p.title,
