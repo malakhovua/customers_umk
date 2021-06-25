@@ -65,7 +65,7 @@ class Product < ApplicationRecord
 		   WHERE p.is_folder = false
        AND NOT pcs.id = 0
 	     AND p.id = %d
-       AND p.deletion_mark = false'
+       AND pcs.deletion_mark = false'
 
     text_query = sprintf(text_query, product_id)
     result = ActiveRecord::Base.connection.exec_query(text_query)
