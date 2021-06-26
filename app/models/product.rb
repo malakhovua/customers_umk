@@ -70,7 +70,7 @@ class Product < ApplicationRecord
     result = ActiveRecord::Base.connection.exec_query(text_query)
     return result
   end
-  
+
   private
 
   def ensure_not_ref_by_any_line_item
