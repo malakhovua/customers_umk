@@ -33,7 +33,7 @@ class AsighnclientsController < ApplicationController
 
     clients_hash = Hash.new
     params.each do |key, value|
-      if key.include? "client"
+      if key.include? "client_check"
         clients_hash[key] = value
       end
     end

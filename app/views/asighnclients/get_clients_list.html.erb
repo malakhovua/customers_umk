@@ -52,7 +52,7 @@
           <td><%= client.parent_name %></td>
           <td><%= client.name %></td>
           <td class="align-middle">
-            <strong id="cart_onchange_chkbx"> <%= check_box_tag 'client' + client.id.to_s, client.id, false, class: "setClient" %></strong>
+            <strong id="cart_onchange_chkbx"> <%= check_box_tag 'client_check' + client.id.to_s, client.id, false, class: "setClient" %></strong>
           </td>
         </tr>
       <% end %>
