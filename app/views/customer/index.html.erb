@@ -68,6 +68,7 @@
 
     <div id="content" style="margin-left: 90px">
       <div class="row">
+        <% cache @products do %>
           <% @products.each do |product| %>
             <% cache product do %>
               <div class="card" style="width: 18rem; margin: 10px">
@@ -105,6 +106,7 @@
               </div>
             <% end %>
           <% end %>
+        <% end %>
       </div>
     </div>
   </div>
