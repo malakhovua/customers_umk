@@ -68,7 +68,6 @@
 
     <div id="content" style="margin-left: 90px">
       <div class="row">
-        <% cache @products do %>
           <% @products.each do |product| %>
             <% cache product do %>
               <div class="card" style="width: 18rem; margin: 10px">
@@ -81,7 +80,7 @@
                     <%= link_to '', favorite_products_path({ :favorite_product => { :user_id => @current_user.id, :product_id => product.id, :client_id => @client_id, :pack_id => ""} } ),
                                 method: :post, class: "fa fa-heart", id: "heard_" + product.id.to_s,
                                 style: style_string,
-                                remote: true , data: @client_header.nil? ?  { confirm: 'Выберите покупателя' } : ""%>
+                                remote: true , data: @client_id.nil? ?  { confirm: 'Выберите покупателя' } : ""%>
                     <%= link_to '', modal_product_qty_path(:id => product['id'], :pack_id => nil, :product_name => product['title'], :pack_name => '', :unit_name => 'кг'), class: 'fa fa-cart-plus', style: 'margin-left:10px;font-size:30px;color:#B00100;',
                                 :data => { :toggle => 'modal', :target => '#modal-window' }, remote: true %>
                   </p>
@@ -96,7 +95,7 @@
                         <%= link_to '', favorite_products_path({ :favorite_product => { :user_id => @current_user.id, :product_id => product.id, :client_id => @client_id, :pack_id => pack['pack_id']} }),
                                     method: :post, class: "fa fa-heart", id: "heard_" + product.id.to_s + pack['pack_id'].to_s,
                                     style: style_string_pack,
-                                    remote: true , data: @client_header.nil? ?  { confirm: 'Выберите покупателя' } : ""%>
+                                    remote: true , data: @client_id.nil? ?  { confirm: 'Выберите покупателя' } : ""%>
                         <%= link_to '', modal_product_qty_path(:id => product['id'], :pack_id => pack['pack_id'], :product_name => product['title'], :pack_name => pack['pack_name'], :unit_name => 'шт'), class: 'fa fa-cart-plus', style: 'margin-left:10px;font-size:30px;color: forestgreen;',
                                     :data => { :toggle => 'modal', :target => '#modal-window' }, remote: true %>
                       </p>
@@ -106,7 +105,6 @@
               </div>
             <% end %>
           <% end %>
-        <% end %>
       </div>
     </div>
   </div>

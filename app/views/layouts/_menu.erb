@@ -16,8 +16,8 @@
     </div>
   <% end %>
   <% unless @cart.client_id.nil? %>
-    <% @client_header = Client.find(@cart.client_id) %>
-    <div style="color: aliceblue"><%= "ПОКУПАТЕЛЬ: " + @client_header.name %></div>
+    <% client = Client.find(@cart.client_id) %>
+    <div style="color: aliceblue"><%= "ПОКУПАТЕЛЬ: " + client.name %></div>
   <% else %>
     <div style="color: aliceblue">ПОКУПАТЕЛЬ НЕ ВЫБРАН.</div>
   <% end %>
