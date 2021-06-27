@@ -25,23 +25,23 @@ class FavoriteProductsController < ApplicationController
   # POST /favorite_products.json
   def create
 
+    if session[:client_id].nil?
+      return
+    end
+
     if favorite_product_params["pack_id"] == ""
       @favorite_product = FavoriteProduct.find_by(product_id: favorite_product_params["product_id"],
                                                   user_id: favorite_product_params["user_id"],
-                                                  client_id: favorite_product_params["client_id"])
+                                                  client_id: session[:client_id])
 
     else
       @favorite_product = FavoriteProduct.find_by(product_id: favorite_product_params["product_id"],
                                                   user_id: favorite_product_params["user_id"],
-                                                  client_id: favorite_product_params["client_id"],
+                                                  client_id: session[:client_id],
                                                   pack_id: favorite_product_params["pack_id"])
 
     end
 
-    if favorite_product_params["client_id"] == ""
-      format.html { redirect_to request.referer, alert: 'Message sent!' }
-      return
-    end
 
     @heard_id = "heard_" + favorite_product_params["product_id"] + favorite_product_params["pack_id"]
     unless @favorite_product.nil?

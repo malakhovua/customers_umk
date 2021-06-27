@@ -42,6 +42,7 @@ class CustomerController < ApplicationController
     if @cart.client_id != @client_id
       @cart.client_id = @client_id
       @cart.save
+      session[:client_id] = @client_id
     end
 
   end

@@ -73,6 +73,7 @@ class CartsController < ApplicationController
   def destroy
     @cart.destroy if @cart.id == session[:cart_id]
     session[:cart_id] = nil
+    session[:client_id] = nil
     respond_to do |format|
       format.html { redirect_to customer_index_url, notice: 'Ваша корзина была полностью очищена.' }
       format.json { head :no_content }

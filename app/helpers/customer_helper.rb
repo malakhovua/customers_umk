@@ -1,3 +1,3 @@
 module CustomerHelper
- 
+
 end
