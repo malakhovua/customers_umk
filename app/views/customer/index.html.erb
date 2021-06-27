@@ -68,9 +68,7 @@
 
     <div id="content" style="margin-left: 90px">
       <div class="row">
-
           <% @products.each do |product| %>
-
               <div class="card" style="width: 18rem; margin: 10px">
                 <%= image_tag(product['image_url'], class: "card-img-top", size: "200x200") %>
                 <div class="card-body">
@@ -92,8 +90,6 @@
                     <li class="list-group-item"> <%= pack['pack_name'] %>
                       <p style="color: forestgreen;font-size:25px"><%= sprintf("%0.02f грн.", Product.get_price(product['id'])) %>
                         <% style_string_pack = @favorite_products.find_by(product_id: product.id, user_id: @current_user.id, client_id: session[:client_id], pack_id: pack['pack_id']).nil? ? "font-size: 25px; margin-left: 10px; color: #a4a5b1" : "font-size: 25px; margin-left: 10px; color: #B00100" %>
-
-                        <%=@favorite_products.find_by(product_id: product.id, user_id: @current_user.id, client_id: session[:client_id], pack_id: pack['pack_id'])%>
                         <%= link_to '', favorite_products_path({ :favorite_product => { :user_id => @current_user.id, :product_id => product.id, :pack_id => pack['pack_id']} }),
                                     method: :post, class: "fa fa-heart", id: "heard_" + product.id.to_s + pack['pack_id'].to_s,
                                     style: style_string_pack,
@@ -106,7 +102,6 @@
                 </ul>
               </div>
             <% end %>
-          
       </div>
     </div>
   </div>
