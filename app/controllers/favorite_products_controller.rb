@@ -48,7 +48,10 @@ class FavoriteProductsController < ApplicationController
       @favorite_product.destroy
       @create = false
     else
-      @favorite_product = FavoriteProduct.new(favorite_product_params)
+      @favorite_product = FavoriteProduct.new(product_id: favorite_product_params["product_id"],
+                                              user_id: favorite_product_params["user_id"],
+                                              client_id: session[:client_id],
+                                              pack_id: favorite_product_params["pack_id"])
       @create = true
     end
     respond_to do |format|
