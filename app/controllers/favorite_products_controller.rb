@@ -98,6 +98,6 @@ class FavoriteProductsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def favorite_product_params
-    params.require(:favorite_product).permit(:user_id, :product_id, :client_id, :pack_id)
+    params.require(:favorite_product).permit(:user_id, :product_id, :pack_id)
   end
 end

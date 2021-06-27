@@ -78,7 +78,7 @@
                   <p class="card-text" style="color: coral"><%= product['parent_name'] %></p>
                   <p style="color: #B00100;font-size:25px"><%= sprintf("%0.02f грн.", Product.get_price(product['id'])) %>
                     <% style_string = @favorite_products.find_by(product_id: product.id, user_id: @current_user.id, client_id: @client_id).nil? ? "font-size: 25px; margin-left: 10px; color: #a4a5b1" : "font-size: 25px; margin-left: 10px; color: #B00100" %>
-                    <%= link_to '', favorite_products_path({ :favorite_product => { :user_id => @current_user.id, :product_id => product.id, :client_id => @client_id, :pack_id => ""} } ),
+                    <%= link_to '', favorite_products_path({ :favorite_product => { :user_id => @current_user.id, :product_id => product.id, :pack_id => ""} } ),
                                 method: :post, class: "fa fa-heart", id: "heard_" + product.id.to_s,
                                 style: style_string,
                                 remote: true %>
@@ -93,7 +93,7 @@
                       <p style="color: forestgreen;font-size:25px"><%= sprintf("%0.02f грн.", Product.get_price(product['id'])) %>
                         <% style_string_pack = @favorite_products.find_by(product_id: product.id, user_id: @current_user.id, client_id: @client_id, pack_id: pack['pack_id']).nil? ? "font-size: 25px; margin-left: 10px; color: #a4a5b1" : "font-size: 25px; margin-left: 10px; color: #B00100" %>
 
-                        <%= link_to '', favorite_products_path({ :favorite_product => { :user_id => @current_user.id, :product_id => product.id, :client_id => @client_id, :pack_id => pack['pack_id']} }),
+                        <%= link_to '', favorite_products_path({ :favorite_product => { :user_id => @current_user.id, :product_id => product.id, :pack_id => pack['pack_id']} }),
                                     method: :post, class: "fa fa-heart", id: "heard_" + product.id.to_s + pack['pack_id'].to_s,
                                     style: style_string_pack,
                                     remote: true %>
