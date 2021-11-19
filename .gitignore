@@ -35,3 +35,13 @@
 
 #baseimgs
 /app/assets/images
+
+#Ignore Gemfile.lock
+/Gemfile.lock
+
+
+
+
+
+
+
