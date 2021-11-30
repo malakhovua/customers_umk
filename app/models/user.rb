@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  enum role: [:admin, :user]
   has_many :orders
   has_many :asighnclients
   has_many :clients, through: :asighnclients

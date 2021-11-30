@@ -10,6 +10,8 @@
   email: <%= @user.email%>
   <br>
   Ед. подбора: <%= @user.unit_id.nil? ? 'Не выбрана' : Unit.find(@user.unit_id).name%>
+  <br>
+  роль: <%=@user.role%>>
 </p>
 
 <%= link_to 'Редактировать', edit_user_path(@user), class: "btn btn-link"%> |

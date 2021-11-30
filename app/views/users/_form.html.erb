@@ -17,6 +17,10 @@
     <%= form.label :Подтвердите_пароль , class: "form-label"%>
     <%= form.password_field :password_confirmation,  class:"form-control"%>
 
+      <%= form.label :Роль, class: "form-label" %>
+      <%role_array = User.roles%>
+      <%= form.select(:role, options_for_select(role_array, selected:@user.role),{},{ :class => 'form-control' })%>
+
       <label>Ед. измерения в подборе:</label>
       <% unit_array = Unit.all.map { |unit| [unit.name, unit.id] } %>
       <%= form.select(:unit_id, options_for_select(unit_array, selected:@user.unit_id),{},{ :class => 'form-control' })%>
