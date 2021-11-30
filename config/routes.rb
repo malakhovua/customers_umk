@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :roles
   resources :addresses
   resources :exch_nodes
   resources :units
