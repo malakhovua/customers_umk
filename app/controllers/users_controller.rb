@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action  :ensure_an_admin_role, :set_user, only: [:show, :edit, :update, :destroy]
 
   # GET /users
   # GET /users.json
@@ -42,6 +42,7 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
+    params['user']['role'] = params['user']['role'].to_i
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to users_url,
@@ -63,18 +64,27 @@ class UsersController < ApplicationController
       format.json { head :no_content }
     end
   end
+
   rescue_from 'User::Error' do |exception|
     redirect_to users_url, notice: exception.message
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def user_params
-      params.require(:user).permit(:name, :password, :password_confirmation, :surname, :unit_id, :client_id)
+  def ensure_an_admin_role
+    current_user = User.find_by(id: session[:user_id])
+    unless current_user.admin?
+       redirect_to account_url
     end
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def user_params
+    params.require(:user).permit(:name, :password, :password_confirmation, :surname, :unit_id, :client_id, :role)
+  end
 end

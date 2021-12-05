@@ -1,5 +1,7 @@
 class AdminController < ApplicationController
 
+  before_action :ensure_an_admin_role
+
   def index
   end
 
@@ -60,6 +62,15 @@ class AdminController < ApplicationController
     @orders = Order.all
     respond_to do |format|
       format.js
+    end
+  end
+
+  private
+
+  def ensure_an_admin_role
+    current_user = User.find_by(id: session[:user_id])
+    unless current_user.admin?
+      redirect_to account_url
     end
   end
 

@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+
   enum role: [:admin, :user]
   has_many :orders
   has_many :asighnclients
@@ -14,4 +15,5 @@ class User < ApplicationRecord
       raise Error.new "Can't delete last user"
     end
   end
+
 end

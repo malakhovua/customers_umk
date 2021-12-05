@@ -1,10 +1,11 @@
 class ProductsController < ApplicationController
 
-  before_action :set_product, only: [:show, :edit, :update, :destroy]
+  before_action :ensure_an_admin_role, :set_product, only: [:show, :edit, :update, :destroy]
 
   # GET /products
   # GET /products.json
   def index
+    ensure_an_admin_role
     @products = Product.order(:parent_name).page params[:page]
   end
 
@@ -96,4 +97,11 @@ class ProductsController < ApplicationController
     def product_params
       params.require(:product).permit(:title, :description, :image_url, :price, :is_folder, :parent_id)
     end
+
+  def ensure_an_admin_role
+    current_user = User.find_by(id: session[:user_id])
+    unless current_user.admin?
+      redirect_to account_url
+    end
+  end
 end

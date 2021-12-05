@@ -1,36 +1,41 @@
 <%= form_with(model: user, class: "row g-3", local: true) do |form| %>
   <div class="col-md-4">
-    <%= form.label :Имя, class: "form-label", for:"validationDefault01" %>
-    <%= form.text_field :name,  class:"form-control", id:"validationDefault01"%>
+    <%= form.label :Имя, class: "form-label", for: "validationDefault01" %>
+    <%= form.text_field :name, class: "form-control", id: "validationDefault01" %>
 
-    <%= form.label :Фамилия, class: "form-label", for:"validationDefault02" %>
-    <%= form.text_field :surname,  class:"form-control", id:"validationDefault02"%>
+    <%= form.label :Фамилия, class: "form-label", for: "validationDefault02" %>
+    <%= form.text_field :surname, class: "form-control", id: "validationDefault02" %>
 
-    <%= form.label :Email_address, class: "form-label", for:"validationDefault02" %>
-    <%= form.email_field :email,  class:"form-control",id:"exampleFormControlInput1", placeholder:"name@example.com"%>
+    <%= form.label :Email_address, class: "form-label", for: "validationDefault02" %>
+    <%= form.email_field :email, class: "form-control", id: "exampleFormControlInput1", placeholder: "name@example.com" %>
   </div>
 
-    <div class="col-md-4">
+  <div class="col-md-4">
     <%= form.label :Пароль, class: "form-label" %>
-    <%= form.password_field :password,  class:"form-control"%>
+    <%= form.password_field :password, class: "form-control" %>
 
-    <%= form.label :Подтвердите_пароль , class: "form-label"%>
-    <%= form.password_field :password_confirmation,  class:"form-control"%>
+    <%= form.label :Подтвердите_пароль, class: "form-label" %>
+    <%= form.password_field :password_confirmation, class: "form-control" %>
 
-      <%= form.label :Роль, class: "form-label" %>
-      <%role_array = User.roles%>
-      <%= form.select(:role, options_for_select(role_array, selected:@user.role),{},{ :class => 'form-control' })%>
+    <% if current_user.admin?%>
+    <%= form.label :Роль, class: "form-label" %>
+    <% role_array = User.roles %>
+    <%= form.select(:role, options_for_select(role_array, selected: User.roles[@user.role]), {}, { :class => 'form-control' }) %>
+    <%end%>
 
-      <label>Ед. измерения в подборе:</label>
-      <% unit_array = Unit.all.map { |unit| [unit.name, unit.id] } %>
-      <%= form.select(:unit_id, options_for_select(unit_array, selected:@user.unit_id),{},{ :class => 'form-control' })%>
+    <% if current_user.admin?%>
+    <label>Ед. измерения в подборе:</label>
+    <% unit_array = Unit.all.map { |unit| [unit.name, unit.id] } %>
+    <%= form.select(:unit_id, options_for_select(unit_array, selected: @user.unit_id), {}, { :class => 'form-control' }) %>
+    <%end%>
+
   </div>
 
   <div class="col-md-3">
   </div>
 
   <div class="col-auto" style="margin-top: 20px">
-    <%= form.submit "Применить", class: "btn btn-primary"%>
+    <%= form.submit "Применить", class: "btn btn-primary" %>
   </div>
 <% end %>
 
