@@ -98,10 +98,4 @@ class ProductsController < ApplicationController
       params.require(:product).permit(:title, :description, :image_url, :price, :is_folder, :parent_id)
     end
 
-  def ensure_an_admin_role
-    current_user = User.find_by(id: session[:user_id])
-    unless current_user.admin?
-      redirect_to account_url
-    end
-  end
 end

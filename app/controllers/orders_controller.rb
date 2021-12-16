@@ -11,7 +11,11 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.all.order('id DESC').page params[:page]
+    unless helpers.current_user_admin
+      @orders = Order.all.order('id DESC').where("user_id = #{helpers.current_user.id}").page params[:page]
+    else
+      @order = Order.all.order('id DESC').page params[:page]
+    end
   end
 
   # GET /orders/1
@@ -23,13 +27,13 @@ class OrdersController < ApplicationController
   def new
     if @cart.client_id.nil?
       respond_to do |format|
-          format.html { redirect_to customer_index_url,
-                                    notice: 'выберите покупателя.' }
+        format.html { redirect_to customer_index_url,
+                                  notice: 'выберите покупателя.' }
       end
       return
     end
     @order = Order.new
-   end
+  end
 
   # GET /orders/1/edit
   def edit
@@ -88,24 +92,25 @@ class OrdersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+
+  # Use callbacks to share common setup or constraints between actions.
   def initialize_collections
     @clients = Client.all
   end
 
-    def ensure_cart_isnt_empty
-      if @cart.line_items.empty?
-        redirect_to customer_index_url, notice:  'Ваша корзина пуста'
-      end
+  def ensure_cart_isnt_empty
+    if @cart.line_items.empty?
+      redirect_to customer_index_url, notice: 'Ваша корзина пуста'
     end
+  end
 
-    def set_order
-       @order = Order.find(params[:id])
-    end
+  def set_order
+    @order = Order.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def order_params
-      user = User.find_by(id: session[:user_id])
-      params.require(:order).permit(:client_id, :date, :shipping_address, :comments, :address_id).merge!({user: user})
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def order_params
+    user = User.find_by(id: session[:user_id])
+    params.require(:order).permit(:client_id, :date, :shipping_address, :comments, :address_id).merge!({ user: user })
+  end
 end

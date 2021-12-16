@@ -6,6 +6,7 @@ class LineItemsController < ApplicationController
   # GET /line_items
   # GET /line_items.json
   def index
+    ensure_an_admin_role
     @line_items = LineItem.all
   end
 

@@ -4,6 +4,7 @@ class ExchNodesController < ApplicationController
   # GET /exch_nodes
   # GET /exch_nodes.json
   def index
+    ensure_an_admin_role
     @exch_nodes = ExchNode.all
   end
 

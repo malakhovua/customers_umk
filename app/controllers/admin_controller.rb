@@ -3,6 +3,7 @@ class AdminController < ApplicationController
   before_action :ensure_an_admin_role
 
   def index
+    ensure_an_admin_role
   end
 
   def products_1c83
@@ -66,13 +67,6 @@ class AdminController < ApplicationController
   end
 
   private
-
-  def ensure_an_admin_role
-    current_user = User.find_by(id: session[:user_id])
-    unless current_user.admin?
-      redirect_to account_url
-    end
-  end
 
   def orders_params
     params.require(:data).permit(:data_1, :data_2)

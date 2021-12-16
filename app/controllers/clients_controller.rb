@@ -4,6 +4,7 @@ class ClientsController < ApplicationController
   # GET /clients
   # GET /clients.json
   def index
+    ensure_an_admin_role
     @clients = Client.all.order(:parent_name)
   end
 

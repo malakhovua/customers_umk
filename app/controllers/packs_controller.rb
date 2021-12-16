@@ -1,9 +1,10 @@
 class PacksController < ApplicationController
-  before_action :set_pack, only: [:show, :edit, :update, :destroy]
+  before_action :ensure_an_admin_role, :set_pack, only: [:show, :edit, :update, :destroy]
 
   # GET /packs
   # GET /packs.json
   def index
+    ensure_an_admin_role
     @packs = Pack.all
   end
 

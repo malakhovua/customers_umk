@@ -5,6 +5,7 @@ class CartsController < ApplicationController
   # GET /carts
   # GET /carts.json
   def index
+    ensure_an_admin_role
     @carts = Cart.all
   end
 

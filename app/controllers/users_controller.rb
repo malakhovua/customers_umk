@@ -1,10 +1,11 @@
 class UsersController < ApplicationController
 
-  before_action  :ensure_an_admin_role, :set_user, only: [:show, :edit, :update, :destroy]
+  before_action  :set_user, only: [:show, :edit, :update, :destroy]
 
   # GET /users
   # GET /users.json
   def index
+    ensure_an_admin_role
     @users = User.order(:name)
   end
 
@@ -71,12 +72,6 @@ class UsersController < ApplicationController
 
   private
 
-  def ensure_an_admin_role
-    current_user = User.find_by(id: session[:user_id])
-    unless current_user.admin?
-       redirect_to account_url
-    end
-  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_user

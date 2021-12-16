@@ -4,6 +4,7 @@ class PricetypesController < ApplicationController
   # GET /pricetypes
   # GET /pricetypes.json
   def index
+    ensure_an_admin_role
     @pricetypes = Pricetype.all
   end
 

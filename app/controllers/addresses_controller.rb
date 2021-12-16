@@ -4,6 +4,7 @@ class AddressesController < ApplicationController
   # GET /addresses
   # GET /addresses.json
   def index
+    ensure_an_admin_role
     @addresses = Address.all
   end
 
