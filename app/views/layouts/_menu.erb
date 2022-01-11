@@ -1,9 +1,19 @@
 <nav class="navbar fixed-top navbar-light" style="background-color: maroon;">
-  
+
   <%= form_tag(customer_index_path, method: :get, class: 'form-inline') do %>
-    <button type="button" id="sidebarCollapse" class="btn btn-outline-light" style="margin: 10px">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+
+    <div class="dropdown">
+      <button class="btn btn-primary" type="button" data-toggle="dropdown" aria-expanded="false" style="margin-right: 5px">
+        Меню
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" data-offset="2">
+        <a class="dropdown-item-text">Продукция</a>
+        <a class="dropdown-item" href="#">Something else here</a>
+        <%= link_to 'На главную', account_url, class: "dropdown-item"%>
+      </div>
+    </div>
+
+
     <div style="display: flex;margin-right: -20px;">
       <%= text_field_tag :Product_name, params[:Product_name], placeholder: 'Наименование', class: 'form-control mr-sm-2' %>
       <%= link_to '', customer_index_path, class: 'fa fa-times-circle', style: 'font-size:20px;margin-right:5px;margin-top: 9px;position:relative;
@@ -11,14 +21,8 @@
     </div>
     <div style="display: inherit;">
     <%= submit_tag 'Поиск', name: nil, class: 'btn btn-outline-light' %>
-      <%= link_to 'На главную', account_url, class: "nav-link active", style: "color:white"%>
     </div>
-  <% end %>
-  <% unless @cart.client_id.nil? %>
-    <% client = Client.find(@cart.client_id) %>
-    <div style="color: aliceblue"><%= "ПОКУПАТЕЛЬ: " + client.name %></div>
-  <% else %>
-    <div style="color: aliceblue">ПОКУПАТЕЛЬ НЕ ВЫБРАН.</div>
+
   <% end %>
     <% if logged_in? %>
     <div id="user_cart">
@@ -33,6 +37,7 @@
         </div>
       <% end %>
   <% end %>
+
   <div id="cart_qty">
     <%= link_to '', @cart, class: 'fa fa-shopping-cart', style: 'font-size:40px;color:dark;hover:text_decoration:none, color:white; ' %>
     <%= link_to @cart, :action => 'go' do %>

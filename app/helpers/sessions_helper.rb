@@ -1,6 +1,10 @@
 module SessionsHelper
   # Logs in the given user.
 
+  # Returns true if the user is logged in, false otherwise.
+  def logged_in?
+    !current_user.nil?
+  end
 
   # Returns the current logged-in user (if any).
   def current_user
@@ -9,8 +13,4 @@ module SessionsHelper
     end
   end
 
-  # Returns true if the user is logged in, false otherwise.
-  def logged_in?
-    !current_user.nil?
-  end
 end
