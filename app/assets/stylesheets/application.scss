@@ -269,3 +269,29 @@ ul ul a {
   color: #3d3d3d;
 }
 //end pop_cart_element
+
+
+
+.dropright-content {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  display: none;
+}
+
+.dropright-content2 {
+  position: absolute;
+  top: 50px;
+  left: 100%;
+  display: none;
+}
+
+
+
+.inner-dropdown:hover .dropright-content {
+  display: block;
+}
+
+.inner-dropdown2:hover .dropright-content2 {
+  display: block;
+}
