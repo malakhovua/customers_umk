@@ -77,6 +77,20 @@ class ProductsController < ApplicationController
     end
   end
 
+
+  def return_subdirectory
+
+    @current_group_id = params[:group_id]
+    @current_group_id_element = '#' + @current_group_id
+    @groups = Product.get_childs_product(@current_group_id)
+
+    respond_to do |format|
+      format.js
+    end
+
+  end
+
+
   def select_group_product
     @group_name = params[:group_name]
     @group_id = params[:group_id]

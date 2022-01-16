@@ -8,21 +8,8 @@
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" data-offset="2">
         <div class="inner-dropdown">
-        <a class="dropdown-item" href="#">Продукция</a>
-        <div class="dropdown-menu dropright-content">
-          <a class="dropdown-item">вереные</a>
-          <a class="dropdown-item">сосиски</a>
-          <a class="dropdown-item">колбаса с.к.</a>
-          <div class="inner-dropdown2">
-            <a class="dropdown-item" href="#">Продукция</a>
-            <div class="dropdown-menu dropright-content2">
-              <a class="dropdown-item">вереные</a>
-              <a class="dropdown-item">сосиски</a>
-              <a class="dropdown-item">колбаса с.к.</a>
-            </div>
-          </div>
+          <a class="dropdown-item" id="00000000017" href="#" onmouseover="getMenu('00000000017')">Продукция</a>
         </div>
-          </div>
         <a class="dropdown-item" href="#">Something else here</a>
         <%= link_to 'На главную', account_url, class: "dropdown-item"%>
       </div>
@@ -72,4 +59,15 @@
 
 <script type="text/javascript" charset="utf-8">
     $('#table-scroll').css("height", "<%= @cart.line_items.size()>10? 750 : (@cart.line_items.size() == 0? 35 : @cart.line_items.size()*80)%>");
+    function getMenu(group_id){
+        fetSubDirectoryServer(group_id);
+
+    }
+
+    function fetSubDirectoryServer(group_id){
+        Rails.ajax({
+            type: "post",
+            url: '/products/return_subdirectory/'+group_id
+        })
+    }
 </script>

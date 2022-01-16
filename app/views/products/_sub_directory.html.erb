@@ -1,0 +1,6 @@
+
+<div class="dropdown-menu dropright-content">
+  <% @groups.each do |group| %>
+    <a class="dropdown-item" id=<%=group.unf_id%> href="#" onmouseover="getMenu(<%="'" + group.unf_id + "'"%>)"><%=group.title%></a>
+  <% end %>
+</div>

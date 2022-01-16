@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
   get "line_items/modal_product_qty" => 'line_items#modal_product_qty', :as => :modal_product_qty
   get "products/return_child_products" => 'products#return_child_products', :as => :return_child_products
+  post "products/return_subdirectory/:group_id" => 'products#return_subdirectory', :as => :return_subdirectory
   get "products/select_group_product" => 'products#select_group_product',   :as => :select_group_product
 
   get "asighnclients/get_clients_list" => 'asighnclients#get_clients_list', :as => :get_clients_list
