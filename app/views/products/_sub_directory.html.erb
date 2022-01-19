@@ -1,6 +1,11 @@
-
-<div class="dropdown-menu dropright-content">
+<div class="dropdown-menu dropright-content<%= Product.get_level(@current_group_id).to_s %>" id="<%= @id_element_sub_div %>">
   <% @groups.each do |group| %>
-    <a class="dropdown-item" id=<%=group.unf_id%> href="#" onmouseover="getMenu(<%="'" + group.unf_id + "'"%>)"><%=group.title%></a>
+    <% unless Product.get_childs_product(group.unf_id).empty? %>
+      <div class="inner-dropdown<%= Product.get_level(group.unf_id) %>">
+    <% end %>
+    <a class="dropdown-item" id=<%= group.unf_id %> href="#" onmouseover="getMenu(<%="'" + group.unf_id + "'"%>)"><%= group.title %></a>
+    <% unless Product.get_childs_product(group.unf_id).empty? %>
+      </div>
+    <% end %>
   <% end %>
 </div>

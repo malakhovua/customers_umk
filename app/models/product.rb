@@ -45,6 +45,16 @@ class Product < ApplicationRecord
     Product.where(:products => {is_folder:true, unf_parent_id:parent_id}).order("title")
   end
 
+  def self.get_level (current_id)
+    level = 1
+    while current_id != "00000000017" do
+      product = Product.find_by(unf_id: current_id)
+      current_id = product.unf_parent_id
+      level = level + 1
+    end
+    level
+  end
+
   def self.get_packs_product (product_id, favorite, client_id)
     #product pacs
     text_query = 'SELECT

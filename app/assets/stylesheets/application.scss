@@ -272,7 +272,7 @@ ul ul a {
 
 
 
-.dropright-content {
+.dropright-content1 {
   position: absolute;
   top: 0;
   left: 100%;
@@ -281,17 +281,38 @@ ul ul a {
 
 .dropright-content2 {
   position: absolute;
-  top: 50px;
+  top: 10px;
+  left: 100%;
+  display: none;
+}
+
+.dropright-content3 {
+  position: absolute;
+  top: 10px;
+  left: 100%;
+  display: none;
+}
+
+.dropright-content4 {
+  position: absolute;
+  top: 10px;
   left: 100%;
   display: none;
 }
 
 
 
-.inner-dropdown:hover .dropright-content {
+.inner-dropdown:hover .dropright-content1 {
   display: block;
 }
 
 .inner-dropdown2:hover .dropright-content2 {
+  display: block;
+}
+
+.inner-dropdown3:hover .dropright-content3 {
+  display: block;
+}
+.inner-dropdown4:hover .dropright-content4 {
   display: block;
 }

@@ -82,6 +82,7 @@ class ProductsController < ApplicationController
 
     @current_group_id = params[:group_id]
     @current_group_id_element = '#' + @current_group_id
+    @id_element_sub_div = 'sub_' + @current_group_id
     @groups = Product.get_childs_product(@current_group_id)
 
     respond_to do |format|
