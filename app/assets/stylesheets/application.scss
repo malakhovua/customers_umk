@@ -270,7 +270,7 @@ ul ul a {
 }
 //end pop_cart_element
 
-
+// catalogs tree style
 
 .dropright-content1 {
   position: absolute;
@@ -300,7 +300,48 @@ ul ul a {
   display: none;
 }
 
+.dropright-content5 {
+  position: absolute;
+  top: 10px;
+  left: 100%;
+  display: none;
+}
+.dropright-content6 {
+  position: absolute;
+  top: 10px;
+  left: 100%;
+  display: none;
+}
+.dropright-content7 {
+  position: absolute;
+  top: 10px;
+  left: 100%;
+  display: none;
+}
+.dropright-content8 {
+  position: absolute;
+  top: 10px;
+  left: 100%;
+  display: none;
+}
+.dropright-content9 {
+  position: absolute;
+  top: 10px;
+  left: 100%;
+  display: none;
+}
 
+dropright-content10 {
+  position: absolute;
+  top: 10px;
+  left: 100%;
+  display: none;
+}
+
+.dropdown-item:hover{
+  background-color: bisque;
+  text-decoration: none;
+}
 
 .inner-dropdown:hover .dropright-content1 {
   display: block;
@@ -314,5 +355,24 @@ ul ul a {
   display: block;
 }
 .inner-dropdown4:hover .dropright-content4 {
+  display: block;
+}
+
+inner-dropdown4:hover .dropright-content5 {
+  display: block;
+}
+inner-dropdown4:hover .dropright-content6 {
+  display: block;
+}
+inner-dropdown4:hover .dropright-content7 {
+  display: block;
+}
+inner-dropdown4:hover .dropright-content8 {
+  display: block;
+}
+inner-dropdown4:hover .dropright-content9 {
+  display: block;
+}
+inner-dropdown4:hover .dropright-content10 {
   display: block;
 }

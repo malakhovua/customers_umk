@@ -60,20 +60,21 @@
 
 </nav>
 
-
-
 <script type="text/javascript" charset="utf-8">
     $('#table-scroll').css("height", "<%= @cart.line_items.size()>10? 750 : (@cart.line_items.size() == 0? 35 : @cart.line_items.size()*80)%>");
     function getMenu(group_id){
+        var parent = document.getElementById(group_id);
         var element = document.getElementById("sub_" + group_id);
+        var top = parent.offsetTop -8;
+        console.log(top)
         if (element == null){
-            getSubDirectoryServer(group_id);
+            getSubDirectoryServer(group_id, top);
         }
     }
-    function getSubDirectoryServer(group_id){
+    function getSubDirectoryServer(group_id, top){
         Rails.ajax({
             type: "post",
-            url: '/products/return_subdirectory/'+group_id
+            url: '/products/return_subdirectory/'+group_id +'/'+top
         })
     }
 

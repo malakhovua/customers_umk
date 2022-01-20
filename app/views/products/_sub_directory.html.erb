@@ -1,4 +1,4 @@
-<div class="dropdown-menu dropright-content<%= Product.get_level(@current_group_id).to_s %>" id="<%= @id_element_sub_div %>">
+<div class="dropdown-menu dropright-content<%= Product.get_level(@current_group_id).to_s %>" id="<%= @id_element_sub_div %>" style="top:<%=@top.to_s%>px">
   <% @groups.each do |group| %>
     <% unless Product.get_childs_product(group.unf_id).empty? %>
       <div class="inner-dropdown<%= Product.get_level(group.unf_id) %>">
