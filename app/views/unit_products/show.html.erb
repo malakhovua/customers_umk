@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @unit_product.name %>
+</p>
+
+<p>
+  <strong>Default:</strong>
+  <%= @unit_product.default %>
+</p>
+
+<p>
+  <strong>Product:</strong>
+  <%= @unit_product.product %>
+</p>
+
+<%= link_to 'Edit', edit_unit_product_path(@unit_product) %> |
+<%= link_to 'Back', unit_products_path %>

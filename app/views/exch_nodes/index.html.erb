@@ -9,6 +9,7 @@
 <table class="table table-bordered">
   <thead class="table table-dark">
     <tr>
+      <th>Code_unf</th>
       <th>Node</th>
       <th>Ser</th>
       <th>Cat</th>
@@ -19,6 +20,7 @@
   <tbody>
     <% @exch_nodes.each do |exch_node| %>
       <tr>
+        <td><%= exch_node.code_unf %></td>
         <td><%= exch_node.node %></td>
         <td><%= exch_node.ser %></td>
         <td><%= exch_node.cat %></td>

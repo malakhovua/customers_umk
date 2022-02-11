@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_30_153544) do
+ActiveRecord::Schema.define(version: 2022_02_10_092415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,6 +58,8 @@ ActiveRecord::Schema.define(version: 2021_11_30_153544) do
     t.boolean "deletion_mark", default: false
     t.string "user_type"
     t.bigint "user_id"
+    t.bigint "pricetype_id"
+    t.index ["pricetype_id"], name: "index_clients_on_pricetype_id"
     t.index ["user_type", "user_id"], name: "index_clients_on_user_type_and_user_id"
   end
 
@@ -67,6 +69,7 @@ ActiveRecord::Schema.define(version: 2021_11_30_153544) do
     t.string "cat"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code_unf"
   end
 
   create_table "favorite_products", force: :cascade do |t|
@@ -118,6 +121,11 @@ ActiveRecord::Schema.define(version: 2021_11_30_153544) do
     t.bigint "address_id"
     t.boolean "server_unf"
     t.datetime "server_unf_date"
+    t.boolean "pickup", default: false
+    t.boolean "certificate", default: false
+    t.boolean "postponement", default: false
+    t.boolean "return", default: false
+    t.boolean "return_item", default: false
     t.index ["address_id"], name: "index_orders_on_address_id"
     t.index ["client_id"], name: "index_orders_on_client_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
@@ -132,6 +140,7 @@ ActiveRecord::Schema.define(version: 2021_11_30_153544) do
     t.integer "type_id"
     t.float "weight"
     t.boolean "deletion_mark", default: false
+    t.boolean "not_active", default: false
   end
 
   create_table "prices", force: :cascade do |t|
@@ -142,9 +151,11 @@ ActiveRecord::Schema.define(version: 2021_11_30_153544) do
     t.bigint "product_id"
     t.bigint "pack_id"
     t.bigint "pricetype_id"
+    t.bigint "unit_id"
     t.index ["pack_id"], name: "index_prices_on_pack_id"
     t.index ["pricetype_id"], name: "index_prices_on_pricetype_id"
     t.index ["product_id"], name: "index_prices_on_product_id"
+    t.index ["unit_id"], name: "index_prices_on_unit_id"
   end
 
   create_table "pricetypes", force: :cascade do |t|
@@ -152,6 +163,7 @@ ActiveRecord::Schema.define(version: 2021_11_30_153544) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deletion_mark", default: false
+    t.string "unf_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -170,6 +182,16 @@ ActiveRecord::Schema.define(version: 2021_11_30_153544) do
     t.string "full_name"
     t.boolean "deletion_mark", default: false
     t.integer "order_id"
+    t.boolean "not_active", default: false
+  end
+
+  create_table "unit_products", force: :cascade do |t|
+    t.string "name"
+    t.boolean "default", default: false
+    t.bigint "product_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_unit_products_on_product_id"
   end
 
   create_table "units", force: :cascade do |t|
@@ -195,6 +217,7 @@ ActiveRecord::Schema.define(version: 2021_11_30_153544) do
   add_foreign_key "asighnclients", "clients"
   add_foreign_key "asighnclients", "users"
   add_foreign_key "carts", "clients"
+  add_foreign_key "clients", "pricetypes"
   add_foreign_key "favorite_products", "clients"
   add_foreign_key "favorite_products", "packs"
   add_foreign_key "favorite_products", "products"
@@ -209,5 +232,6 @@ ActiveRecord::Schema.define(version: 2021_11_30_153544) do
   add_foreign_key "prices", "packs"
   add_foreign_key "prices", "pricetypes"
   add_foreign_key "prices", "products"
+  add_foreign_key "prices", "units"
   add_foreign_key "users", "units"
 end

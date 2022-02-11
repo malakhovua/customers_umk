@@ -1,37 +1,28 @@
 <nav class="navbar fixed-top navbar-light" style="background-color: maroon;">
 
   <%= form_tag(customer_index_path, method: :get, class: 'form-inline') do %>
-
     <div class="dropdown">
       <button class="btn btn-primary" type="button" data-toggle="dropdown" aria-expanded="false" style="margin-right: 5px">
         Меню
       </button>
-
-
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" data-offset="2">
         <div class="inner-dropdown">
-          <a class="dropdown-item" id="00000000017" href="#" onmouseover="getMenu('00000000017')">Продукция</a>
+          <%=link_to  'Продукция', customer_index_path, id: '00000000017', class:"dropdown-item", onmouseover: "getMenu('00000000017')" %>
         </div>
         <a class="dropdown-item" href="#">Something else here</a>
-        <%= link_to 'На главную', account_url, class: "dropdown-item"%>
+        <%= link_to 'На главную', account_url, class: "dropdown-item" %>
       </div>
-
-
-
     </div>
-
-
     <div style="display: flex;margin-right: -20px;">
-      <%= text_field_tag :Product_name, params[:Product_name], placeholder: 'Наименование', class: 'form-control mr-sm-2' %>
+      <%= text_field_tag :Product_name, params[:Product_name], placeholder: 'Наименование', class: 'form-control mr-sm-2', tabindex: 1, id: 'search' %>
       <%= link_to '', customer_index_path, class: 'fa fa-times-circle', style: 'font-size:20px;margin-right:5px;margin-top: 9px;position:relative;
     left: -33px;color:dark;aria-hidden="true"' %>
     </div>
     <div style="display: inherit;">
-    <%= submit_tag 'Поиск', name: nil, class: 'btn btn-outline-light' %>
+      <%= submit_tag 'Поиск', name: nil, class: 'btn btn-outline-light' %>
     </div>
-
   <% end %>
-    <% if logged_in? %>
+  <% if logged_in? %>
     <div id="user_cart">
       <%= link_to edit_user_path(current_user), :action => 'go' do %>
         <div id="user">
@@ -55,27 +46,34 @@
   </div>
   </div>
   <div id="pop_cart">
-      <%= render partial: ('carts/pop_cart') %>
+    <%= render partial: ('carts/pop_cart') %>
   </div>
 
 </nav>
 
 <script type="text/javascript" charset="utf-8">
     $('#table-scroll').css("height", "<%= @cart.line_items.size()>10? 750 : (@cart.line_items.size() == 0? 35 : @cart.line_items.size()*80)%>");
-    function getMenu(group_id){
+
+    function getMenu(group_id) {
         var parent = document.getElementById(group_id);
         var element = document.getElementById("sub_" + group_id);
-        var top = parent.offsetTop -8;
+        var top = parent.offsetTop - 8;
         console.log(top)
-        if (element == null){
+        if (element == null) {
             getSubDirectoryServer(group_id, top);
         }
     }
-    function getSubDirectoryServer(group_id, top){
+
+    function getSubDirectoryServer(group_id, top) {
         Rails.ajax({
             type: "post",
-            url: '/products/return_subdirectory/'+group_id +'/'+top
+            url: '/products/return_subdirectory/' + group_id + '/' + top
         })
     }
 
+    let search = document.querySelector('#search')
+    function ready(){
+        search.focus();
+    }
+    document.addEventListener("DOMContentLoaded", ready);
 </script>

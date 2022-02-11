@@ -3,7 +3,7 @@
     <% unless Product.get_childs_product(group.unf_id).empty? %>
       <div class="inner-dropdown<%= Product.get_level(group.unf_id) %>">
     <% end %>
-    <a class="dropdown-item" id=<%= group.unf_id %> href="#" onmouseover="getMenu(<%="'" + group.unf_id + "'"%>)"><%= group.title %></a>
+    <%=link_to  group.title, customer_index_path(:group_id=>group.unf_id), id: group.unf_id, class:"dropdown-item", onmouseover: "getMenu('#{group.unf_id}')" %>
     <% unless Product.get_childs_product(group.unf_id).empty? %>
       </div>
     <% end %>

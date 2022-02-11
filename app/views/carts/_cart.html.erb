@@ -14,12 +14,25 @@
         </div>
       </div>
       <h2 class="text-center" style="margin-bottom: 15px"> Корзина заказчика</h2>
+
+      <label for="exampleDataList" class="form-label">Покупатель:</label>
+
       <% unless @cart.client_id.nil? %>
         <% client = Client.find(@cart.client_id) %>
-        <h2 class="text-center" style="margin-bottom: 12px"><%= client.name %></h2>
+        <% client_str = client.name + " {" + client.id.to_s + "}" %>
       <% else %>
-        <h2 class="text-center" style="margin-bottom: 12px">ПОКУПАТЕЛЬ НЕ ВЫБРАН.</h2>
+        <% client_str = ""%>
       <% end %>
+
+      <input name="client_id" class="form-control" list="datalistOptions" id="client_input" placeholder="Поиск клинта..." value="<%= client_str %>">
+      <datalist id="datalistOptions">
+        <% clients = Client.order(:name) %>
+        <%#clients = Client.joins(:asighnclients).order(:name)%>
+        <% clients.each do |cl| %>
+          <option value="<%= cl.name + " {" + cl.id.to_s + "}" %>"></option>
+        <% end %>
+      </datalist>
+
       <div class="d-inline-block">
         <div class="form-check">
           <%= check_box_tag 'stick', "", @cart.stick, :onclick => "boxDisable();" %>
@@ -99,6 +112,37 @@
 
       function boxDisable() {
           sendDataServer();
+      };
+
+      function ClientOnInput() {
+      }
+
+      //focus client field event
+      var clientInput = document.getElementById('client_input');
+      clientInput.addEventListener('focusout', (event) => {
+
+          if (clientInput.value != '') {
+              sendDataServer();
+          }
+          // sendDataServer();;
+      });
+
+
+      //clients list search
+      var select = document.getElementById("selectClient");
+      var oldOptions = Array.apply(undefined, select.options); // копируем все OPTION. По ним будем искать
+
+      document.getElementById('input_search_client').onkeyup = function (e) {
+          // спец. сочетания пропускаем
+          if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+          select.options.length = 0;
+          var regexp = new RegExp(this.value, "ig");
+          for (var i = 0; i < oldOptions.length; i++) {
+              if (oldOptions[i].innerText.search(regexp) >= 0) {
+                  select.appendChild(oldOptions[i]);
+              }
+          }
       };
 
   </script>

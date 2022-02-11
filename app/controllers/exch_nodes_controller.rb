@@ -70,6 +70,6 @@ class ExchNodesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def exch_node_params
-      params.require(:exch_node).permit(:node, :ser, :cat)
+      params.require(:exch_node).permit(:node, :ser, :cat, :code_unf)
     end
 end

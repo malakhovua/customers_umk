@@ -14,7 +14,7 @@ class OrdersController < ApplicationController
     unless helpers.current_user_admin
       @orders = Order.all.order('id DESC').where("user_id = #{helpers.current_user.id}").page params[:page]
     else
-      @order = Order.all.order('id DESC').page params[:page]
+      @orders = Order.all.order('id DESC').page params[:page]
     end
   end
 
@@ -27,7 +27,7 @@ class OrdersController < ApplicationController
   def new
     if @cart.client_id.nil?
       respond_to do |format|
-        format.html { redirect_to customer_index_url,
+        format.html { redirect_to @cart,
                                   notice: 'выберите покупателя.' }
       end
       return

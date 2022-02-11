@@ -13,6 +13,8 @@ class Product < ApplicationRecord
   belongs_to :superior, class_name: 'Product', foreign_key: :parent_id, optional: true
   has_many :price
   has_many :favorite_products, dependent: :destroy
+  has_many :unit_products, dependent: :destroy
+
 
   scope :roots, -> { where(parent_id: nil) }
 
@@ -42,7 +44,7 @@ class Product < ApplicationRecord
   end
 
   def self.get_childs_product (parent_id)
-    Product.where(:products => {is_folder:true, unf_parent_id:parent_id}).order("title")
+    Product.where(:products => {is_folder:true, unf_parent_id:parent_id, not_active: false}).order("title")
   end
 
   def self.get_level (current_id)
@@ -55,6 +57,7 @@ class Product < ApplicationRecord
     level
   end
 
+  # this method needs to rebuild
   def self.get_packs_product (product_id, favorite, client_id)
     #product pacs
     text_query = 'SELECT
@@ -74,7 +77,8 @@ class Product < ApplicationRecord
 		   WHERE p.is_folder = false
        AND NOT pcs.id = 0
 	     AND p.id = %d
-       AND pcs.deletion_mark = false'
+       AND NOT pcs.deletion_mark
+       AND NOT pcs.not_active'
 
     text_query = sprintf(text_query, product_id)
     result = ActiveRecord::Base.connection.exec_query(text_query)

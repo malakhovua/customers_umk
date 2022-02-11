@@ -45,13 +45,15 @@ class CartsController < ApplicationController
 
     @cart.stick = !!params['stick']
     @cart.stick_pack = !!params['stick_pack']
+    @cart.client_id = params['client_id'][/\{(.*?)\}/, 1] unless params['client_id'] == ''
 
     @lines_hash = Hash.new
     @cart.line_items.each do |line_item|
-      line_item.quantity = params['qty'+line_item.id.to_s].to_f
-      line_item.amount = params['amount'+line_item.id.to_s].to_f
-      line_item.stick  = !!params['stick'+line_item.id.to_s]
-      line_item.comment = params['comment'+line_item.id.to_s]
+      line_item.pack = Pack.find(params['packs' + line_item.id.to_s]) unless params['packs' + line_item.id.to_s].nil?
+      line_item.quantity = params['qty' + line_item.id.to_s].to_f
+      line_item.amount = params['amount' + line_item.id.to_s].to_f
+      line_item.stick = !!params['stick' + line_item.id.to_s]
+      line_item.comment = params['comment' + line_item.id.to_s]
       line_item.recount = line_item.total_quantity
       line_item.save
       @lines_hash["item" + line_item.id.to_s] = [line_item.id.to_s, line_item.recount]
@@ -59,7 +61,7 @@ class CartsController < ApplicationController
 
     respond_to do |format|
       if @cart.update(cart_params)
-        format.html { redirect_to @cart, notice: 'Корзина была обновлена!'}
+        format.html { redirect_to @cart, notice: 'Корзина была обновлена!' }
         #format.json { render :show, status: :ok, location: @cart }
         format.js
       else
@@ -82,16 +84,16 @@ class CartsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_cart
-      @cart = Cart.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def cart_params
-      params.fetch(:cart, {})
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_cart
+    @cart = Cart.find(params[:id])
+  end
 
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def cart_params
+    params.fetch(:cart, {})
+  end
 
   private
 

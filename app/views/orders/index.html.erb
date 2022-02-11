@@ -1,39 +1,38 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link" , style: "font-size: 20px"%></li>
-    <li class="breadcrumb-item"><%= link_to 'Продолжить покупку', customer_index_path, class: "btn btn-link", style: "font-size: 20px"%></li>
+    <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link", style: "font-size: 20px" %></li>
+    <li class="breadcrumb-item"><%= link_to 'Продолжить покупку', customer_index_path, class: "btn btn-link", style: "font-size: 20px" %></li>
   </ol>
 </nav>
 <div class="container-fluid" style="margin-top: 0px">
-<div id="order_table">
-  <%= render partial: 'orders/order_table'%>
-</div>
-<%= form_tag orders_to_1c83_path({:id => @product_id, :pack_id => @pack_id}), class:"border border-light rounded shadow-sm mb-5", method: :get, remote: true do %>
+  <div id="order_table">
+    <%= render partial: 'orders/order_table' %>
+  </div>
+  <%= form_tag orders_to_1c83_path({ :id => @product_id, :pack_id => @pack_id }), class: "border border-light rounded shadow-sm mb-5", method: :get, remote: true do %>
     <div class="form-group" style="margin: 30px">
       <div class="row">
         <div class="col">
           <label for="inputEmail4">Начало периода:</label>
-          <%= date_field("date1","date_1",value: DateTime.now.strftime("%Y-%m-%d"), class: "form-control")%>
+          <%= date_field("date1", "date_1", value: DateTime.now.strftime("%Y-%m-%d"), class: "form-control") %>
         </div>
         <div class="col">
           <label for="inputEmail4">Окончание периода:</label>
-          <%= date_field("date2","date_2",value: DateTime.now.strftime("%Y-%m-%d"), class: "form-control" )%>
+          <%= date_field("date2", "date_2", value: DateTime.now.strftime("%Y-%m-%d"), class: "form-control") %>
         </div>
       </div>
       <div>
       </div>
     </div>
     <footer class="footer">
-      <span class="text-muted"><%= paginate @orders %></span>
-    </footer>
-    <div class="form-group row" style="margin: 30px">
-      <div class="col-sm-10">
-        <%= submit_tag 'Отправить заказы в УНФ', class: 'btn btn-primary' %>
-      </div>
-    </div>
+      <% unless @orders.nil? %>
+        <span class="text-muted"><%= paginate @orders %></span>
+        </footer>
+        <div class="form-group row" style="margin: 30px">
+          <div class="col-sm-10">
+            <%= submit_tag 'Отправить заказы в УНФ', class: 'btn btn-primary' %>
+          </div>
+        </div>
+      <% end %>
   <% end %>
-
-<br>
-
-<%#= #link_to 'New Order', new_order_path %>
+  <br>
 </div>

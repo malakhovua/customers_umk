@@ -3,43 +3,51 @@
     <div class="p-2">
       <div class="ml-3 d-inline-block align-middle">
         <h5 class="mb-0"><a href="#" class="text-dark d-inline-block align-middle"><%= line_item.product.title %></a>
-          <%product_catalog = Product.find_by(unf_id:line_item.product.unf_parent_id)%>
-        </h5><span class="text-muted font-weight-normal font-italic d-block">Категория: <%= product_catalog.nil? ? "" : product_catalog.title %></span>
+          <% product_catalog = Product.find_by(unf_id: line_item.product.unf_parent_id) %>
+        </h5>
+        <span class="text-muted font-weight-normal font-italic d-block">Категория: <%= product_catalog.nil? ? "" : product_catalog.title %></span>
       </div>
     </div>
   </th>
 
   <th scope="row" class="align-middle">
-    <%= text_field_tag("comment"  + line_item.id.to_s, line_item.comment, class:"form-control", :onchange=>"inputFieldOnChange()") %>
+    <%= text_field_tag("comment" + line_item.id.to_s, line_item.comment, class: "form-control", :onchange => "inputFieldOnChange()") %>
   </th>
-  <td class="align-middle"><strong><%=line_item.pack.nil? ? line_item.product[:weight] : line_item.pack[:weight]%></td>
+  <td class="align-middle"><strong><%= line_item.pack.nil? ? line_item.product[:weight] : line_item.pack[:weight] %></td>
   <% unless line_item.pack.nil? %>
-    <td class="align-middle"><strong><%= line_item.pack.name %></td>
+    <% packs_arr = Product.get_packs_product(line_item.product.id, 0, 0).to_hash %>
+    <% packs = [] %>
+    <% packs_arr.each do |p| %>
+      <% packs.push(Pack.find(p['pack_id'])) %>
+    <% end %>
+    <td class="align-middle"><%= select_tag 'packs' + line_item.id.to_s, options_from_collection_for_select(packs, 'id', 'name', line_item.pack.id), class: "form-control", :onchange => "inputFieldOnChange()" %></td>
   <% else %>
     <td class="align-middle"></td>
   <% end %>
   <% if line_item.quantity == 0 || line_item.quantity == nil %>
-    <td class="align-middle"><strong class="form-control" id="num_field" style="background-color: whitesmoke;"></strong></td>
+    <td class="align-middle"><strong class="form-control" id="num_field" style="background-color: whitesmoke;"></strong>
+    </td>
   <% else %>
     <td class="align-middle">
-      <strong id="cart_onchange"><%= number_field_tag 'qty' + line_item.id.to_s, line_item.quantity, :step => 0.01, class: "form-control", :onchange=>"inputFieldOnChange()"%></strong>
+      <strong id="cart_onchange"><%= number_field_tag 'qty' + line_item.id.to_s, line_item.quantity, :step => 0.01, class: "form-control", :onchange => "inputFieldOnChange()" %></strong>
     </td>
   <% end %>
 
   <% if line_item.amount == 0 || line_item.amount == nil %>
-    <td class="align-middle"><strong class="form-control" id="num_field" style="background-color: whitesmoke;"></strong></td>
+    <td class="align-middle"><strong class="form-control" id="num_field" style="background-color: whitesmoke;"></strong>
+    </td>
   <% else %>
     <td class="align-middle">
-      <strong id="cart_onchange"><%= number_field_tag 'amount' + line_item.id.to_s, line_item.amount, :step => 1, class: "form-control", :onchange=>"inputFieldOnChange()" %></strong>
+      <strong id="cart_onchange"><%= number_field_tag 'amount' + line_item.id.to_s, line_item.amount, :step => 1, class: "form-control", :onchange => "inputFieldOnChange()" %></strong>
     </td>
   <% end %>
   <td class="align-middle">
-    <div id=<%='recount' + line_item.id.to_s %>>
-    <strong ><%=display_recount(line_item.recount)%></strong>
+    <div id=<%= 'recount' + line_item.id.to_s %>>
+      <strong><%= display_recount(line_item.recount) %></strong>
     </div>
   </td>
   <td class="align-middle">
-    <strong id="cart_onchange_chkbx" > <%= check_box_tag 'stick' + line_item.id.to_s, "" ,line_item.stick, :onclick=>"boxDisable();"%></strong>
+    <strong id="cart_onchange_chkbx"> <%= check_box_tag 'stick' + line_item.id.to_s, "", line_item.stick, :onclick => "boxDisable();" %></strong>
   </td>
 
   <td class="align-middle">
@@ -47,10 +55,10 @@
   <% unit_ref = Unit.find(line_item.unit_id) %>
   <td class="align-middle"><strong><%= unit_ref.name %></strong></td>
   <td class="align-middle">
-    <% if @cart.line_items.size ==1 %>
-    <i><%= link_to '', line_item_path(line_item), method: :delete, class: 'fa fa-trash', style: 'color: red;'%></i>
-    <%else %>
-      <i><%= link_to '', line_item_path(line_item), method: :delete, class: 'fa fa-trash', style: 'color: red;', remote:true%></i>
-    <%end %>
+    <% if @cart.line_items.size == 1 %>
+      <i><%= link_to '', line_item_path(line_item), method: :delete, class: 'fa fa-trash', style: 'color: red;' %></i>
+    <% else %>
+      <i><%= link_to '', line_item_path(line_item), method: :delete, class: 'fa fa-trash', style: 'color: red;', remote: true %></i>
+    <% end %>
   </td>
 </tr>
