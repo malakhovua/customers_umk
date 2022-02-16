@@ -4,7 +4,7 @@ class PricesController < ApplicationController
   # GET /prices
   # GET /prices.json
   def index
-    @prices = Price.all
+    @prices = Price.all.order(:product_id, :period, :pricetype_id).page params[:page]
   end
 
   # GET /prices/1

@@ -2,12 +2,16 @@
 
 <h1>Unit Products</h1>
 
-<table>
-  <thead>
+<table class="table table-bordered">
+  <thead class="table table-dark">
     <tr>
+      <th>id</th>
+      <th>unf_id</th>
       <th>Name</th>
-      <th>Default</th>
+      <th>Del_mark</th>
       <th>Product</th>
+      <th>Ratio</th>
+       <th>Default</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -15,9 +19,13 @@
   <tbody>
     <% @unit_products.each do |unit_product| %>
       <tr>
+        <td><%= unit_product.id %></td>
+        <td><%= unit_product.unf_id %></td>
         <td><%= unit_product.name %></td>
-        <td><%= unit_product.default %></td>
-        <td><%= unit_product.product %></td>
+        <td><%= unit_product.deletion_mark %></td>
+        <td><%= unit_product.product.title %></td>
+        <td><%= unit_product.ratio %></td>
+        <td><%= unit_product.default%></td>
         <td><%= link_to 'Show', unit_product %></td>
         <td><%= link_to 'Edit', edit_unit_product_path(unit_product) %></td>
         <td><%= link_to 'Destroy', unit_product, method: :delete, data: { confirm: 'Are you sure?' } %></td>

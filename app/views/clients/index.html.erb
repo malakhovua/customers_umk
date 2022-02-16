@@ -33,7 +33,7 @@
         <td><%= client.parent_name %></td>
         <td><%= client.name %></td>
         <td><%= client.address %></td>
-        <td><%= client.pricetypes.name%></td>
+        <td><%= client.pricetype.nil? ? "" : client.pricetype.name%></td>
         <td><%= client.email %></td>
         <td><%= client.phone %></td>
         <td><%= link_to 'Показать', client %></td>

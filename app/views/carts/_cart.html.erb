@@ -17,22 +17,6 @@
 
       <label for="exampleDataList" class="form-label">Покупатель:</label>
 
-      <% unless @cart.client_id.nil? %>
-        <% client = Client.find(@cart.client_id) %>
-        <% client_str = client.name + " {" + client.id.to_s + "}" %>
-      <% else %>
-        <% client_str = ""%>
-      <% end %>
-
-      <input name="client_id" class="form-control" list="datalistOptions" id="client_input" placeholder="Поиск клинта..." value="<%= client_str %>">
-      <datalist id="datalistOptions">
-        <% clients = Client.order(:name) %>
-        <%#clients = Client.joins(:asighnclients).order(:name)%>
-        <% clients.each do |cl| %>
-          <option value="<%= cl.name + " {" + cl.id.to_s + "}" %>"></option>
-        <% end %>
-      </datalist>
-
       <div class="d-inline-block">
         <div class="form-check">
           <%= check_box_tag 'stick', "", @cart.stick, :onclick => "boxDisable();" %>

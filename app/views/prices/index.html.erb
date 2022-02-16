@@ -9,6 +9,7 @@
 <table class="table table-bordered">
   <thead class="table table-dark">
     <tr>
+      <th>Период</th>
       <th>Продукция</th>
       <th>Упаковка</th>
       <th>Единица</th>
@@ -20,10 +21,11 @@
   <tbody>
     <% @prices.each do |price| %>
       <tr>
-        <td><%= price.product.title %></td>
-        <td><%= price.pack.name %></td>
-        <td><%= price.unit.name %></td>
-        <td><%= price.pricetype.name %></td>
+        <td><%= price.period%></td>
+        <td><%= price.product.nil? ? "" : price.product.title %></td>
+        <td><%= price.pack.nil? ? "" : price.pack.name %></td>
+        <td><%= price.unit_product.nil? ? "" : price.unit_product.name %></td>
+        <td><%= price.pricetype.nil? ? "" : price.pricetype.name %></td>
         <td><%= price.value %></td>
         <td><%= link_to 'Show', price %></td>
         <td><%= link_to 'Edit', edit_price_path(price) %></td>
@@ -36,3 +38,4 @@
 <br>
 
 <%= link_to 'New Price', new_price_path %>
+<%= paginate @prices%>

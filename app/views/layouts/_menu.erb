@@ -18,10 +18,34 @@
       <%= link_to '', customer_index_path, class: 'fa fa-times-circle', style: 'font-size:20px;margin-right:5px;margin-top: 9px;position:relative;
     left: -33px;color:dark;aria-hidden="true"' %>
     </div>
-    <div style="display: inherit;">
-      <%= submit_tag 'Поиск', name: nil, class: 'btn btn-outline-light' %>
+    <div class="row">
+
+      <div class="col">
+        <div style="display: inherit;">
+          <%= submit_tag 'Поиск', name: nil, class: 'btn btn-outline-light' %>
+        </div>
+      </div>
+
+      <% unless @cart.client_id.nil? %>
+        <% client = Client.find(@cart.client_id) %>
+        <% client_str = client.name + " {" + client.id.to_s + "}" %>
+      <% else %>
+        <% client_str = "" %>
+      <% end %>
+
+      <div class="col">
+        <input name="client_id" class="form-control" list="datalistOptions" id="client_input" placeholder="Поиск клинта..." value="<%= client_str %>">
+        <datalist id="datalistOptions">
+          <% clients = Client.order(:name) %>
+          <%#clients = Client.joins(:asighnclients).order(:name)%>
+          <% clients.each do |cl| %>
+            <option value="<%= cl.name + " {" + cl.id.to_s + "}" %>"></option>
+          <% end %>
+        </datalist>
+      </div>
     </div>
-  <% end %>
+
+<% end %>
   <% if logged_in? %>
     <div id="user_cart">
       <%= link_to edit_user_path(current_user), :action => 'go' do %>
@@ -71,9 +95,21 @@
         })
     }
 
+
+
     let search = document.querySelector('#search')
     function ready(){
         search.focus();
     }
     document.addEventListener("DOMContentLoaded", ready);
+
+    //focus client field event
+    var clientInput = document.getElementById('client_input');
+    clientInput.addEventListener('focusout', (event) => {
+
+        if (clientInput.value != '') {
+          alert("hello")//  sendDataServer();
+        }
+        // sendDataServer();;
+    });
 </script>

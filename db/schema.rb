@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_10_092415) do
+ActiveRecord::Schema.define(version: 2022_02_16_125106) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 2022_02_10_092415) do
     t.string "user_type"
     t.bigint "user_id"
     t.bigint "pricetype_id"
+    t.boolean "not_active", default: false
     t.index ["pricetype_id"], name: "index_clients_on_pricetype_id"
     t.index ["user_type", "user_id"], name: "index_clients_on_user_type_and_user_id"
   end
@@ -151,11 +152,11 @@ ActiveRecord::Schema.define(version: 2022_02_10_092415) do
     t.bigint "product_id"
     t.bigint "pack_id"
     t.bigint "pricetype_id"
-    t.bigint "unit_id"
+    t.bigint "unit_product_id"
     t.index ["pack_id"], name: "index_prices_on_pack_id"
     t.index ["pricetype_id"], name: "index_prices_on_pricetype_id"
     t.index ["product_id"], name: "index_prices_on_product_id"
-    t.index ["unit_id"], name: "index_prices_on_unit_id"
+    t.index ["unit_product_id"], name: "index_prices_on_unit_product_id"
   end
 
   create_table "pricetypes", force: :cascade do |t|
@@ -191,6 +192,9 @@ ActiveRecord::Schema.define(version: 2022_02_10_092415) do
     t.bigint "product_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "deletion_mark", default: false
+    t.float "ratio", default: 1.0
+    t.string "unf_id"
     t.index ["product_id"], name: "index_unit_products_on_product_id"
   end
 
@@ -232,6 +236,6 @@ ActiveRecord::Schema.define(version: 2022_02_10_092415) do
   add_foreign_key "prices", "packs"
   add_foreign_key "prices", "pricetypes"
   add_foreign_key "prices", "products"
-  add_foreign_key "prices", "units"
+  add_foreign_key "prices", "unit_products"
   add_foreign_key "users", "units"
 end
