@@ -45,8 +45,6 @@ class CartsController < ApplicationController
 
     @cart.stick = !!params['stick']
     @cart.stick_pack = !!params['stick_pack']
-    @cart.client_id = params['client_id'][/\{(.*?)\}/, 1] unless params['client_id'] == ''
-
     @lines_hash = Hash.new
     @cart.line_items.each do |line_item|
       line_item.pack = Pack.find(params['packs' + line_item.id.to_s]) unless params['packs' + line_item.id.to_s].nil?

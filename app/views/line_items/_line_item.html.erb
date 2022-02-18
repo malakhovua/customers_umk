@@ -49,9 +49,8 @@
   <td class="align-middle">
     <strong id="cart_onchange_chkbx"> <%= check_box_tag 'stick' + line_item.id.to_s, "", line_item.stick, :onclick => "boxDisable();" %></strong>
   </td>
-
   <td class="align-middle">
-    <strong><%= sprintf("%0.02f грн.", Product.get_price(line_item.product.id)) %></strong></td>
+    <strong><%= sprintf("%0.02f грн.", Product.get_price(line_item.product.id,@cart.client.pricetype_id, line_item.pack.nil? ? nil : line_item.pack.id )) %></strong></td>
   <% unit_ref = Unit.find(line_item.unit_id) %>
   <td class="align-middle"><strong><%= unit_ref.name %></strong></td>
   <td class="align-middle">

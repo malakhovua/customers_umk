@@ -1,15 +1,15 @@
 <nav class="navbar fixed-top navbar-light" style="background-color: maroon;">
 
-  <%= form_tag(customer_index_path, method: :get, class: 'form-inline') do %>
+  <%= form_tag(customer_index_path, method: :get, class: 'form-inline', id: 'filter') do %>
     <div class="dropdown">
       <button class="btn btn-primary" type="button" data-toggle="dropdown" aria-expanded="false" style="margin-right: 5px">
         Меню
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" data-offset="2">
         <div class="inner-dropdown">
-          <%=link_to  'Продукция', customer_index_path, id: '00000000017', class:"dropdown-item", onmouseover: "getMenu('00000000017')" %>
+          <%= link_to 'Продукция', customer_index_path, id: '00000000017', class: "dropdown-item", onmouseover: "getMenu('00000000017')" %>
         </div>
-        <a class="dropdown-item" href="#">Something else here</a>
+        <%= link_to 'К списку заказов', orders_url, class: "dropdown-item"%>
         <%= link_to 'На главную', account_url, class: "dropdown-item" %>
       </div>
     </div>
@@ -19,22 +19,32 @@
     left: -33px;color:dark;aria-hidden="true"' %>
     </div>
     <div class="row">
-
+      <!--
+       search product field
+      -->
       <div class="col">
         <div style="display: inherit;">
           <%= submit_tag 'Поиск', name: nil, class: 'btn btn-outline-light' %>
         </div>
       </div>
-
-      <% unless @cart.client_id.nil? %>
-        <% client = Client.find(@cart.client_id) %>
+      <!--
+      end search
+      -->
+      <!--
+      set client block
+      -->
+      <% unless @client_id.nil? %>
+        <% client = Client.find(@client_id) %>
         <% client_str = client.name + " {" + client.id.to_s + "}" %>
       <% else %>
         <% client_str = "" %>
       <% end %>
-
       <div class="col">
-        <input name="client_id" class="form-control" list="datalistOptions" id="client_input" placeholder="Поиск клинта..." value="<%= client_str %>">
+        <div style="display: flex ">
+          <input name="client_id" class="form-control" list="datalistOptions" id="client_input" placeholder="Поиск клинта..." style="width: 500px" value="<%= client_str %>" onChange="updateListProducts()">
+          <a href="#" class="fa fa-times-circle" style="font-size: 20px; color: white; margin-top: 9px;position:relative; margin-left: 5px" onclick="ClearClient()"></a>
+        </div>
+
         <datalist id="datalistOptions">
           <% clients = Client.order(:name) %>
           <%#clients = Client.joins(:asighnclients).order(:name)%>
@@ -44,8 +54,10 @@
         </datalist>
       </div>
     </div>
-
-<% end %>
+    <!--
+    end set client
+    -->
+  <% end %>
   <% if logged_in? %>
     <div id="user_cart">
       <%= link_to edit_user_path(current_user), :action => 'go' do %>
@@ -76,13 +88,18 @@
 </nav>
 
 <script type="text/javascript" charset="utf-8">
+
+    var clientInput = document.getElementById('client_input');
+
+
+    // set height for table-scroll element
     $('#table-scroll').css("height", "<%= @cart.line_items.size()>10? 750 : (@cart.line_items.size() == 0? 35 : @cart.line_items.size()*80)%>");
 
+    //return product subdirectory
     function getMenu(group_id) {
         var parent = document.getElementById(group_id);
         var element = document.getElementById("sub_" + group_id);
         var top = parent.offsetTop - 8;
-        console.log(top)
         if (element == null) {
             getSubDirectoryServer(group_id, top);
         }
@@ -95,21 +112,31 @@
         })
     }
 
+    //end return product subdirectory
 
-
+    //set focus on searching field
     let search = document.querySelector('#search')
-    function ready(){
+
+    function ready() {
         search.focus();
     }
-    document.addEventListener("DOMContentLoaded", ready);
 
-    //focus client field event
-    var clientInput = document.getElementById('client_input');
-    clientInput.addEventListener('focusout', (event) => {
+    //send data on change form elements
+    function updateListProducts() {
 
         if (clientInput.value != '') {
-          alert("hello")//  sendDataServer();
+            Rails.ajax({
+                type: "get",
+                url: '/',
+                data: $("form#filter").serialize()
+            })
         }
-        // sendDataServer();;
-    });
+       // location.reload();
+    }
+
+    //onClick on clear client input field
+    function ClearClient() {
+        clientInput.value = "";
+    }
+
 </script>

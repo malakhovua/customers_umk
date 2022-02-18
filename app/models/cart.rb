@@ -1,5 +1,6 @@
 class Cart < ApplicationRecord
   has_many :line_items, dependent: :destroy
+  belongs_to :client, optional: true
 
   def add_product(product, pack, qty, unit_id, pack_type_id, comment)
 
@@ -55,7 +56,7 @@ class Cart < ApplicationRecord
   end
 
   def total_price
-    line_items.to_a.sum { |item| item.total_price (item.product.id) }
+    line_items.to_a.sum { |item| Product.get_price(item.product.id,self.client.pricetype.id, item.pack.nil? ? nil : item.pack.id) * (item.quantity + item.amount)}
   end
 
   def total_quantity

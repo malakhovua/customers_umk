@@ -14,8 +14,7 @@
         </div>
       </div>
       <h2 class="text-center" style="margin-bottom: 15px"> Корзина заказчика</h2>
-
-      <label for="exampleDataList" class="form-label">Покупатель:</label>
+      <h2 class="text-center" style="margin-bottom: 15px"><%= @cart.client.nil? ? "" : @cart.client.name%></h2>
 
       <div class="d-inline-block">
         <div class="form-check">
@@ -28,6 +27,7 @@
         </div>
       </div>
     </div>
+
     <table class="table table-bordered table-hover">
       <thead>
       <tr>
@@ -98,35 +98,5 @@
           sendDataServer();
       };
 
-      function ClientOnInput() {
-      }
-
-      //focus client field event
-      var clientInput = document.getElementById('client_input');
-      clientInput.addEventListener('focusout', (event) => {
-
-          if (clientInput.value != '') {
-              sendDataServer();
-          }
-          // sendDataServer();;
-      });
-
-
-      //clients list search
-      var select = document.getElementById("selectClient");
-      var oldOptions = Array.apply(undefined, select.options); // копируем все OPTION. По ним будем искать
-
-      document.getElementById('input_search_client').onkeyup = function (e) {
-          // спец. сочетания пропускаем
-          if (e.ctrlKey || e.altKey || e.metaKey) return;
-
-          select.options.length = 0;
-          var regexp = new RegExp(this.value, "ig");
-          for (var i = 0; i < oldOptions.length; i++) {
-              if (oldOptions[i].innerText.search(regexp) >= 0) {
-                  select.appendChild(oldOptions[i]);
-              }
-          }
-      };
 
   </script>

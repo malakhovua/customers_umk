@@ -1,21 +1,22 @@
-<%n=1%>
+<% n = 1 %>
 <% @order.line_items.each do |line_item| %>
-<tr>
-    <td><%=n%></td>
+  <tr>
+    <td><%= n %></td>
     <td><%= line_item.product.title %></td>
     <% unless line_item.pack.nil? %>
       <td><strong><%= line_item.pack.name %></td>
     <% else %>
       <td></td>
     <% end %>
-  <td><strong><%= check_box_tag "","", line_item.stick, :disabled => true%></strong></td>
-  <td><strong><%= line_item.recount %></strong></td>
+    <td><strong><%= check_box_tag "", "", line_item.stick, :disabled => true %></strong></td>
+    <td><strong><%= sprintf("%0.02f", line_item.recount) %></strong></td>
     <td><strong><%= line_item.quantity %></strong></td>
-  <td><strong><%= line_item.amount %></strong></td>
-  <% unit_ref = Unit.find(line_item.unit_id) %>
-  <td><strong><%= unit_ref.name%></strong></td>
-    <td><strong><%= sprintf("%0.02f грн.", Product.get_price(line_item.product.id)) %></strong></td>
-  <td><strong><%= sprintf("%0.02f грн.",(line_item.quantity * Product.get_price(line_item.product.id)))%></strong></td>
-</tr>
-  <%n+=1%>
+    <td><strong><%= line_item.amount %></strong></td>
+    <% unit_ref = Unit.find(line_item.unit_id) %>
+    <td><strong><%= unit_ref.name %></strong></td>
+    <% price = Product.get_price(line_item.product.id, @order.client.pricetype.id, line_item.pack.nil? ? nil : line_item.pack.id,nil,@order.date) %>
+    <td><strong><%= sprintf("%0.02f грн.", price) %></strong></td>
+    <td><strong><%= sprintf("%0.02f грн.", line_item.recount * price) %></strong></td>
+  </tr>
+  <% n += 1 %>
 <% end %>

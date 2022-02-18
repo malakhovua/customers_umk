@@ -1,64 +1,26 @@
-
 <div class="container-fluid">
   <p id="info" style="display: none">Text to popup</p>
   <%= render partial: "layouts/menu" %>
 
   <!-- Modal add qty -->
-  <div id="modal-window" class="modal fade"  tabindex="-1"
+  <div id="modal-window" class="modal fade" tabindex="-1"
        role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <%= render partial: 'line_items/modal_qty' %>
   </div>
   <!-- Modal -->
 
-  <!-- Modal  products tree -->
+  <!--  Modal  products tree
   <div class="modal fade" id="productTreeModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-    <%= render partial: 'products/product_tree_modal' %>
+    <%#= render partial: 'products/product_tree_modal' %>
+  </div>-->
+
+  <div id='customer_content'>
+  <%= render partial: 'customer/content' %>
   </div>
 
-  <div class="wrapper">
-    <div id="content" style="margin-left: 90px">
-      <div class="row">
-          <% @products.each do |product| %>
-              <div class="card" style="width: 18rem; margin: 10px">
-                <%= image_tag(product['image_url'], class: "card-img-top", size: "200x200") %>
-                <div class="card-body">
-                  <h5 class="card-title"><%= product['title'] %></h5>
-                  <p class="card-text" style="color: coral"><%= product['parent_name'] %></p>
-                  <p style="color: #B00100;font-size:25px"><%= sprintf("%0.02f грн.", Product.get_price(product['id'])) %>
-                    <% style_string = @favorite_products.find_by(product_id: product.id, user_id: @current_user.id, client_id: session[:client_id]).nil? ? "font-size: 25px; margin-left: 10px; color: #a4a5b1" : "font-size: 25px; margin-left: 10px; color: #B00100" %>
-                    <%= link_to '', favorite_products_path({ :favorite_product => { :user_id => @current_user.id, :product_id => product.id, :pack_id => ""} } ),
-                                method: :post, class: "fa fa-heart", id: "heard_" + product.id.to_s,
-                                style: style_string,
-                                remote: true %>
-                    <%= link_to '', modal_product_qty_path(:id => product['id'], :pack_id => nil, :product_name => product['title'], :pack_name => '', :unit_name => 'кг'), class: 'fa fa-cart-plus', style: 'margin-left:10px;font-size:30px;color:#B00100;',
-                                :data => { :toggle => 'modal', :target => '#modal-window' }, remote: true %>
-                  </p>
-                </div>
-                <ul class="list-group list-group-flush">
-                  <% packs = Product.get_packs_product(product['id'],@favorite, @client_id) %>
-                  <% packs.each do |pack| %>
-                    <li class="list-group-item"> <%= pack['pack_name'] %>
-                      <p style="color: forestgreen;font-size:25px"><%= sprintf("%0.02f грн.", Product.get_price(product['id'])) %>
-                        <% style_string_pack = @favorite_products.find_by(product_id: product.id, user_id: @current_user.id, client_id: session[:client_id], pack_id: pack['pack_id']).nil? ? "font-size: 25px; margin-left: 10px; color: #a4a5b1" : "font-size: 25px; margin-left: 10px; color: #B00100" %>
-                        <%= link_to '', favorite_products_path({ :favorite_product => { :user_id => @current_user.id, :product_id => product.id, :pack_id => pack['pack_id']} }),
-                                    method: :post, class: "fa fa-heart", id: "heard_" + product.id.to_s + pack['pack_id'].to_s,
-                                    style: style_string_pack,
-                                    remote: true %>
-                        <%= link_to '', modal_product_qty_path(:id => product['id'], :pack_id => pack['pack_id'], :product_name => product['title'], :pack_name => pack['pack_name'], :unit_name => 'шт'), class: 'fa fa-cart-plus', style: 'margin-left:10px;font-size:30px;color: forestgreen;',
-                                    :data => { :toggle => 'modal', :target => '#modal-window' }, remote: true %>
-                      </p>
-                    </li>
-                  <% end %>
-                </ul>
-              </div>
-            <% end %>
-      </div>
-    </div>
-  </div>
 
-  <footer class="footer">
-    <span class="text-muted"><%= paginate @products %></span>
-  </footer>
+
+
 
   <script type="text/javascript" charset="utf-8">
 
@@ -66,13 +28,13 @@
       var e = document.getElementById('cart_qty');
       var ecl = document.getElementById('close_pop_cart')
 
-      e.onmouseover = function() {
+      e.onmouseover = function () {
           document.getElementById('pop_cart').style.display = 'block';
-         };
-      e.onmouseout = function() {
-        // document.getElementById('pop_cart').style.display = 'none';
+      };
+      e.onmouseout = function () {
+          // document.getElementById('pop_cart').style.display = 'none';
       }
-      onclickPopCart = function(){
+      onclickPopCart = function () {
           document.getElementById('pop_cart').style.display = 'none';
       }
 

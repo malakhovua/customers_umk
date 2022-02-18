@@ -2,8 +2,8 @@ class Product < ApplicationRecord
   validates :title, :description, :image_url, presence: true
   #validates :price, numericality: {greate_than_or_equel_to: 0.01}
   validates :image_url, allow_blank: true, format: {
-      with: %r{\.(gif|jpg|png)\Z}i,
-      massege: 'must be a URL for GIF, JPG or PNG image.'
+    with: %r{\.(gif|jpg|png)\Z}i,
+    massege: 'must be a URL for GIF, JPG or PNG image.'
   }
   before_destroy :ensure_not_ref_by_any_line_item
   has_many :line_items
@@ -15,36 +15,50 @@ class Product < ApplicationRecord
   has_many :favorite_products, dependent: :destroy
   has_many :unit_products, dependent: :destroy
 
-
   scope :roots, -> { where(parent_id: nil) }
 
   paginates_per 50
   max_paginates_per 100
 
-  def self.get_price (prod_id=0, pricetype_id=22)
-    text_query = 'SELECT
-    pr.value,
-    pr.product_id,
-    pr.period
-    FROM
-    prices AS pr
-    WHERE pr.product_id = %d
-    AND pr.pricetype_id = %d
-    LIMIT 1'
-    text_query = sprintf(text_query,prod_id, pricetype_id)
+  def self.get_price(prod_id, pricetype_id, pack_id = nil, product_unit_id = nil, period = nil)
 
-    result = ActiveRecord::Base.connection.exec_query(text_query)
+    return 0 if pricetype_id.nil?
 
-    if result[0].nil?
-      0.to_f
+    period = if period.nil?
+               Time.now
+             else
+               period
+             end
+
+    product_unit = if product_unit_id.nil?
+                     default_unit(prod_id)
+                   else
+                     UnitProduct.find_by(id: product_unit)
+                   end
+
+    product_price = 0
+    pack_price = 0
+
+    #get product price
+    if product_unit.nil?
+      result = Price.all.where(product_id: prod_id, pricetype_id: pricetype_id).where('period <= ?', period).order(period: :DESC).limit(1)
     else
-      result[0]['value'].to_f
+      result = Price.all.where(product_id: prod_id, pricetype_id: pricetype_id, unit_product_id: product_unit.id).where('period <= ?', period).order(period: :DESC).limit(1)
     end
+    product_price = result[0].value unless result[0].nil?
+
+    #get pack price
+    unless pack_id.nil?
+      result = Price.where(pack_id: pack_id).where('period <= ?', period).order(period: :DESC).limit(1)
+      pack_price = result[0].value unless result[0].nil?
+    end
+
+    product_price + pack_price
 
   end
 
   def self.get_childs_product (parent_id)
-    Product.where(:products => {is_folder:true, unf_parent_id:parent_id, not_active: false}).order("title")
+    Product.where(:products => { is_folder: true, unf_parent_id: parent_id, not_active: false }).order("title")
   end
 
   def self.get_level (current_id)
@@ -55,6 +69,10 @@ class Product < ApplicationRecord
       level = level + 1
     end
     level
+  end
+
+  def self.default_unit(product_id)
+    UnitProduct.find_by(product_id: product_id, default: true)
   end
 
   # this method needs to rebuild

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_16_125106) do
+ActiveRecord::Schema.define(version: 2022_02_18_095810) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,7 +96,7 @@ ActiveRecord::Schema.define(version: 2022_02_16_125106) do
     t.bigint "pack_id"
     t.bigint "unit_id"
     t.integer "pack_type_id"
-    t.integer "amount"
+    t.integer "amount", default: 0
     t.string "product_unf_id"
     t.boolean "stick", default: false
     t.string "comment"

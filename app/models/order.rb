@@ -16,7 +16,7 @@ class Order < ApplicationRecord
   end
 
   def total_price
-    line_items.to_a.sum { |item| item.total_price (item.product.id)}
+    line_items.to_a.sum { |item| Product.get_price(item.product.id, self.client.pricetype.id, item.pack.nil? ? nil : item.pack.id,nil, self.date ) * (item.recount)}
   end
 
   def total_quantity

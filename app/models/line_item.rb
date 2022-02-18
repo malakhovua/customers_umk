@@ -4,9 +4,6 @@ class LineItem < ApplicationRecord
   belongs_to :pack, optional: true
   belongs_to :cart
 
-  def total_price (product_id)
-    Product.get_price(product_id) * quantity
-  end
 
   def total_quantity
     unit = Unit.find(unit_id)
