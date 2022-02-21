@@ -8,6 +8,11 @@
 
     <%= form.label :Email_address, class: "form-label", for: "validationDefault02" %>
     <%= form.email_field :email, class: "form-control", id: "exampleFormControlInput1", placeholder: "name@example.com" %>
+
+    <%= form.label :Группа_доступа, class: "form-label" %>
+    <% groups = AccessGroup.all.map { |group| [group.name, group.id] }%>
+    <%= form.select(:access_group_id, options_for_select(groups, selected: @user.access_group_id), {}, { :class => 'form-control' }) %>
+
   </div>
 
   <div class="col-md-4">
@@ -17,17 +22,18 @@
     <%= form.label :Подтвердите_пароль, class: "form-label" %>
     <%= form.password_field :password_confirmation, class: "form-control" %>
 
-    <% if current_user.admin?%>
-    <%= form.label :Роль, class: "form-label" %>
-    <% role_array = User.roles %>
-    <%= form.select(:role, options_for_select(role_array, selected: User.roles[@user.role]), {}, { :class => 'form-control' }) %>
-    <%end%>
+    <% if current_user.admin? %>
+      <%= form.label :Роль, class: "form-label" %>
+      <% role_array = User.roles %>
+      <%= form.select(:role, options_for_select(role_array, selected: User.roles[@user.role]), {}, { :class => 'form-control' }) %>
+    <% end %>
 
-    <% if current_user.admin?%>
-    <label>Ед. измерения в подборе:</label>
-    <% unit_array = Unit.all.map { |unit| [unit.name, unit.id] } %>
-    <%= form.select(:unit_id, options_for_select(unit_array, selected: @user.unit_id), {}, { :class => 'form-control' }) %>
-    <%end%>
+
+    <% if current_user.admin? %>
+      <label>Ед. измерения в подборе:</label>
+      <% unit_array = Unit.all.map { |unit| [unit.name, unit.id] } %>
+      <%= form.select(:unit_id, options_for_select(unit_array, selected: @user.unit_id), {}, { :class => 'form-control' }) %>
+    <% end %>
 
   </div>
 

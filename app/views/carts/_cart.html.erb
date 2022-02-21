@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover table-of-contents">
       <thead>
       <tr>
         <th scope="col" class="">
@@ -67,7 +67,7 @@
       </tr>
       </thead>
       <div id="line_items_body">
-        <tbody id="line_items">
+        <tbody>
         <%= render(@cart.line_items) %>
         </tbody>
       </div>
@@ -75,6 +75,10 @@
     </div>
     <!-- End -->
   <% end #form_tag %>
+
+  <style>
+
+  </style>
 
   <script type="text/javascript">
       //send form to server

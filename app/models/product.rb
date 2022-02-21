@@ -14,6 +14,8 @@ class Product < ApplicationRecord
   has_many :price
   has_many :favorite_products, dependent: :destroy
   has_many :unit_products, dependent: :destroy
+  has_many :product_exeptions
+  attr_accessor :belong_another_client
 
   scope :roots, -> { where(parent_id: nil) }
 
@@ -73,6 +75,14 @@ class Product < ApplicationRecord
 
   def self.default_unit(product_id)
     UnitProduct.find_by(product_id: product_id, default: true)
+  end
+
+  def belong_another_client (client_id)
+    if client_id.nil?
+      return false
+    end
+    res = ProductExeption.where(:product_id => self.id).where.not(:client_id => client_id)
+    res.many?
   end
 
   # this method needs to rebuild

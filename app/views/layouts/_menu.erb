@@ -46,7 +46,7 @@
         </div>
 
         <datalist id="datalistOptions">
-          <% clients = Client.order(:name) %>
+          <% clients = current_user.access_group_id.nil? ? [] : Client.where(:access_group_id => current_user.access_group_id).order(:name) %>
           <%#clients = Client.joins(:asighnclients).order(:name)%>
           <% clients.each do |cl| %>
             <option value="<%= cl.name + " {" + cl.id.to_s + "}" %>"></option>

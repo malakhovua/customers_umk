@@ -110,6 +110,7 @@ class Unf
                end
 
       client[:unf_id] = dt['unf_id']
+      client[:access_group_id] = dt['access_group_id'].to_i != 0 ? dt['access_group_id'].to_i != 0 : ""
       client[:parent_id] = dt['parent_id']
       client[:pricetype_id] = dt['pricetype_id']
       client[:deletion_mark] = dt['deletion_mark']
@@ -149,7 +150,7 @@ class Unf
       price[:period] = dt['period']
       price[:product_id] = Product.find_by(unf_id: dt['unf_id']).id
       unless dt['unf_pack_id'] == ''
-        pack = Pack.find_by(id:dt['unf_pack_id'])
+        pack = Pack.find_by(id: dt['unf_pack_id'])
         next if pack.nil?
 
         price[:pack_id] = dt['unf_pack_id']
@@ -186,6 +187,25 @@ class Unf
     }
   end
 
+  def get_access_groups
+    res = connect_1c.get(get_unf_path('access_groups'))
+
+    data = JSON.parse res.body
+
+    data.each { |dt|
+      group = if AccessGroup.where(:id => dt['id'].to_i).present?
+               AccessGroup.find_by(id: dt['id'].to_i)
+             else
+               AccessGroup.new
+             end
+
+      group[:id] = dt['id'].to_i
+      group[:name] = dt['name']
+      group.save!
+    }
+
+  end
+
   def get_price_types
     res = connect_1c.get(get_unf_path 'pricetype')
 
@@ -203,6 +223,35 @@ class Unf
       pricetype[:name] = dt['name']
       pricetype.save!
     }
+  end
+
+  def get_product_exceptions_1c83
+
+    res = connect_1c.get(get_unf_path 'product_exceptions')
+
+    data = JSON.parse res.body
+
+    data.each { |dt|
+
+      product = Product.find_by(:unf_id => dt['product_id'])
+      client = Client.find_by(:unf_id => dt['client_id'])
+
+      unless product.present? && client.present?
+        next
+      end
+
+      if ProductExeption.where(:product_id => product.id, :client_id => client.id).present?
+        next
+      else
+        exception = ProductExeption.new
+      end
+
+      exception.product_id = product.id
+      exception.client_id = client.id
+
+      exception.save!
+    }
+
   end
 
   def connect_1c
@@ -226,11 +275,13 @@ class Unf
     orders = Order.all.where(:date => date1..date2, :server_unf => nil)
     first = true
     orders.each do |order|
+      address_id = order.address.nil? ? '' : order.address.unf_id
       coma = first ? '' : ','
       cont = cont + coma +
-             '{"header":' + order.to_json +
-             '"clien_unf_id":' + '"' + order.client['unf_id'].to_s + '"' +
-             ',"line_items": [' + order.line_items.to_json + ']' + '}'
+        '{"header":' + order.to_json +
+        '"clien_unf_id":' + '"' + order.client['unf_id'].to_s + '"' +
+        '"address_id":' + '' + address_id + '' +
+        ',"line_items": [' + order.line_items.to_json + ']' + '}'
       first = false
     end
 

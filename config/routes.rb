@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :access_groups
+  resources :product_exeptions
   resources :unit_products
   resources :addresses
   resources :exch_nodes
@@ -22,6 +24,8 @@ Rails.application.routes.draw do
   get 'admin/prices_1c83' => 'admin#prices_1c83', :as => :prices_1c83
   get 'admin/orders_to_1c83' => 'admin#orders_to_1c83', :as => :orders_to_1c83
   get 'admin/addresse_1c83' => 'admin#addresses_1c83', :as => :addresses_1c383
+  get 'admin/access_groups_1c83'=>'admin#access_groups_1c83', :as => :access_groups_1c83
+  get 'admin/product_exceptions_1c83' => 'admin#product_exceptions_1c83', :as => :product_exceptions_1c83
 
 
   get "line_items/modal_product_qty" => 'line_items#modal_product_qty', :as => :modal_product_qty

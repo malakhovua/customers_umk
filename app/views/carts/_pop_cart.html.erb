@@ -10,8 +10,10 @@
         <% pack_name = line.pack_id.nil? ? '' : " (" + Pack.find(line.pack_id).name + ") " %>
         <tr>
           <td class="align-middle"><%= line.product.title + pack_name %></td>
+          <td class="align-middle"><%= display_recount(line.amount + line.quantity).to_s%></td>
           <td class="align-middle"><%= display_recount(line.recount).to_s + ' кг' %></td>
-        </tr>
+          <!--<td></td><i><%#= link_to '', line_item_path(line), method: :delete, class: 'fa fa-trash', style: 'color: red;', remote: true %></i></td>
+        --></tr>
       <% end %>
       </tbody>
     </table>

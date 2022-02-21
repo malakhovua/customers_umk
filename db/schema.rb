@@ -10,10 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_18_095810) do
+ActiveRecord::Schema.define(version: 2022_02_19_204318) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "access_groups", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "addresses", force: :cascade do |t|
     t.string "description"
@@ -60,6 +66,8 @@ ActiveRecord::Schema.define(version: 2022_02_18_095810) do
     t.bigint "user_id"
     t.bigint "pricetype_id"
     t.boolean "not_active", default: false
+    t.bigint "access_group_id"
+    t.index ["access_group_id"], name: "index_clients_on_access_group_id"
     t.index ["pricetype_id"], name: "index_clients_on_pricetype_id"
     t.index ["user_type", "user_id"], name: "index_clients_on_user_type_and_user_id"
   end
@@ -167,6 +175,15 @@ ActiveRecord::Schema.define(version: 2022_02_18_095810) do
     t.string "unf_id"
   end
 
+  create_table "product_exeptions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "product_id"
+    t.bigint "client_id"
+    t.index ["client_id"], name: "index_product_exeptions_on_client_id"
+    t.index ["product_id"], name: "index_product_exeptions_on_product_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -214,6 +231,8 @@ ActiveRecord::Schema.define(version: 2022_02_18_095810) do
     t.bigint "unit_id"
     t.string "email"
     t.integer "role", default: 0
+    t.bigint "access_group_id"
+    t.index ["access_group_id"], name: "index_users_on_access_group_id"
     t.index ["unit_id"], name: "index_users_on_unit_id"
   end
 
@@ -221,6 +240,7 @@ ActiveRecord::Schema.define(version: 2022_02_18_095810) do
   add_foreign_key "asighnclients", "clients"
   add_foreign_key "asighnclients", "users"
   add_foreign_key "carts", "clients"
+  add_foreign_key "clients", "access_groups"
   add_foreign_key "clients", "pricetypes"
   add_foreign_key "favorite_products", "clients"
   add_foreign_key "favorite_products", "packs"
@@ -237,5 +257,8 @@ ActiveRecord::Schema.define(version: 2022_02_18_095810) do
   add_foreign_key "prices", "pricetypes"
   add_foreign_key "prices", "products"
   add_foreign_key "prices", "unit_products"
+  add_foreign_key "product_exeptions", "clients"
+  add_foreign_key "product_exeptions", "products"
+  add_foreign_key "users", "access_groups"
   add_foreign_key "users", "units"
 end

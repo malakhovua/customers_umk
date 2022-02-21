@@ -1,5 +1,6 @@
 class Order < ApplicationRecord
   belongs_to :client
+  belongs_to :address, optional: true
   belongs_to :user
   has_many :line_items, dependent: :destroy
 
@@ -16,6 +17,9 @@ class Order < ApplicationRecord
   end
 
   def total_price
+    if self.client.pricetype.nil?
+      return 0
+    end
     line_items.to_a.sum { |item| Product.get_price(item.product.id, self.client.pricetype.id, item.pack.nil? ? nil : item.pack.id,nil, self.date ) * (item.recount)}
   end
 

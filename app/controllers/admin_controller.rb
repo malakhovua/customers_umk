@@ -14,6 +14,14 @@ class AdminController < ApplicationController
     end
   end
 
+  def access_groups_1c83
+    exchenge = Unf.new
+    exchenge.get_access_groups
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def packs_1c83
     exchenge = Unf.new
     exchenge.get_packs
@@ -52,6 +60,15 @@ class AdminController < ApplicationController
     respond_to do |format|
       format.js
     end
+  end
+
+  def product_exceptions_1c83
+    exchenge = Unf.new
+    exchenge.get_product_exceptions_1c83
+    respond_to do |format|
+      format.js
+    end
+
   end
 
 
