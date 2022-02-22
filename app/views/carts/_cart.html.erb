@@ -1,74 +1,76 @@
 <!-- End -->
 <div id="cart_show">
   <%= form_tag cart_path, method: :put, id: "cartForm" do %>
-    <div class="sticky-top" style="background-color: #F7F7F7">
-      <div class="row" style="margin-bottom: 20px">
-        <div>
-          <%= link_to " Продолжить покупку", customer_index_path, class: "fa fa-shopping-basket", style: "margin: 10px;
+    <table class="table table-bordered table-hover table-of-contents">
+      <div>
+        <thead class="sticky-top" style="background-color: aliceblue">
+        <tr>
+          <th scope="colgroup" colspan="11">
+            <div class="row" style="margin-bottom: 20px">
+              <div>
+                <%= link_to " Продолжить покупку", customer_index_path, class: "fa fa-shopping-basket", style: "margin: 10px;
     font-size: 25px;
     color: dodgerblue;" %>
-        </div>
-        <div>
-          <%= link_to ' Очистить корзину', @cart, method: :delete,
-                      data: { confirm: 'Вы уверены?' }, class: "fa fa-trash", style: "margin: 10px;font-size: 25px;color: red;" %>
-        </div>
+              </div>
+              <div>
+                <%= link_to ' Очистить корзину', @cart, method: :delete,
+                            data: { confirm: 'Вы уверены?' }, class: "fa fa-trash", style: "margin: 10px;font-size: 25px;color: red;" %>
+              </div>
+            </div>
+            <h2 class="text-center" style="margin-bottom: 15px"> Корзина заказчика</h2>
+            <h2 class="text-center" style="margin-bottom: 15px"><%= @cart.client.nil? ? "" : @cart.client.name %></h2>
+            <div class="d-inline-block">
+              <div class="form-check">
+                <%= check_box_tag 'stick', "", @cart.stick, :onclick => "boxDisable();" %>
+                <label class="form-check-label" for="exampleCheck1">Стикеровать все</label>
+              </div>
+              <div class="form-check">
+                <%= check_box_tag 'stick_pack', "", @cart.stick_pack, :onclick => "boxDisable();" %>
+                <label class="form-check-label" for="exampleCheck1">Стикеровать только в упаковке</label>
+              </div>
+            </div>
+          </th>
+        </tr>
+        <tr>
+          <th scope="col" class="">
+            <div class="p-2 px-3 text-uppercase">Продукция</div>
+          </th>
+          <th scope="col" class="">
+            <div class="p-2 px-3 text-uppercase">Примечание</div>
+          </th>
+          <th scope="col" class="">
+            <div class="py-2 text-uppercase">Вес, ед.</div>
+          </th>
+          <th scope="col" class="">
+            <div class="p-2 px-3 text-uppercase">Упаковка</div>
+          </th>
+          <th scope="col" class="">
+            <div class="py-2 text-uppercase">Количество, вес</div>
+          </th>
+          <th scope="col" class="">
+            <div class="py-2 text-uppercase">Количество, шт</div>
+          </th>
+          <th scope="col" class="">
+            <div class="py-2 text-uppercase">Пересчет, кг</div>
+          </th>
+          <th scope="col" class="">
+            <div class="py-2 text-uppercase">Стикировать</div>
+          </th>
+          <th scope="col" class="">
+            <div class="py-2 text-uppercase">Цена</div>
+          </th>
+          <th scope="col" class="">
+            <div class="py-2 text-uppercase">Ед.</div>
+          </th>
+          <th scope="col" class="">
+            <div class="py-2 text-uppercase"></div>
+          </th>
+        </tr>
+        </thead>
       </div>
-      <h2 class="text-center" style="margin-bottom: 15px"> Корзина заказчика</h2>
-      <h2 class="text-center" style="margin-bottom: 15px"><%= @cart.client.nil? ? "" : @cart.client.name%></h2>
-
-      <div class="d-inline-block">
-        <div class="form-check">
-          <%= check_box_tag 'stick', "", @cart.stick, :onclick => "boxDisable();" %>
-          <label class="form-check-label" for="exampleCheck1">Стикеровать все</label>
-        </div>
-        <div class="form-check">
-          <%= check_box_tag 'stick_pack', "", @cart.stick_pack, :onclick => "boxDisable();" %>
-          <label class="form-check-label" for="exampleCheck1">Стикеровать только в упаковке</label>
-        </div>
-      </div>
-    </div>
-
-    <table class="table table-bordered table-hover table-of-contents">
-      <thead>
-      <tr>
-        <th scope="col" class="">
-          <div class="p-2 px-3 text-uppercase">Продукция</div>
-        </th>
-        <th scope="col" class="">
-          <div class="p-2 px-3 text-uppercase">Примечание</div>
-        </th>
-        <th scope="col" class="">
-          <div class="py-2 text-uppercase">Вес, ед.</div>
-        </th>
-        <th scope="col" class="">
-          <div class="p-2 px-3 text-uppercase">Упаковка</div>
-        </th>
-        <th scope="col" class="">
-          <div class="py-2 text-uppercase">Количество, вес</div>
-        </th>
-        <th scope="col" class="">
-          <div class="py-2 text-uppercase">Количество, шт</div>
-        </th>
-        <th scope="col" class="">
-          <div class="py-2 text-uppercase">Пересчет, кг</div>
-        </th>
-        <th scope="col" class="">
-          <div class="py-2 text-uppercase">Стикировать</div>
-        </th>
-        <th scope="col" class="">
-          <div class="py-2 text-uppercase">Цена</div>
-        </th>
-        <th scope="col" class="">
-          <div class="py-2 text-uppercase">Ед.</div>
-        </th>
-        <th scope="col" class="">
-          <div class="py-2 text-uppercase"></div>
-        </th>
-      </tr>
-      </thead>
       <div id="line_items_body">
         <tbody>
-        <%= render(@cart.line_items) %>
+        <%= render(@cart.line_items.order(:id)) %>
         </tbody>
       </div>
     </table>

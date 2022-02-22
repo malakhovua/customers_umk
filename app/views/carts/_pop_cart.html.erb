@@ -6,12 +6,12 @@
     <p>Товар в корзине:</p>
     <table class="table table-bordered table-hover">
       <tbody>
-      <% @cart.line_items.each do |line| %>
+      <% @cart.line_items.order(:id).each do |line| %>
         <% pack_name = line.pack_id.nil? ? '' : " (" + Pack.find(line.pack_id).name + ") " %>
         <tr>
           <td class="align-middle"><%= line.product.title + pack_name %></td>
-          <td class="align-middle"><%= display_recount(line.amount + line.quantity).to_s%></td>
-          <td class="align-middle"><%= display_recount(line.recount).to_s + ' кг' %></td>
+          <td class="align-left"><%= display_recount(line.amount + line.quantity).to_s%></td>
+          <td class="align-left"><%= display_recount(line.recount).to_s + ' кг' %></td>
           <!--<td></td><i><%#= link_to '', line_item_path(line), method: :delete, class: 'fa fa-trash', style: 'color: red;', remote: true %></i></td>
         --></tr>
       <% end %>

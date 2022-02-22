@@ -76,10 +76,11 @@ class AdminController < ApplicationController
     date1 = params['date1']['date_1'].to_time
     date2 = params['date2']['date_2'].to_time
     exchenge = Unf.new
-    exchenge.post_orders(date1, date2)
+    exchenge.post_orders(date1, date2,helpers.current_user.id)
     @orders = Order.all
     respond_to do |format|
-      format.js
+      #format.js
+            format.html { redirect_to orders_url, notice: 'Заказы отправлены!' }
     end
   end
 

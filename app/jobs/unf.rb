@@ -269,10 +269,10 @@ class Unf
     end
   end
 
-  def post_orders(date1, date2)
+  def post_orders(date1, date2, user_id)
     cont = '{"orders":['
 
-    orders = Order.all.where(:date => date1..date2, :server_unf => nil)
+    orders = Order.all.where(:date => date1..date2, :server_unf => nil).where(:user_id => user_id)
     first = true
     orders.each do |order|
       address_id = order.address.nil? ? '' : order.address.unf_id

@@ -1,5 +1,5 @@
 <% n = 1 %>
-<% @order.line_items.each do |line_item| %>
+<% @order.line_items.order(:id).each do |line_item| %>
   <tr>
     <td><%= n %></td>
     <td><%= line_item.product.title %></td>

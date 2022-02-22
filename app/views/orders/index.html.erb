@@ -8,7 +8,7 @@
   <div id="order_table">
     <%= render partial: 'orders/order_table' %>
   </div>
-  <%= form_tag orders_to_1c83_path({ :id => @product_id, :pack_id => @pack_id }), class: "border border-light rounded shadow-sm mb-5", method: :get, remote: true do %>
+  <%= form_tag orders_to_1c83_path({ :id => @product_id, :pack_id => @pack_id }), class: "border border-light rounded shadow-sm mb-5", method: :get do %>
     <div class="form-group" style="margin: 30px">
       <div class="row">
         <div class="col">
@@ -29,10 +29,11 @@
         </footer>
         <div class="form-group row" style="margin: 30px">
           <div class="col-sm-10">
-            <%= submit_tag 'Отправить заказы в УНФ', class: 'btn btn-primary' %>
+            <%= submit_tag 'Отправить заказы в УНФ', class: 'btn btn-primary' %> <h5 style="color: red"><%=notice%></h5>
           </div>
         </div>
       <% end %>
   <% end %>
   <br>
+
 </div>
