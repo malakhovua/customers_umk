@@ -9,7 +9,6 @@
       </div>
     </div>
   </th>
-
   <th scope="row" class="align-middle">
     <%= text_field_tag("comment" + line_item.id.to_s, line_item.comment, class: "form-control", :onchange => "inputFieldOnChange()") %>
   </th>
@@ -32,7 +31,6 @@
       <strong id="cart_onchange"><%= number_field_tag 'qty' + line_item.id.to_s, line_item.quantity, :step => 0.01, class: "form-control", :onchange => "inputFieldOnChange()" %></strong>
     </td>
   <% end %>
-
   <% if line_item.amount == 0 || line_item.amount == nil %>
     <td class="align-middle"><strong class="form-control" id="num_field" style="background-color: whitesmoke;"></strong>
     </td>

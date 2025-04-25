@@ -13,6 +13,9 @@
     <% groups = AccessGroup.all.map { |group| [group.name, group.id] }%>
     <%= form.select(:access_group_id, options_for_select(groups, selected: @user.access_group_id), {}, { :class => 'form-control' }) %>
 
+    <%= form.label :Код_УНФ, class: "form-label", for: "validationDefault01" %>
+    <%= form.text_field :unf_id, class: "form-control", id: "validationDefault01" %>
+
   </div>
 
   <div class="col-md-4">

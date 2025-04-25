@@ -91,7 +91,6 @@
 
     var clientInput = document.getElementById('client_input');
 
-
     // set height for table-scroll element
     $('#table-scroll').css("height", "<%= @cart.line_items.size()>10? 750 : (@cart.line_items.size() == 0? 35 : @cart.line_items.size()*80)%>");
 

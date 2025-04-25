@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Inventory Line Items</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Qty</th>
+      <th>Price</th>
+      <th>Sum</th>
+      <th>Inventory</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @inventory_line_items.each do |inventory_line_item| %>
+      <tr>
+        <td><%= inventory_line_item.product %></td>
+        <td><%= inventory_line_item.qty %></td>
+        <td><%= inventory_line_item.price %></td>
+        <td><%= inventory_line_item.sum %></td>
+        <td><%= inventory_line_item.inventory %></td>
+        <td><%= link_to 'Show', inventory_line_item %></td>
+        <td><%= link_to 'Edit', edit_inventory_line_item_path(inventory_line_item) %></td>
+        <td><%= link_to 'Destroy', inventory_line_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Inventory Line Item', new_inventory_line_item_path %>

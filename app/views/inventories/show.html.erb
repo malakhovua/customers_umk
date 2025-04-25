@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Storage places:</strong>
+  <%= @inventory.storage_place%>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @inventory.user %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @inventory.date %>
+</p>
+
+<p>
+  <strong>Desc:</strong>
+  <%= @inventory.desc %>
+</p>
+
+<%= link_to 'Edit', edit_inventory_path(@inventory) %> |
+<%= link_to 'Back', inventories_path %>

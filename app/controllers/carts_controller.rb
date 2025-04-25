@@ -60,7 +60,6 @@ class CartsController < ApplicationController
     respond_to do |format|
       if @cart.update(cart_params)
         format.html { redirect_to @cart, notice: 'Корзина была обновлена!' }
-        #format.json { render :show, status: :ok, location: @cart }
         format.js
       else
         format.html { render :edit }

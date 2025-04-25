@@ -7,8 +7,6 @@ class Order < ApplicationRecord
   paginates_per 20
   max_paginates_per 20
 
-
-
   def add_line_items_from_cart(cart)
     cart.line_items.each do |item|
        item.cart_id  = nil

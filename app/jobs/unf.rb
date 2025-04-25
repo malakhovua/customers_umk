@@ -256,7 +256,7 @@ class Unf
 
   def connect_1c
     conn = Faraday.new
-    conn.basic_auth('admin', '911*')
+    conn.basic_auth('admin', 'wY7mixap')
     conn.response :json, :content_type => /\bjson$/
     conn
   end

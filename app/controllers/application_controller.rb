@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
 
   helper :all
 
-  before_action :authorize
+  before_action :authorize, :set_current_user
 
   protected
 
@@ -17,6 +17,12 @@ class ApplicationController < ActionController::Base
       redirect_to login_url, notice: "Пожалуйста залогинтесь."
     else
     end
+  end
+
+  private
+
+  def set_current_user
+    Current.user = User.find_by(id: session[:user_id])
   end
 
 end

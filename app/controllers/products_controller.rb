@@ -92,7 +92,6 @@ class ProductsController < ApplicationController
 
   end
 
-
   def select_group_product
     @group_name = params[:group_name]
     @group_id = params[:group_id]
@@ -105,13 +104,13 @@ class ProductsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_product
-      @product = Product.find(params[:id])
-    end
+  def set_product
+    @product = Product.find(params[:id])
+  end
 
     # Never trust parameters from the scary internet, only allow the white list through.
-    def product_params
-      params.require(:product).permit(:title, :description, :image_url, :price, :is_folder, :parent_id)
-    end
+  def product_params
+    params.require(:product).permit(:title, :description, :image_url, :price, :is_folder, :parent_id)
+  end
 
 end

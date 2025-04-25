@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+  resources :inventory_line_items
+  resources :inventories
+  resources :storage_places
   resources :access_groups
   resources :product_exeptions
   resources :unit_products
@@ -37,12 +40,21 @@ Rails.application.routes.draw do
   post "asighnclients/set_user_for_clients_list" => 'asighnclients#set_user_for_clients_list', :as => :set_user_for_clients_list
   delete '/asighnclients/:id', to: 'asighnclients#destroy', :as => :delete_asighnclients
 
+  namespace 'v1', defaults: {format: 'json'} do
+    resources :products, only: %i[index show]
+  end
+  namespace 'v1' do
+    resources :inventories, only: %i[show create]
+  end
+
 
   controller :sessions do
     get 'login'=> :new
     post 'login'=> :create
     delete 'logout'=> :destroy
   end
+
+
 
   resources :line_items
   resources :carts

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  storage_places: one
+  user: one
+  date: 2025-03-16 19:56:19
+  desc: MyString
+
+two:
+  storage_places: two
+  user: two
+  date: 2025-03-16 19:56:19
+  desc: MyString

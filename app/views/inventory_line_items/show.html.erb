@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Product:</strong>
+  <%= @inventory_line_item.product %>
+</p>
+
+<p>
+  <strong>Qty:</strong>
+  <%= @inventory_line_item.qty %>
+</p>
+
+<p>
+  <strong>Price:</strong>
+  <%= @inventory_line_item.price %>
+</p>
+
+<p>
+  <strong>Sum:</strong>
+  <%= @inventory_line_item.sum %>
+</p>
+
+<p>
+  <strong>Inventory:</strong>
+  <%= @inventory_line_item.inventory %>
+</p>
+
+<%= link_to 'Edit', edit_inventory_line_item_path(@inventory_line_item) %> |
+<%= link_to 'Back', inventory_line_items_path %>

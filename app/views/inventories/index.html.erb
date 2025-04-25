@@ -1,0 +1,46 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link_to 'На головну', account_url, class: "btn btn-link", style: "font-size: 20px" %></li>
+  </ol>
+</nav>
+
+<p id="notice"><%= notice %></p>
+
+<h1>Інвентаризації</h1>
+<table class="table table-hover table table-bordered">
+  <thead class="sticky-top" style="background-color: aliceblue">
+  <tr>
+    <th scope="col">Торгівельна точка</th>
+    <th scope="col">Дата</th>
+    <th scope="col">Номер</th>
+    <th scope="col">Сума</th>
+    <th scope="col">Відповідальна особа</th>
+    <th scope="col">Коментар</th>
+    <th scope="col"></th>
+    <th scope="col"></th>
+    <th colspan="3"></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @inventories.each do |inventory| %>
+    <tr>
+      <td><%= inventory.storage_place.title %></td>
+      <td><%= inventory.date %></td>
+      <td><%= inventory.unf_number %></td>
+      <td><%= inventory.sum%></td>
+      <% if inventory.user.nil? %>
+        <td>Не задано</td>
+      <% else %>
+        <td><%= inventory.user.name %></td>
+      <% end %>
+      <td><%= inventory.desc %></td>
+      <td><%= link_to 'Редагувати', edit_inventory_path(inventory), class: "fa fa-file-text-o", style: "color:  #007bff;" %></td>
+      <% if current_user.admin? %>
+        <td><%= link_to 'Видалити', inventory, method: :delete, data: { confirm: 'Are you sure?' }, class: "fa fa-trash", style: "color:  #007bff;" %></td>
+      <% end %>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<br>
+

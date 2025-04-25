@@ -1,0 +1,38 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link_to '<< До списку', inventories_path, class: "btn btn-link" , style: "font-size: 20px"%></li>
+  </ol>
+</nav>
+
+<div  id="inventory_partial">
+  <%=  render 'form', inventory: @inventory %>
+</div>
+
+<script type="text/javascript">
+
+    //send form to server
+    function sendDataServer() {
+        var form = document.getElementById('inventory_line_items_partial');
+        var formData = new FormData(form)
+        Rails.ajax({
+            type: 'PUT',
+            url: '/inventories/' + <%= @inventory.id %>,
+            data: formData,
+            dataType: "json"
+        })
+    }
+    function inputFieldQtyOnChange(lin_itm_id) {
+        const quantity = document.getElementById("qty" + lin_itm_id);
+        const price = document.getElementById("price" + lin_itm_id);
+        const sum = document.getElementById("sum" + lin_itm_id);
+        let sum_value = 0;
+        sum_value = quantity.value * price.value
+        sum.value = sum_value.toFixed(2);
+        sendDataServer()
+    }
+    function inputFieldOnChange(lin_itm_id){
+        sendDataServer()
+    }
+
+</script>
+

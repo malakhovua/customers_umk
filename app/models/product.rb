@@ -1,8 +1,8 @@
 class Product < ApplicationRecord
   validates :title, :description, :image_url, presence: true
-  #validates :price, numericality: {greate_than_or_equel_to: 0.01}
+  # validates :price, numericality: {greate_than_or_equel_to: 0.01}
   validates :image_url, allow_blank: true, format: {
-    with: %r{\.(gif|jpg|png)\Z}i,
+    with: %r{\.(gif|jpg|png|jpeg)\Z}i,
     massege: 'must be a URL for GIF, JPG or PNG image.'
   }
   before_destroy :ensure_not_ref_by_any_line_item
@@ -41,7 +41,7 @@ class Product < ApplicationRecord
     product_price = 0
     pack_price = 0
 
-    #get product price
+    # get product price
     if product_unit.nil?
       result = Price.all.where(product_id: prod_id, pricetype_id: pricetype_id).where('period <= ?', period).order(period: :DESC).limit(1)
     else
@@ -49,7 +49,7 @@ class Product < ApplicationRecord
     end
     product_price = result[0].value unless result[0].nil?
 
-    #get pack price
+    # get pack price
     unless pack_id.nil?
       result = Price.where(pack_id: pack_id).where('period <= ?', period).order(period: :DESC).limit(1)
       pack_price = result[0].value unless result[0].nil?
@@ -57,6 +57,45 @@ class Product < ApplicationRecord
 
     product_price + pack_price
 
+  end
+
+  def params_json_to_object(dat)
+
+    self.unf_id = dat['unf_id']
+    self.deletion_mark = dat['deletion_mark']
+    self.not_active = dat['not_active']
+    self.unf_parent_id = dat['unf_parent_id']
+    self.title = dat['title']
+    self.description = 'description'
+    self.full_name = dat['full_name']
+    self.order_id = dat['order_id']
+    self.is_folder = dat['is_folder']
+    self.parent_name = dat['parent_name']
+    self.weight = dat['weight']
+    self.rko = dat['rko']
+    self.created_at = Time.now
+
+    if dat['binary_file'] == ''
+      self.image_url = 'image_url.jpg'
+    else
+      base64_image = dat['binary_file']
+      # decode64
+      img_from_base64 = Base64.decode64(base64_image)
+      # file type
+      filetype = dat['file_extension']
+      # name the file
+      filename = './app/assets/images/' + self.unf_id
+
+      # write file
+      file = filename << '.' << filetype
+      File.open(file, 'wb') do |f|
+        f.write(img_from_base64)
+      end
+      self.image_url = dat['unf_id'] + '.' + filetype
+    end
+    # end file
+    #
+    self.image_url = 'folder.jpg' if self.is_folder == true
   end
 
   def self.get_childs_product (parent_id)
@@ -87,7 +126,7 @@ class Product < ApplicationRecord
 
   # this method needs to rebuild
   def self.get_packs_product (product_id, favorite, client_id)
-    #product pacs
+    # product pacs
     text_query = 'SELECT
        p.id,
        p.title,

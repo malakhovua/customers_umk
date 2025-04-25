@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_19_204318) do
+ActiveRecord::Schema.define(version: 2025_04_16_184225) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,6 +92,34 @@ ActiveRecord::Schema.define(version: 2022_02_19_204318) do
     t.index ["pack_id"], name: "index_favorite_products_on_pack_id"
     t.index ["product_id"], name: "index_favorite_products_on_product_id"
     t.index ["user_id"], name: "index_favorite_products_on_user_id"
+  end
+
+  create_table "inventories", force: :cascade do |t|
+    t.bigint "user_id"
+    t.datetime "date"
+    t.string "desc"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "unf_number"
+    t.bigint "storage_place_id"
+    t.float "sum"
+    t.index ["storage_place_id"], name: "index_inventories_on_storage_place_id"
+    t.index ["user_id"], name: "index_inventories_on_user_id"
+  end
+
+  create_table "inventory_line_items", force: :cascade do |t|
+    t.bigint "product_id"
+    t.float "qty"
+    t.float "price"
+    t.float "sum"
+    t.string "comment"
+    t.bigint "inventory_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "unit_product_id"
+    t.index ["inventory_id"], name: "index_inventory_line_items_on_inventory_id"
+    t.index ["product_id"], name: "index_inventory_line_items_on_product_id"
+    t.index ["unit_product_id"], name: "index_inventory_line_items_on_unit_product_id"
   end
 
   create_table "line_items", force: :cascade do |t|
@@ -201,6 +229,14 @@ ActiveRecord::Schema.define(version: 2022_02_19_204318) do
     t.boolean "deletion_mark", default: false
     t.integer "order_id"
     t.boolean "not_active", default: false
+    t.decimal "rko"
+  end
+
+  create_table "storage_places", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "unf_id"
+    t.string "title"
   end
 
   create_table "unit_products", force: :cascade do |t|
@@ -232,6 +268,7 @@ ActiveRecord::Schema.define(version: 2022_02_19_204318) do
     t.string "email"
     t.integer "role", default: 0
     t.bigint "access_group_id"
+    t.string "unf_id"
     t.index ["access_group_id"], name: "index_users_on_access_group_id"
     t.index ["unit_id"], name: "index_users_on_unit_id"
   end
@@ -246,6 +283,11 @@ ActiveRecord::Schema.define(version: 2022_02_19_204318) do
   add_foreign_key "favorite_products", "packs"
   add_foreign_key "favorite_products", "products"
   add_foreign_key "favorite_products", "users"
+  add_foreign_key "inventories", "storage_places"
+  add_foreign_key "inventories", "users"
+  add_foreign_key "inventory_line_items", "inventories"
+  add_foreign_key "inventory_line_items", "products"
+  add_foreign_key "inventory_line_items", "unit_products"
   add_foreign_key "line_items", "carts"
   add_foreign_key "line_items", "orders"
   add_foreign_key "line_items", "packs"

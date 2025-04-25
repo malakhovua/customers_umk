@@ -1,0 +1,44 @@
+
+<tr>
+  <td><%= @n +=1%></td>
+  <td>
+    <% if inventory_line_item.product.nil? %>
+      <%= '' %>
+    <% else %>
+      <%= inventory_line_item.product.parent_name %>
+    <% end %>
+  </td>
+  <td>
+    <% if inventory_line_item.product.nil? %>
+      <%= '' %>
+    <% else %>
+      <%= inventory_line_item.product.title %>
+    <% end %>
+  </td>
+  <td>
+    <% if inventory_line_item.product.nil? %>
+      <%= '' %>
+    <% else %>
+      <%= sprintf("%d",inventory_line_item.product.rko)%>
+    <% end %>
+  </td>
+  <td>
+    <% if inventory_line_item.unit_product.nil? %>
+      <%= '' %>
+    <% else %>
+      <%= inventory_line_item.unit_product.name%>
+    <% end %>
+  </td>
+  <td class="align-middle">
+    <% onchange = "inputFieldQtyOnChange(#{inventory_line_item.id.to_s})" %>
+    <strong><%= number_field_tag "qty#{inventory_line_item.id.to_s}", inventory_line_item.qty, :step => 0.01, class: "form-control", :onchange => onchange %></strong>
+  </td>
+  <td class="align-middle">
+    <strong><%= number_field_tag "price#{inventory_line_item.id.to_s}", sprintf('%.2f',inventory_line_item.price.to_f), :step => 0.01, class: "form-control", :readonly => true%></strong>
+  <td class="align-middle">
+    <strong><%= number_field_tag "sum#{inventory_line_item.id.to_s}",  sprintf('%.2f', inventory_line_item.sum.to_f) , :step => 0.01, class: "form-control", :readonly => true%></strong>
+  </td>
+  <th scope="row" class="align-middle">
+    <%= text_field_tag("comment#{inventory_line_item.id.to_s}", inventory_line_item.comment, class: "form-control", :onchange => "inputFieldOnChange(#{inventory_line_item.id.to_s})") %>
+  </th>
+</tr>
