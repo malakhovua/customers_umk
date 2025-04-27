@@ -20,7 +20,7 @@
       </div>
       <div class="col-md-6 mb-3">
         <label for="lastName">Дата:</label>
-        <%= form.date_field :date, class: "form-control", type: "date", value: DateTime.now.strftime("%Y-%m-%d"), id: "example-date-input", readonly: (not current_user.admin?) %>
+        <%= form.date_field :date, class: "form-control", type: "date", value: @inventory.date.strftime("%Y-%m-%d"), id: "example-date-input", readonly: (not current_user.admin?) %>
       </div>
       <div class="col-md-6 mb-3">
         <label for="lastName">Сума документа:</label>
