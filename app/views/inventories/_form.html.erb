@@ -74,7 +74,7 @@
     </th>
     </thead>
     <% @n = 0 %>
-    <%= render @inventory.inventory_line_items.left_outer_joins(:product).order(:parent_name) %>
+    <%= render @inventory.inventory_line_items.left_outer_joins(:product).order(:parent_name,:title) %>
   </table>
   <div class="form-group">
     <div class="field">
