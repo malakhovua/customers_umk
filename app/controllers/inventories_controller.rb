@@ -6,9 +6,9 @@ class InventoriesController < ApplicationController
   def index
     if session[:user_id]
       @inventories = if User.current_user.retailer?
-                       Inventory.where(user_id: User.current_user.id).order(storage_place: :asc, unf_number: :desc)
+                       Inventory.where(user_id: User.current_user.id).order(date: :desc, storage_place_id: :asc)
                      else
-                       Inventory.all.order(date: :desc)
+                       Inventory.all.order(date: :desc, storage_place_id:  :asc)
                      end
     end
   end

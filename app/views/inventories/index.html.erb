@@ -25,7 +25,7 @@
   <% @inventories.each do |inventory| %>
     <tr>
       <td><%= inventory.storage_place.title %></td>
-      <td><%= inventory.date %></td>
+      <td><%= inventory.date.strftime("%d/%m/%Y") %></td>
       <td><%= inventory.unf_number %></td>
       <td><%= inventory.sum%></td>
       <% if inventory.user.nil? %>
