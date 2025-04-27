@@ -5,7 +5,7 @@ require 'json'
 module V1
   class InventoriesController < ActionController::API
     include ActionController::HttpAuthentication::Basic::ControllerMethods
-    http_basic_authenticate_with name: 'username', password: 'passwd123'
+    http_basic_authenticate_with name: 'username_api', password: 'ScGAyJqi8W0TU3'
 
     def create
       msg = ''

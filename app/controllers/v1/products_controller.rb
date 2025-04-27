@@ -4,7 +4,7 @@
   module V1
     class ProductsController < ActionController::API
       include ActionController::HttpAuthentication::Basic::ControllerMethods
-      http_basic_authenticate_with name: "username", password: "passwd123"
+      http_basic_authenticate_with name: 'username_api', password: 'ScGAyJqi8W0TU3'
       def index
         render json: @products = Product.all
       end
