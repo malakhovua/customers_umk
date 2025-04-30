@@ -32,6 +32,7 @@ module V1
         @inventory.storage_place = storage_place
         @inventory.created_at = Time.now
         @inventory.inventory_line_items.destroy_all
+        @inventory.sum = 0.0
         # line_items
         inventory_line_items_params.each { |dt|
           prod = if Product.where(unf_id: dt['unf_id']).present?
@@ -54,7 +55,7 @@ module V1
           } # unit product
           unit_product = UnitProduct.find_by(unf_id: dt['unit_unf_id'])
           @inventory.inventory_line_items.build(product: prod, comment: dt['comment'], price: dt['price'],
-                                                unit_product: unit_product)
+                                                unit_product: unit_product, sum: 0.0)
         } # line items
         @inventory.save!
         render json: msg
