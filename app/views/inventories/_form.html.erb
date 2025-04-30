@@ -62,7 +62,7 @@
       <div class="py-2 text-uppercase" style="min-width:80px">Ціна</div>
     </th>
     <th scope="col" class="">
-      <div class="py-2 text-uppercase" style="min-width:90px" >Сума разом: <div class=form-control", id="total_sum" , style="background-color: #EDF68B"><%= sprintf('%.2f',@inventory.sum)%></div> </div>
+      <div class="py-2 text-uppercase" style="min-width:90px" >Сума разом: <div class=form-control", id="total_sum" , style="background-color: #EDF68B"><%= sprintf('%.2f',@inventory.sum.nil? ? 0.0 : @inventory.sum)%></div> </div>
     </th>
     <th scope="col" class="">
       <div class="p-2 px-3 text-uppercase">Коментар</div>
