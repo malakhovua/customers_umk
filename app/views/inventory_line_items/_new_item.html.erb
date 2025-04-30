@@ -1,0 +1,50 @@
+<%= form_tag inventory_line_items_path({ :inventory_id => @inventory, :product_id => '', :inventory_line_item => false }), method: :post do %>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Введіть данні рядка інвентарізації:</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-row">
+            <div class="col">
+              <label>Найменування товару:</label>
+              <%= text_field_tag 'product_name', '', class: "form-control", id: "num_field" %>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <label>Код РРО:</label>
+              <%= text_field_tag 'rko', '', :step => 0.01, class: "form-control", id: "num_field" %>
+            </div>
+            <div class="col">
+              <label>Кількість:</label>
+              <%= number_field_tag 'qty', '', :step => 0.01, class: "form-control", id: "qty", :onchange => "inputFieldQtyOnChange('',false)"%>
+            </div>
+
+            <div class="col">
+              <label>Ціна:</label>
+              <%= number_field_tag 'price', '', :step => 0.01, class: "form-control", id: "price", :onchange => "inputFieldQtyOnChange('',false)"%>
+            </div>
+
+            <div class="col">
+              <label>Сума:</label>
+              <%= number_field_tag 'sum', '', :step => 0.01, class: "form-control", id: "sum", readonly: true %>
+            </div>
+          </div>
+          <br>
+          <div class="form-floating">
+            <%= text_area_tag "comment", "", class: "form-control", id: "floatingTextarea", placeholder: "Коментар..." %>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <%= submit_tag 'Додати запис', class: 'btn btn-primary', id: 'inCartSubmit' %>
+        <%= submit_tag 'Закрыть', class: 'btn btn-primary', :data => { :dismiss => "modal" } %>
+      </div>
+    </div>
+  </div>
+<% end %>

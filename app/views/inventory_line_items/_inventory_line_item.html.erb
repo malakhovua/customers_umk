@@ -1,6 +1,7 @@
 
 <tr>
   <td><%= @n +=1%></td>
+  <% onchange = "inputFieldQtyOnChange(#{inventory_line_item.id.to_s})" %>
   <td>
     <% if inventory_line_item.product.nil? %>
       <%= '' %>
@@ -10,14 +11,14 @@
   </td>
   <td>
     <% if inventory_line_item.product.nil? %>
-      <%= '' %>
+      <%= text_field_tag("product_name#{inventory_line_item.id.to_s}", inventory_line_item.product_name,  class: "form-control", :onchange => "inputFieldOnChange(#{inventory_line_item.id.to_s})") %>
     <% else %>
       <%= inventory_line_item.product.title %>
     <% end %>
   </td>
   <td>
     <% if inventory_line_item.product.nil? %>
-      <%= '' %>
+      <%= text_field_tag("rko#{inventory_line_item.id.to_s}",inventory_line_item.rko,  class: "form-control", :onchange => "inputFieldOnChange(#{inventory_line_item.id.to_s})")%>
     <% else %>
       <%= sprintf("%d",inventory_line_item.product.rko)%>
     <% end %>
@@ -30,15 +31,22 @@
     <% end %>
   </td>
   <td class="align-middle">
-    <% onchange = "inputFieldQtyOnChange(#{inventory_line_item.id.to_s})" %>
     <strong><%= number_field_tag "qty#{inventory_line_item.id.to_s}", inventory_line_item.qty, :step => 0.01, class: "form-control", :onchange => onchange %></strong>
   </td>
   <td class="align-middle">
-    <strong><%= number_field_tag "price#{inventory_line_item.id.to_s}", sprintf('%.2f',inventory_line_item.price.to_f), :step => 0.01, class: "form-control", :readonly => true%></strong>
+    <strong><%= number_field_tag "price#{inventory_line_item.id.to_s}", sprintf('%.2f',inventory_line_item.price.to_f), :step => 0.01, class: "form-control",
+                                 :readonly => inventory_line_item.product.nil? ? false : true, :onchange => onchange%></strong>
   <td class="align-middle">
-    <strong><%= number_field_tag "sum#{inventory_line_item.id.to_s}",  sprintf('%.2f', inventory_line_item.sum.to_f) , :step => 0.01, class: "form-control", :readonly => true%></strong>
+    <strong><%= number_field_tag "sum#{inventory_line_item.id.to_s}",  sprintf('%.2f', inventory_line_item.sum.to_f) , :step => 0.01, class: "form-control",
+                                 :readonly => true%></strong>
   </td>
   <th scope="row" class="align-middle">
     <%= text_field_tag("comment#{inventory_line_item.id.to_s}", inventory_line_item.comment, class: "form-control", :onchange => "inputFieldOnChange(#{inventory_line_item.id.to_s})") %>
   </th>
+  <th scope="row" class="align-middle">
+    <% if inventory_line_item.product.nil? %>
+      <%= link_to '', inventory_line_item, method: :delete, data: { confirm: 'Ви впевнені?' }, class: "fa fa-trash", style: "color:  #cc0000;" %>
+    <% end %>
+  </th>
 </tr>
+

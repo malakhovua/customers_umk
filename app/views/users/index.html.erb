@@ -11,6 +11,7 @@
     <tr>
       <th>И`мя</th>
       <th>Роль</th>
+      <th>Підрозділ</th>
       <th>Код</th>
       <th colspan="3"></th>
     </tr>
@@ -21,10 +22,10 @@
       <tr>
         <td><%= user.name %></td>
         <td><%= user.role %></td>
+        <td><%= user.storage_place.nil? ? 'Не задано' : user.storage_place.title%></td>
         <td><%= user.unf_id %></td>
-        <td><%= link_to 'Показать', user %></td>
-        <td><%= link_to 'Редактировать', edit_user_path(user) %></td>
-        <td><%= link_to 'Удалить', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Редагувати', edit_user_path(user) %></td>
+        <td><%= link_to 'Видалити', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>

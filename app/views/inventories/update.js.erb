@@ -1,3 +1,2 @@
-$('#inventory_partial').html(
-    "<%= j render :partial => 'inventories/form' %>"
-);
+
+$('#total_sum').html(<%= sprintf('%.2f',@inventory.sum)%>);

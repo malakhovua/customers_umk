@@ -1,19 +1,19 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link", style: "font-size: 20px" %></li>
+    <li class="breadcrumb-item"><%= link_to 'На головну', account_url, class: "btn btn-link", style: "font-size: 20px" %></li>
     <% if current_user.admin? %>
-      <li class="breadcrumb-item"><%= link_to 'Андминистрирование', admin_url, class: "btn btn-link", style: "font-size: 20px" %></li>
+      <li class="breadcrumb-item"><%= link_to 'Андміністрування', admin_url, class: "btn btn-link", style: "font-size: 20px" %></li>
+    <% end %>
+    <% if current_user.admin? %>
+      <li class="breadcrumb-item"><%= link_to 'До списку користувачів', users_path, class: "btn btn-link", style: "font-size: 20px" %></li>
     <% end %>
   </ol>
 </nav>
 <div class="container">
-  <h1>Редактировать пользователя:</h1>
+  <h1>Редагувати користувача:</h1>
   <% if current_user.admin? %>
-    <%= link_to 'Установить клиентов для пользователя', get_clients_list_path(user_id: @user.id), class: "btn btn-link" %>
+    <%= link_to 'Встановити клієнтів для користувача', get_clients_list_path(user_id: @user.id), class: "btn btn-link" %>
   <% end %>
   <%= render 'form', user: @user %>
-  <% if current_user.admin? %>
-    <%= link_to 'К списку пользователей', users_path, class: "btn btn-link" %>
-  <% end %>
 </div>
 

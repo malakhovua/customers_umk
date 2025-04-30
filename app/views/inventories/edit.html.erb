@@ -21,14 +21,17 @@
             dataType: "json"
         })
     }
-    function inputFieldQtyOnChange(lin_itm_id) {
+    function inputFieldQtyOnChange(lin_itm_id, sendData = true) {
         const quantity = document.getElementById("qty" + lin_itm_id);
         const price = document.getElementById("price" + lin_itm_id);
         const sum = document.getElementById("sum" + lin_itm_id);
         let sum_value = 0;
         sum_value = quantity.value * price.value
         sum.value = sum_value.toFixed(2);
-        sendDataServer()
+        if (sendData === true){
+            sendDataServer()
+        }
+
     }
     function inputFieldOnChange(lin_itm_id){
         sendDataServer()

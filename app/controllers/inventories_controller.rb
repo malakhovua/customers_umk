@@ -6,7 +6,7 @@ class InventoriesController < ApplicationController
   def index
     if session[:user_id]
       @inventories = if User.current_user.retailer?
-                       Inventory.where(user_id: User.current_user.id).order(date: :desc, storage_place_id: :asc)
+                       Inventory.where(storage_place: User.current_user.storage_place).order(date: :desc, storage_place_id: :asc)
                      else
                        Inventory.all.order(date: :desc, storage_place_id:  :asc)
                      end
@@ -44,15 +44,16 @@ class InventoriesController < ApplicationController
 
   # PATCH/PUT /inventories/1 or /inventories/1.json
   def update
-    sum = 0
+
     @inventory.inventory_line_items.each do |line_item|
+      line_item.rko = params["rko#{line_item.id}"].to_f
       line_item.qty = params["qty#{line_item.id}"].to_f
       line_item.sum = params["sum#{line_item.id}"].to_f
+      line_item.product_name = params["product_name#{line_item.id}"].to_s
       line_item.comment = params["comment#{line_item.id}"].to_s
       line_item.save
-      sum += line_item.sum
     end
-    @inventory.sum = sum.to_f.round(2)
+    @inventory.recalculate_total_sum
 
     respond_to do |format|
 

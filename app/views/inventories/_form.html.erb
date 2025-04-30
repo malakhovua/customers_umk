@@ -22,10 +22,7 @@
         <label for="lastName">Дата:</label>
         <%= form.date_field :date, class: "form-control", type: "date", value: @inventory.date.strftime("%Y-%m-%d"), id: "example-date-input", readonly: (not current_user.admin?) %>
       </div>
-      <div class="col-md-6 mb-3">
-        <label for="lastName">Сума документа:</label>
-        <%= form.text_field :sum, class: "form-control", readonly: true %>
-      </div>
+
     </div>
     <div class="form-group">
       <div class="col-md-15">
@@ -50,6 +47,7 @@
     </th>
     <th scope="col" class="">
       <div class="p-2 px-3 text-uppercase">Номенклатура</div>
+      <%= link_to ' Додати рядок з номенклатурою', "",   :data => { :toggle => 'modal', :target => '#modal-window' }, remote: true, class:"fa fa-plus-square", style: "color: royalblue;"%>
     </th>
     <th scope="col" class="">
       <div class="p-2 px-3 text-uppercase">Код РРО</div>
@@ -64,7 +62,7 @@
       <div class="py-2 text-uppercase" style="min-width:80px">Ціна</div>
     </th>
     <th scope="col" class="">
-      <div class="py-2 text-uppercase" style="min-width:90px">Сума</div>
+      <div class="py-2 text-uppercase" style="min-width:90px" >Сума разом: <div class=form-control", id="total_sum" , style="background-color: #EDF68B"><%= sprintf('%.2f',@inventory.sum)%></div> </div>
     </th>
     <th scope="col" class="">
       <div class="p-2 px-3 text-uppercase">Коментар</div>
@@ -79,8 +77,13 @@
   <div class="form-group">
     <div class="field">
       <label>Коментар:</label>
-      <%= form.text_field :desc, class:"form-control", id:"exampleFormControlTextarea1", rows:"3"%>
+      <%= form.text_field :desc, class:"form-control", id:"exampleFormControlTextarea1", rows:"3", readonly: true%>
     </div>
   </div>
 <% end %>
+
+<div id="modal-window" class="modal fade" tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <%= render partial: 'inventory_line_items/new_item' %>
+</div>
 

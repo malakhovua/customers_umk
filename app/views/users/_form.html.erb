@@ -1,15 +1,15 @@
 <%= form_with(model: user, class: "row g-3", local: true) do |form| %>
   <div class="col-md-4">
-    <%= form.label :Имя, class: "form-label", for: "validationDefault01" %>
+    <%= form.label "Імʼя", class: "form-label", for: "validationDefault01" %>
     <%= form.text_field :name, class: "form-control", id: "validationDefault01" %>
 
-    <%= form.label :Фамилия, class: "form-label", for: "validationDefault02" %>
+    <%= form.label :Прізвище, class: "form-label", for: "validationDefault02" %>
     <%= form.text_field :surname, class: "form-control", id: "validationDefault02" %>
 
     <%= form.label :Email_address, class: "form-label", for: "validationDefault02" %>
     <%= form.email_field :email, class: "form-control", id: "exampleFormControlInput1", placeholder: "name@example.com" %>
 
-    <%= form.label :Группа_доступа, class: "form-label" %>
+    <%= form.label :Група_доступу, class: "form-label" %>
     <% groups = AccessGroup.all.map { |group| [group.name, group.id] }%>
     <%= form.select(:access_group_id, options_for_select(groups, selected: @user.access_group_id), {}, { :class => 'form-control' }) %>
 
@@ -22,8 +22,11 @@
     <%= form.label :Пароль, class: "form-label" %>
     <%= form.password_field :password, class: "form-control" %>
 
-    <%= form.label :Подтвердите_пароль, class: "form-label" %>
+    <%= form.label :Підтвердьте_пароль, class: "form-label" %>
     <%= form.password_field :password_confirmation, class: "form-control" %>
+
+    <%= form.label :Підрозділ, class: "form-label" %>
+    <%= form.collection_select :storage_place_id, StoragePlace.all, :id, :title, {},class:"form-control"%>
 
     <% if current_user.admin? %>
       <%= form.label :Роль, class: "form-label" %>
@@ -33,7 +36,7 @@
 
 
     <% if current_user.admin? %>
-      <label>Ед. измерения в подборе:</label>
+      <label>Од. виміру в підборі:</label>
       <% unit_array = Unit.all.map { |unit| [unit.name, unit.id] } %>
       <%= form.select(:unit_id, options_for_select(unit_array, selected: @user.unit_id), {}, { :class => 'form-control' }) %>
     <% end %>
