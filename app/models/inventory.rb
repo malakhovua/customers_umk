@@ -5,7 +5,8 @@ class Inventory < ApplicationRecord
   enum status: %i[open closed]
 
   def recalculate_total_sum
-    self.sum = inventory_line_items.to_a.sum(&:sum).to_f
+    total_sum = inventory_line_items.to_a.sum(&:sum)
+    self.sum = total_sum.nil? ? 0 : total_sum.to_f
   end
 
 end
