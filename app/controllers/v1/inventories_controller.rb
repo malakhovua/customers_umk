@@ -20,6 +20,8 @@ module V1
                      end
         @inventory.date = inventory_params['date']
         @inventory.unf_number = inventory_params['unf_number']
+        @inventory.inv_type = inventory_params['inv_type']
+        @inventory.status = inventory_params['status']
         @inventory.desc = inventory_params['descr']
         @inventory.user = User.find_by(unf_id: inventory_params['user_unf_id'])
         storage_place = if StoragePlace.where(unf_id: inventory_params['storage_place_unf_id']).present?
@@ -55,6 +57,7 @@ module V1
           } # unit product
           unit_product = UnitProduct.find_by(unf_id: dt['unit_unf_id'])
           @inventory.inventory_line_items.build(product: prod, comment: dt['comment'], price: dt['price'],
+                                                row_number: dt['row_number'],
                                                 unit_product: unit_product, sum: 0.0)
         } # line items
         @inventory.save!

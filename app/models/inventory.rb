@@ -2,7 +2,8 @@ class Inventory < ApplicationRecord
   belongs_to :storage_place, optional: true
   belongs_to :user, optional: true
   has_many :inventory_line_items, dependent: :destroy
-  enum status: %i[open closed]
+  enum status: %i[В_роботі Закрита]
+  enum inv_type: %i[ГП СТ]
 
   def recalculate_total_sum
     self.sum = 0.0 if sum.nil?

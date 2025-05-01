@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_04_28_140636) do
+ActiveRecord::Schema.define(version: 2025_05_01_143535) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,8 @@ ActiveRecord::Schema.define(version: 2025_04_28_140636) do
     t.string "unf_number"
     t.bigint "storage_place_id"
     t.float "sum"
+    t.integer "status"
+    t.integer "inv_type"
     t.index ["storage_place_id"], name: "index_inventories_on_storage_place_id"
     t.index ["user_id"], name: "index_inventories_on_user_id"
   end
@@ -119,6 +121,7 @@ ActiveRecord::Schema.define(version: 2025_04_28_140636) do
     t.bigint "unit_product_id"
     t.string "product_name"
     t.decimal "rko"
+    t.decimal "row_number"
     t.index ["inventory_id"], name: "index_inventory_line_items_on_inventory_id"
     t.index ["product_id"], name: "index_inventory_line_items_on_product_id"
     t.index ["unit_product_id"], name: "index_inventory_line_items_on_unit_product_id"

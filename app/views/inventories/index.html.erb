@@ -13,6 +13,8 @@
     <th scope="col">Торгівельна точка</th>
     <th scope="col">Дата</th>
     <th scope="col">Номер</th>
+    <th scope="col">Статус</th>
+    <th scope="col">Тип</th>
     <th scope="col">Сума</th>
     <th scope="col">Відповідальна особа</th>
     <th scope="col">Коментар</th>
@@ -27,6 +29,8 @@
       <td><%= inventory.storage_place.title %></td>
       <td><%= inventory.date.strftime("%d/%m/%Y") %></td>
       <td><%= inventory.unf_number %></td>
+      <td><%= inventory.status %></td>
+      <td><%= inventory.inv_type %></td>
       <td><%= inventory.sum%></td>
       <% if inventory.user.nil? %>
         <td>Не задано</td>
