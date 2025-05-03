@@ -8,6 +8,10 @@
   <%=  render 'form', inventory: @inventory %>
 </div>
 
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><%= link_to '<< До списку', inventories_path, class: "btn btn-link" , style: "font-size: 20px"%></li>
+</ol>
+
 <script type="text/javascript">
 
     //send form to server

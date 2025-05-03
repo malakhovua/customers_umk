@@ -45,6 +45,8 @@ class InventoriesController < ApplicationController
   # PATCH/PUT /inventories/1 or /inventories/1.json
   def update
 
+    params[:inventory][:status] = params[:inventory][:status].to_i
+
     @inventory.inventory_line_items.each do |line_item|
       line_item.rko = params["rko#{line_item.id}"].to_f
       line_item.qty = params["qty#{line_item.id}"].to_f
@@ -54,11 +56,11 @@ class InventoriesController < ApplicationController
       line_item.save
     end
     @inventory.recalculate_total_sum
-
     respond_to do |format|
 
       if @inventory.update(inventory_params)
-        format.html { redirect_to inventories_url, notice: 'Документ оновлено!' }
+        @inventory.status = params[:status].to_i
+        format.html { redirect_to edit_inventory_path @inventory}
         format.js
       else
         format.html { render :edit }
@@ -86,6 +88,6 @@ class InventoriesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def inventory_params
-    params.require(:inventory).permit(:storage_place_id, :user_id, :date, :desc)
+    params.require(:inventory).permit(:storage_place_id, :user_id, :date, :desc, :status)
   end
 end

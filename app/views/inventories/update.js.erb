@@ -1,2 +1,3 @@
-
-$('#total_sum').html(<%= sprintf('%.2f',@inventory.sum)%>);
+<% field_value = sprintf('%.2f', @inventory.sum.nil? ? 0.0 : @inventory.sum).gsub(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1 ")%>
+total_sum = document.getElementById("total_sum")
+total_sum.innerHTML = "<%= field_value %>"

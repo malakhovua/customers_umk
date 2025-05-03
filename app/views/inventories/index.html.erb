@@ -13,11 +13,11 @@
     <th scope="col">Торгівельна точка</th>
     <th scope="col">Дата</th>
     <th scope="col">Номер</th>
-    <th scope="col">Статус</th>
     <th scope="col">Тип</th>
     <th scope="col">Сума</th>
     <th scope="col">Відповідальна особа</th>
     <th scope="col">Коментар</th>
+    <th scope="col">Статус</th>
     <th scope="col"></th>
     <th scope="col"></th>
     <th colspan="3"></th>
@@ -29,7 +29,6 @@
       <td><%= inventory.storage_place.title %></td>
       <td><%= inventory.date.strftime("%d/%m/%Y") %></td>
       <td><%= inventory.unf_number %></td>
-      <td><%= inventory.status %></td>
       <td><%= inventory.inv_type %></td>
       <td><%= inventory.sum%></td>
       <% if inventory.user.nil? %>
@@ -38,9 +37,10 @@
         <td><%= inventory.user.name %></td>
       <% end %>
       <td><%= inventory.desc %></td>
-      <td><%= link_to 'Редагувати', edit_inventory_path(inventory), class: "fa fa-file-text-o", style: "color:  #007bff;" %></td>
+      <td><%= inventory.status %></td>
+      <td><%= link_to 'Відкрити', edit_inventory_path(inventory), class: "fa fa-file-text-o", style: "color:  #007bff;" %></td>
       <% if current_user.admin? %>
-        <td><%= link_to 'Видалити', inventory, method: :delete, data: { confirm: 'Are you sure?' }, class: "fa fa-trash", style: "color:  #007bff;" %></td>
+        <td><%= link_to 'Видалити', inventory, method: :delete, data: { confirm: 'Are you sure?' }, class: "fa fa-trash", style: "color:  #cc0000;" %></td>
       <% end %>
     </tr>
   <% end %>

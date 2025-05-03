@@ -1,91 +1,97 @@
 <%= form_with(model: @inventory, local: true, id: "inventory_line_items_partial") do |form| %>
-  <% if @inventory.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(inventory.errors.count, "error") %> prohibited this inventory from being saved:</h2>
-      <ul>
-        <% @inventory.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-  <div class="col-md-8 order-md-1">
-    <div class="actions">
-      <%= form.submit 'Зберегти документ', class: 'btn btn-primary' %>
-    </div>
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <label for="firstName">Номер:</label>
-        <%= form.text_field :unf_number, class: "form-control", readonly: true %>
+ <% disabled = if current_user.admin?
+                 ''
+               else
+                 Inventory.statuses[@inventory.status] == 0 ? '' : 'disabled="disabled"'
+               end %>
+  <fieldset <%=disabled%>>
+    <% if @inventory.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(inventory.errors.count, "error") %> prohibited this inventory from being saved:</h2>
+        <ul>
+          <% @inventory.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
       </div>
-      <div class="col-md-6 mb-3">
-        <label for="lastName">Дата:</label>
-        <%= form.date_field :date, class: "form-control", type: "date", value: @inventory.date.strftime("%Y-%m-%d"), id: "example-date-input", readonly: (not current_user.admin?) %>
-      </div>
-      <div class="col-md-6 mb-3">
-        <label for="lastName">Статус:</label>
-        <%= form.select(:status, options_for_select(Inventory.statuses, selected: Inventory.statuses[@inventory.status]), {}, { :class => 'form-control' }) %>
-      </div>
-    </div>
-    <% if current_user.admin? %>
-    <div class="form-group">
-      <div class="col-md-15">
-        <label for="firstName">Торгівельна точка:</label>
-        <% list_storage = current_user.admin? ? StoragePlace.all : StoragePlace.where(id: @inventory.storage_place) %>
-        <%= form.collection_select :storage_place_id, list_storage, :id, :title, {}, class: "form-control" %>
-      </div>
-      <div class="col-md-15">
-        <label for="lastName">Відповідпльна особа:</label>
-        <% list_user = current_user.admin? ? User.all : User.where(id: @inventory.user) %>
-        <%= form.collection_select :user_id, list_user, :id, :name, {}, class: "form-control" %>
-      </div>
-    </div>
     <% end %>
-  </div>
-  <table class="table table-bordered table-hover table-of-contents">
-    <thead class="sticky-top" style="background-color: aliceblue">
-    <th scope="col" class="">
-      <div class="p-2 px-3 text-uppercase">№з/п</div>
-    </th>
-    <th scope="col" class="">
-      <div class="p-2 px-3 text-uppercase">Група</div>
-    </th>
-    <th scope="col" class="">
-      <div class="p-2 px-3 text-uppercase">Номенклатура</div>
-      <%= link_to ' Додати рядок з номенклатурою', "", :data => { :toggle => 'modal', :target => '#modal-window' }, remote: true, class: "fa fa-plus-square", style: "color: royalblue;" %>
-    </th>
-    <th scope="col" class="">
-      <div class="p-2 px-3 text-uppercase">Код РРО</div>
-    </th>
-    <th scope="col" class="">
-      <div class="p-2 px-3 text-uppercase">Од.</div>
-    </th>
-    <th scope="col" class="">
-      <div class="py-2 text-uppercase">Кількість, од.</div>
-    </th>
-    <th scope="col" class="">
-      <div class="py-2 text-uppercase" style="min-width:80px">Ціна</div>
-    </th>
-    <th scope="col" class="">
-      <div class="py-2 text-uppercase" style="min-width:90px">Сума разом:
-        <div class=form-control", id="total_sum" , style="background-color: #EDF68B"><%= sprintf('%.2f', @inventory.sum.nil? ? 0.0 : @inventory.sum) %></div>
+    <div class="col-md-8 order-md-1">
+      <div class="row">
+        <div class="col-md-6 mb-3" >
+          <label for="firstName">Номер:</label>
+          <%= form.text_field :unf_number, class: "form-control", readonly: true %>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="lastName">Дата:</label>
+          <%= form.date_field :date, class: "form-control", type: "date", value: @inventory.date.strftime("%Y-%m-%d"), id: "example-date-input", readonly: (not current_user.admin?) %>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="lastName">Статус:</label>
+          <%= form.select(:status, options_for_select(Inventory.statuses, selected:  Inventory.statuses[@inventory.status]), {}, { :class => 'form-control' }) %>
+        </div>
       </div>
-    </th>
-    <th scope="col" class="">
-      <div class="p-2 px-3 text-uppercase">Коментар</div>
-      <%= form.text_field :desc, class: "form-control", id: "exampleFormControlTextarea1", rows: "3", readonly: current_user.admin? ? false : true %>
-    </th>
-    <th scope="col" class="">
-      <div class="py-2 text-uppercase"></div>
-    </th>
-    </thead>
-    <% @n = 0 %>
-    <%= render @inventory.inventory_line_items.left_outer_joins(:product).order(:row_number) %>
-  </table>
+      <% if current_user.admin? %>
+        <div class="form-group">
+          <div class="col-md-15">
+            <label for="firstName">Торгівельна точка:</label>
+            <% list_storage = current_user.admin? ? StoragePlace.all : StoragePlace.where(id: @inventory.storage_place) %>
+            <%= form.collection_select :storage_place_id, list_storage, :id, :title, {}, class: "form-control" %>
+          </div>
+          <div class="col-md-15">
+            <label for="lastName">Відповідпльна особа:</label>
+            <% list_user = current_user.admin? ? User.all : User.where(id: @inventory.user) %>
+            <%= form.collection_select :user_id, list_user, :id, :name, {}, class: "form-control" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <table class="table table-bordered table-hover table-of-contents">
+      <thead class="sticky-top" style="background-color: aliceblue; text-align: left">
+      <th scope="col" class="">
+        <div class="p-2 px-3 text-uppercase"  style="text-align: -webkit-left">№</div>
+      </th>
+      <th scope="col" class="" style="width: 130px">
+        <div class="p-2 px-3 text-uppercase">Група</div>
+      </th>
+      <th scope="col" class="">
+        <div class="p-2 px-3 text-uppercase">Номенклатура</div>
+        <%= link_to ' Додати рядок з номенклатурою', "", :data => { :toggle => 'modal', :target => '#modal-window' }, remote: true, class: "fa fa-plus-square", style: "color: royalblue;" %>
+      </th>
+      <th scope="col" class="" style="width: 130px">
+        <div class="p-2 px-3 text-uppercase">Код РРО</div>
+      </th>
+      <th scope="col" class="">
+        <div class="p-2 px-3 text-uppercase">Од.</div>
+      </th>
+      <th scope="col" class="" style="width: 130px">
+        <div class="py-2 text-uppercase">Кількість, од.</div>
+      </th>
+      <th scope="col" class="">
+        <div class="py-2 text-uppercase" style="min-width:80px">Ціна</div>
+      </th>
+      <th scope="col" class="">
+        <div class="py-2 text-uppercase" style="min-width:90px">Сума разом:
+          <div class=form-control", id="total_sum" , style="background-color: #EDF68B"><%= sprintf('%.2f', @inventory.sum.nil? ? 0.0 : @inventory.sum).gsub(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1 ") %></div>
+        </div>
+      </th>
+      <th scope="col" class="">
+        <div class="p-2 px-3 text-uppercase">Коментар</div>
+        <%= form.text_field :desc, class: "form-control", id: "exampleFormControlTextarea1", rows: "3", readonly: current_user.admin? ? false : true %>
+      </th>
+      <th scope="col" class="">
+        <div class="py-2 text-uppercase">
+          <%= form.button nil, class: "fa fa-save", style: 'font-size:28px;color:royalblue' do %>
+          <% end %>
+        </div>
+      </th>
+      </thead>
+      <% @n = 0 %>
+      <%= render @inventory.inventory_line_items.left_outer_joins(:product).order(:row_number) %>
+    </table>
 <% end %>
 
 <div id="modal-window" class="modal fade" tabindex="-1"
      role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <%= render partial: 'inventory_line_items/new_item' %>
 </div>
-
+</fieldset>
