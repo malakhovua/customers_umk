@@ -1,11 +1,9 @@
 <div class="container">
   <div class="jumbotron jumbotron-fluid" style="background-color:azure;box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);     margin-top: 35px;
       margin-bottom: 60px;">
-    <div class="container">
       <h2 class="display-10 text-center">Ласкаво просимо до сайту замовлень "УМК"!</h2>
       <h1 class="display-10 text-center">Ви увійшли як <%= current_user.name%>.</h1>
       <p class="lead"> </p>
-    </div>
   </div>
   <div class="row">
     <%unless current_user.retailer? %>

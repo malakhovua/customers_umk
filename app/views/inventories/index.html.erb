@@ -7,6 +7,7 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Інвентаризації</h1>
+<%= paginate @inventories%>
 <table class="table table-hover table table-bordered">
   <thead class="sticky-top" style="background-color: aliceblue">
   <tr>
@@ -30,7 +31,7 @@
       <td><%= inventory.date.strftime("%d/%m/%Y") %></td>
       <td><%= inventory.unf_number %></td>
       <td><%= inventory.inv_type %></td>
-      <td><%= inventory.sum%></td>
+      <td><%= sprintf('%.2f',inventory.sum) %></td>
       <% if inventory.user.nil? %>
         <td>Не задано</td>
       <% else %>
@@ -40,11 +41,13 @@
       <td><%= inventory.status %></td>
       <td><%= link_to 'Відкрити', edit_inventory_path(inventory), class: "fa fa-file-text-o", style: "color:  #007bff;" %></td>
       <% if current_user.admin? %>
-        <td><%= link_to 'Видалити', inventory, method: :delete, data: { confirm: 'Are you sure?' }, class: "fa fa-trash", style: "color:  #cc0000;" %></td>
+        <td><%= link_to 'Видалити', inventory, method: :delete, data: { confirm: 'Ви дійсно бажаєте видалити документ?' }, class: "fa fa-trash", style: "color:  #cc0000;" %></td>
       <% end %>
     </tr>
   <% end %>
   </tbody>
 </table>
 <br>
+
+<%= paginate @inventories%>
 

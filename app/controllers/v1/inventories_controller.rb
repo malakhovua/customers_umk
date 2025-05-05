@@ -66,14 +66,16 @@ module V1
     end
 
     def show
-      @inventory = Inventory.where('unf_number = :id and date >= :date', {:id=> params['id'], :date=> params['date'].to_date})
+      @inventory = Inventory.where('unf_number = :id and date >= :date and status = 1', { :id=> params['id'], :date=> params['date'].to_date })
       if @inventory.present?
         @inventory_line_items = InventoryLineItem.all.where(inventory_id: @inventory[0].id)
-        data = []
+        line_items_data = []
         @inventory_line_items.each do |inventory_line_item|
-          data << { qty: inventory_line_item.qty, comment: inventory_line_item.comment,
-                    product: inventory_line_item.product.unf_id }
+          line_items_data << { qty: inventory_line_item.qty, comment: inventory_line_item.comment,
+                               product: inventory_line_item.product.nil? ? inventory_line_item.rko : inventory_line_item.product.rko,
+                               product_name: inventory_line_item.product_name}
         end
+        data = { main_comment: @inventory[0].desc, line_items: line_items_data }
         render json: data
       else
         render json: '[]'

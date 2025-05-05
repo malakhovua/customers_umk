@@ -6,9 +6,9 @@ class InventoriesController < ApplicationController
   def index
     if session[:user_id]
       @inventories = if User.current_user.retailer?
-                       Inventory.where(storage_place: User.current_user.storage_place).order(date: :desc, storage_place_id: :asc)
+                       Inventory.where(storage_place: User.current_user.storage_place).order(date: :desc, storage_place_id: :asc).page params[:page]
                      else
-                       Inventory.all.order(date: :desc, storage_place_id:  :asc)
+                       Inventory.all.order(date: :desc, storage_place_id:  :asc).page params[:page]
                      end
     end
   end
@@ -33,7 +33,7 @@ class InventoriesController < ApplicationController
 
     respond_to do |format|
       if @inventory.save
-        format.html { redirect_to @inventory, notice: "Inventory was successfully created." }
+        format.html { redirect_to @inventory, notice: "Інвентаризацію було створено." }
         format.json { render :show, status: :created, location: @inventory }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -74,7 +74,7 @@ class InventoriesController < ApplicationController
   def destroy
     @inventory.destroy
     respond_to do |format|
-      format.html { redirect_to inventories_url, notice: "Inventory was successfully destroyed." }
+      format.html { redirect_to inventories_url, notice: "Інвентаризацію було видалено." }
       format.json { head :no_content }
     end
   end
