@@ -73,7 +73,7 @@ module V1
         @inventory_line_items.each do |inventory_line_item|
           line_items_data << { qty: inventory_line_item.qty, comment: inventory_line_item.comment,
                                product: inventory_line_item.product.nil? ? inventory_line_item.rko : inventory_line_item.product.rko,
-                               product_name: inventory_line_item.product_name}
+                               product_name: inventory_line_item.product_name, price: inventory_line_item.price}
         end
         data = { main_comment: @inventory[0].desc, line_items: line_items_data }
         render json: data
