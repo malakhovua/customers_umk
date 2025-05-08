@@ -16,7 +16,7 @@
     <th scope="col">Дата</th>
     <th scope="col">Номер</th>
     <th scope="col">Тип</th>
-    <th scope="col">Сума</th>
+    <th scope="col" style="min-width: 100px">Сума</th>
     <% if current_user.admin? %>
       <th scope="col">Коментар</th>
     <% end %>
@@ -53,7 +53,7 @@
       <td><%= inventory.status %></td>
       <td><%= link_to 'Відкрити', edit_inventory_path(inventory), class: "fa fa-file-text-o", style: "color:  #007bff;" %></td>
       <% if current_user.admin? %>
-        <td><%= link_to 'Видалити', inventory, method: :delete, data: { confirm: 'Ви дійсно бажаєте видалити документ?' }, class: "fa fa-trash", style: "color:  #cc0000;" %></td>
+        <td><%= link_to '', inventory, method: :delete, data: { confirm: 'Ви дійсно бажаєте видалити документ?' }, class: "fa fa-trash", style: "color:  #cc0000;" %></td>
       <% end %>
     </tr>
   <% end %>
