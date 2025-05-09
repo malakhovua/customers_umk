@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_01_143535) do
+ActiveRecord::Schema.define(version: 2025_05_09_182825) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -122,6 +122,7 @@ ActiveRecord::Schema.define(version: 2025_05_01_143535) do
     t.string "product_name"
     t.decimal "rko"
     t.decimal "row_number"
+    t.boolean "checked", default: false
     t.index ["inventory_id"], name: "index_inventory_line_items_on_inventory_id"
     t.index ["product_id"], name: "index_inventory_line_items_on_product_id"
     t.index ["unit_product_id"], name: "index_inventory_line_items_on_unit_product_id"

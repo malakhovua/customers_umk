@@ -53,6 +53,7 @@ class InventoriesController < ApplicationController
       line_item.sum = params["sum#{line_item.id}"].to_f
       line_item.product_name = params["product_name#{line_item.id}"].to_s
       line_item.comment = params["comment#{line_item.id}"].to_s
+      line_item.checked = !!params["checked#{line_item.id}"]
       line_item.save
     end
     @inventory.recalculate_total_sum

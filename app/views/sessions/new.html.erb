@@ -1,37 +1,50 @@
 <% if flash[:alert] %>
   <p><%= flash[:alert] %></p>
-<%end %>
-<%= form_tag do%>
-<body>
-<div id="login">
-  <h3 class="text-center text-white pt-5"></h3>
+<% end %>
+<%= form_tag do %>
+  <body>
   <div class="container">
-    <div id="login-row" class="row justify-content-center align-items-center">
-      <div id="login-column" class="col-md-6">
-        <div id="login-box" class="col-md-12">
-          <form id="login-form" class="form" action="" method="post">
-            <h3 class="text-center text-info">Увійти</h3>
-            <div class="form-group">
-              <label for="username" class="text-info">Им'я користувача:</label><br>
-              <%=text_field_tag :name, params[:name], id: "username", class: "form-control" %>
-            </div>
-            <div class="form-group">
-              <label for="password" class="text-info">Пароль:</label><br>
-              <%= password_field_tag :password, params[:password], id: "password", class: "form-control"%>
-            </div>
-            <div class="form-group">
-              <!--<label for="remember-me" class="text-info"><span>Remember me</span> <span><input id="remember-me" name="remember-me" type="checkbox"></span></label><br>-->
-              <%= submit_tag "Увійти", class: "btn btn-info btn-md" %>
-            </div>
-            <!-- <div id="register-link" class="text-right">
-               <a href="#" class="text-info">Register here</a>
-             </div>-->
-          </form>
+    <div id="login">
+      <div id="login-row" class="row justify-content-center align-items-center">
+        <div id="login-column" class="col-md-10 col-lg-8">
+          <div id="login-box" class="col-md-10 col-lg-8">
+            <form id="login-form" class="form" action="" method="post">
+              <h3 class="text-center text-info display-md-4">Увійти</h3>
+              <div class="form-group">
+                <label for="username" class="text-info">Им'я користувача:</label><br>
+                <%= text_field_tag :name, params[:name], id: "username", class: "form-control" %>
+              </div>
+              <div class="form-group">
+                <label for="password" class="text-info">Пароль:</label><br>
+                <%= password_field_tag :password, params[:password], id: "password", class: "form-control" %>
+              </div>
+              <div class="form-group">
+                <%= submit_tag "Увійти", class: "btn btn-info btn-sm-lg" %>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-</body>
+  </body>
 <% end %>
+
+
+
+<style>
+    .container {
+        padding-top: 80px;
+    }
+    @media only screen and (max-width: 500px) {
+        .container{
+
+            font-size: xx-large;
+
+        }
+        .text-center {
+            font-size: xx-large;
+        }
+    }
+</style>
 

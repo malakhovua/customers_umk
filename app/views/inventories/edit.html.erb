@@ -14,7 +14,6 @@
 
 <script type="text/javascript">
 
-    //send form to server
     function sendDataServer() {
         var form = document.getElementById('inventory_line_items_partial');
         var formData = new FormData(form)
@@ -29,12 +28,16 @@
         const quantity = document.getElementById("qty" + lin_itm_id);
         const price = document.getElementById("price" + lin_itm_id);
         const sum = document.getElementById("sum" + lin_itm_id);
+        const checked = document.getElementById("checked" + lin_itm_id);
         let sum_value = 0;
         sum_value = quantity.value * price.value
         sum.value = sum_value.toFixed(2);
+        checked.checked  = "checked";
+
         if (sendData === true){
             sendDataServer()
         }
+
 
     }
     function inputFieldOnChange(lin_itm_id){

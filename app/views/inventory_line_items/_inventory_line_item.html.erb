@@ -31,11 +31,11 @@
     <% end %>
   </td>
   <td class="align-middle">
-    <strong><%= number_field_tag "qty#{inventory_line_item.id.to_s}", inventory_line_item.qty==0 ? "" :  inventory_line_item.qty, :step => 0.01, class: "form-control", :onchange => onchange %></strong>
-  </td>
-  <td class="align-middle">
     <strong><%= number_field_tag "price#{inventory_line_item.id.to_s}", sprintf('%.2f',inventory_line_item.price.to_f), :step => 0.01, class: "form-control",
                                  :readonly => inventory_line_item.product.nil? ? false : true, :onchange => onchange%></strong>
+  <td class="align-middle">
+    <strong><%= number_field_tag "qty#{inventory_line_item.id.to_s}", inventory_line_item.qty==0 ? "" :  inventory_line_item.qty, :step => 0.001, class: "form-control", :onchange => onchange %></strong>
+  </td>
   <td class="align-middle">
     <strong><%= number_field_tag "sum#{inventory_line_item.id.to_s}",  sprintf('%.2f', inventory_line_item.sum.to_f) , :step => 0.01, class: "form-control",
                                  :readonly => true%></strong>
@@ -44,6 +44,9 @@
     <div> <%= text_field_tag("comment#{inventory_line_item.id.to_s}", inventory_line_item.comment, class: "form-control", tabindex: -1,:onchange => "inputFieldOnChange(#{inventory_line_item.id.to_s})") %>
     </div>
    </th>
+  <th scope="row" class="align-middle">
+    <strong><%= check_box_tag "checked#{inventory_line_item.id.to_s}","",inventory_line_item.checked, :onclick => "inputFieldOnChange(#{inventory_line_item.id.to_s})"%></strong>
+  </th>
   <th scope="row" class="align-middle">
     <% if inventory_line_item.product.nil? %>
       <%= link_to '', inventory_line_item, method: :delete, data: { confirm: 'Ви впевнені?' }, class: "fa fa-trash", style: "color:  #cc0000; font-size:28px" %>
