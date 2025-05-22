@@ -34,7 +34,7 @@
     <strong><%= number_field_tag "price#{inventory_line_item.id.to_s}", sprintf('%.2f',inventory_line_item.price.to_f), :step => 0.01, class: "form-control",
                                  :readonly => inventory_line_item.product.nil? ? false : true, :onchange => onchange%></strong>
   <td class="align-middle">
-    <strong><%= number_field_tag "qty#{inventory_line_item.id.to_s}", inventory_line_item.qty==0 ? "" :  inventory_line_item.qty, :step => 0.001, class: "form-control", :onchange => onchange %></strong>
+    <strong><%= number_field_tag "qty#{inventory_line_item.id.to_s}", inventory_line_item.qty==0 ? "" :  inventory_line_item.qty, :step => 0.001, class: "form-control", style: 'font-weight: bold',:onchange => onchange %></strong>
   </td>
   <td class="align-middle">
     <strong><%= number_field_tag "sum#{inventory_line_item.id.to_s}",  sprintf('%.2f', inventory_line_item.sum.to_f) , :step => 0.01, class: "form-control",
