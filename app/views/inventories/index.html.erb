@@ -7,11 +7,60 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Інвентаризації</h1>
+
+<% if current_user.admin? %>
+  <%= form_tag inventories_url, :id => 'form_filter', method: :get do %>
+    <h4 style="color: royalblue">Встановити фільтр:</h4>
+
+    <div class="row">
+      <div class="col-md-3 mb-2">
+        <%= select_tag "storage_place", options_from_collection_for_select(StoragePlace.all, "id", "title", params['storage_place']), include_blank: 'Оберіть місце зберігання', :class => 'form-control', :id => 'storage_place', :onchange => 'this.form.submit()' %>
+      </div>
+      <div class="col-md-0 mb-1">
+        <a href="#" class="fa fa-times-circle" style="font-size: 20px; color: black; margin-top: 10px; z-index: 100;" onclick="ClearField('storage_place')"></a>
+      </div>
+
+      <div class="col-md-3 mb-2">
+        <%= select_tag "user", options_from_collection_for_select(User.where(:role => 'retailer'), "id", "name", params['user']), include_blank: 'Оберіть відповідальну особу', :class => 'form-control', :id => 'user', :onchange => 'this.form.submit()' %>
+      </div>
+      <div class="col-md-0 mb-1">
+        <a href="#" class="fa fa-times-circle" style="font-size: 20px; color: black; margin-top: 10px; z-index: 100;" onclick="ClearField('user')"></a>
+      </div>
+
+      <div class="col-md-3 mb-2">
+        <%= date_field_tag "current_date", params['current_date'], :class => 'form-control', :id => 'current_date', :onchange => 'this.form.submit()' %>
+      </div>
+      <div class="col-md-0 mb-1">
+        <a href="#" class="fa fa-times-circle" style="font-size: 20px; color: black; margin-top: 10px; z-index: 100;" onclick="ClearField('current_date')"></a>
+      </div>
+
+      <div class="col-md-3 mb-2">
+        <%= select_tag "inv_types", options_for_select(Inventory.inv_types, params['inv_types']), include_blank: 'Оберіть тип інвентаризації', :class => 'form-control', :id => 'inv_types', :onchange => 'this.form.submit()' %>
+      </div>
+      <div class="col-md-0 mb-1">
+        <a href="#" class="fa fa-times-circle" style="font-size: 20px; color: black; margin-top: 10px; z-index: 100;" onclick="ClearField('inv_types')"></a>
+      </div>
+
+      <div class="col-md-3 mb-2">
+        <%= select_tag "status", options_for_select(Inventory.statuses, params['status']), include_blank: 'Оберіть сатус інвентаризації', :class => 'form-control', :id => 'status', :onchange => 'this.form.submit()' %>
+      </div>
+      <div class="col-md-0 mb-1">
+        <a href="#" class="fa fa-times-circle" style="font-size: 20px; color: black; margin-top: 10px; z-index: 100;" onclick="ClearField('status')"></a>
+      </div>
+
+    </div>
+
+  <% end %>
+<% end %>
+
 <%= paginate @inventories %>
+
 <table class="table table-hover table table-bordered">
   <thead class="sticky-top" style="background-color: aliceblue">
   <tr>
-    <th scope="col">Торгівельна точка</th>
+    <th scope="col"><label for="firstName">Торгівельна точка:</label>
+      Торгівельна точка
+    </th>
     <th scope="col">Відповідальна особа</th>
     <th scope="col">Дата</th>
     <th scope="col">Номер</th>
@@ -29,14 +78,14 @@
   </tr>
   </thead>
   <tbody>
-  <%  current_date = @inventories.count == 0 ? '' : @inventories[0].date.to_date%>
-  <%  current_color = 'beige'%>
+  <% current_date = @inventories.count == 0 ? '' : @inventories[0].date.to_date %>
+  <% current_color = 'beige' %>
   <% @inventories.each do |inventory| %>
-    <% if  current_date != inventory.date.to_date%>
-    <%  current_color = current_color == 'beige' ? '#CCFFE5': 'beige'%>
+    <% if current_date != inventory.date.to_date %>
+      <% current_color = current_color == 'beige' ? '#CCFFE5' : 'beige' %>
     <% end %>
     <% current_date = inventory.date.to_date %>
-    <tr style="background-color: <%=current_color%>">
+    <tr style="background-color: <%= current_color %>">
       <td><%= inventory.storage_place.title %></td>
       <% if inventory.user.nil? %>
         <td>Не задано</td>
@@ -62,4 +111,18 @@
 <br>
 
 <%= paginate @inventories %>
+
+<script type="text/javascript" charset="utf-8">
+
+    //onClick on clear input field
+    function ClearField(id) {
+
+        var InputField = document.getElementById(id);
+        var FormFilter = document.getElementById('form_filter');
+        InputField.value = "";
+        FormFilter.submit();
+    }
+
+</script>
+
 

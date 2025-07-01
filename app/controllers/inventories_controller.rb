@@ -6,10 +6,23 @@ class InventoriesController < ApplicationController
   def index
     if session[:user_id]
       @inventories = if User.current_user.retailer?
-                       Inventory.where(storage_place: User.current_user.storage_place).order(date: :desc, storage_place_id: :asc).page params[:page]
+                       Inventory.where(storage_place: User.current_user.storage_place)
                      else
-                       Inventory.all.order(date: :desc, storage_place_id:  :asc).page params[:page]
+                       Inventory.all
                      end
+
+      @inventories = @inventories.where(storage_place: params['storage_place']) if params['storage_place'].present?
+
+      @inventories = @inventories.where(user: params['user']) if params['user'].present?
+
+      @inventories = @inventories.where(date: params['current_date']) if params['current_date'].present?
+
+      @inventories = @inventories.where(inv_type: params['inv_types']) if params['inv_types'].present?
+
+      @inventories = @inventories.where(status: params['status']) if params['status'].present?
+
+      @inventories = @inventories.order(date: :desc, storage_place_id: :asc).page(params[:page])
+
     end
   end
 
