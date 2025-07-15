@@ -4,6 +4,14 @@ class InventoriesController < ApplicationController
 
   # GET /inventories or /inventories.json
   def index
+
+    params['storage_place'] = session[:inventory_index_params]['storage_place'] if params['storage_place'].nil?
+    params['user'] = session[:inventory_index_params]['user'] if params['user'].nil?
+    params['current_date'] = session[:inventory_index_params]['current_date'] if params['current_date'].nil?
+    params['inv_types'] = session[:inventory_index_params]['inv_types'] if params['inv_types'].nil?
+    params['status'] = session[:inventory_index_params]['status'] if params['status'].nil?
+    #params['page'] = session[:inventory_index_page] if params['page'].nil?
+
     if session[:user_id]
       @inventories = if User.current_user.retailer?
                        Inventory.where(storage_place: User.current_user.storage_place)
@@ -22,6 +30,9 @@ class InventoriesController < ApplicationController
       @inventories = @inventories.where(status: params['status']) if params['status'].present?
 
       @inventories = @inventories.order(date: :desc, storage_place_id: :asc).page(params[:page])
+
+      session[:inventory_index_params] = params
+      # session[:inventory_index_page] = params[:page]
 
     end
   end
