@@ -76,6 +76,7 @@ class InventoriesController < ApplicationController
     @inventory.inventory_line_items.each do |line_item|
       line_item.rko = params["rko#{line_item.id}"].to_f
       line_item.qty = params["qty#{line_item.id}"].to_f
+      line_item.price = params["price#{line_item.id}"].to_f
       line_item.sum = params["sum#{line_item.id}"].to_f
       line_item.product_name = params["product_name#{line_item.id}"].to_s
       line_item.comment = params["comment#{line_item.id}"].to_s
