@@ -14,16 +14,21 @@
 
 <script type="text/javascript">
 
-    function sendDataServer() {
+    function sendDataServer(lin_itm_id) {
         var form = document.getElementById('inventory_line_items_partial');
-        var formData = new FormData(form)
+        var Params;
+        Params = new FormData(form);
+        Params.append('lin_itm_id', lin_itm_id);
+        Params.append('current_line_itm', "1");
+
         Rails.ajax({
             type: 'PUT',
             url: '/inventories/' + <%= @inventory.id %>,
-            data: formData,
+            data: Params,
             dataType: "json"
         })
     }
+
     function inputFieldQtyOnChange(lin_itm_id, sendData = true) {
         const quantity = document.getElementById("qty" + lin_itm_id);
         const price = document.getElementById("price" + lin_itm_id);
@@ -35,13 +40,12 @@
         checked.checked  = "checked";
 
         if (sendData === true){
-            sendDataServer()
+            sendDataServer(lin_itm_id);
         }
-
-
     }
+
     function inputFieldOnChange(lin_itm_id){
-        sendDataServer()
+        sendDataServer(lin_itm_id)
     }
 
 </script>

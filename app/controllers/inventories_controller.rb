@@ -74,6 +74,9 @@ class InventoriesController < ApplicationController
     params[:inventory][:status] = params[:inventory][:status].to_i
 
     @inventory.inventory_line_items.each do |line_item|
+
+      next unless params['lin_itm_id'].to_i == line_item.id && !params['current_line_itm'].nil?
+
       line_item.rko = params["rko#{line_item.id}"].to_f
       line_item.qty = params["qty#{line_item.id}"].to_f
       line_item.price = params["price#{line_item.id}"].to_f
