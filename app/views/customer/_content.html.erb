@@ -1,5 +1,5 @@
 <div class="wrapper" >
-  <div id="content" style="margin-left: 90px">
+  <div id="content">
     <div class="row">
       <% @products.each do |product| %>
         <%if product.belong_another_client(@client_id)%>
@@ -10,18 +10,18 @@
           <div class="card-body">
             <h5 class="card-title"><%= product['title'] %></h5>
             <p class="card-text" style="color: coral"><%= product['parent_name'] %></p>
-            <p style="color: #B00100;font-size:25px"><%= sprintf("%0.02f грн.", Product.get_price(product['id'], @price_type_id)) %>
-              <% style_string = @favorite_products.find_by(product_id: product.id, user_id: current_user.id, client_id: session[:client_id]).nil? ? "font-size: 25px; margin-left: 10px; color: #a4a5b1" : "font-size: 25px; margin-left: 10px; color: #B00100" %>
+            <p style="color: #B00100"><%= sprintf("%0.02f грн.", Product.get_price(product['id'], @price_type_id)) %>
+              <% style_string = @favorite_products.find_by(product_id: product.id, user_id: current_user.id, client_id: session[:client_id]).nil? ? "margin-left: 10px; color: #a4a5b1" : "margin-left: 10px; color: #B00100" %>
               <%= link_to '', favorite_products_path({ :favorite_product => { :user_id => current_user.id, :product_id => product.id, :pack_id => "" } }),
                           method: :post, class: "fa fa-heart", id: "heard_" + product.id.to_s,
                           style: style_string,
                           remote: true %>
               <% if @client_id.nil? %>
-                <%= link_to '', "#", class: 'fa fa-cart-plus', style: 'margin-left:10px;font-size:30px;color:#B00100;',
+                <%= link_to '', "#", class: 'fa fa-cart-plus', style: 'margin-left:10px;color:#B00100;',
                             :data => { :toggle => 'modal', :target => '#modal-window' }, remote: true, data: @client_id.nil? ? { confirm: 'Выберите покупателя' } : "" %>
 
               <% else %>
-                <%= link_to '', modal_product_qty_path(:id => product['id'], :pack_id => nil, :product_name => product['title'], :pack_name => '', :unit_name => 'кг'), class: 'fa fa-cart-plus', style: 'margin-left:10px;font-size:30px;color:#B00100;',
+                <%= link_to '', modal_product_qty_path(:id => product['id'], :pack_id => nil, :product_name => product['title'], :pack_name => '', :unit_name => 'кг'), class: 'fa fa-cart-plus', style: 'margin-left:10px;color:#B00100;',
                             :data => { :toggle => 'modal', :target => '#modal-window' }, remote: true %>
               <% end %>
             </p>

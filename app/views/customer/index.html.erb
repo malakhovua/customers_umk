@@ -18,6 +18,35 @@
   <%= render partial: 'customer/content' %>
   </div>
 
+  <style>
+
+      .card p {
+          font-size: 2rem;
+      }
+
+      .container-fluid {
+          margin-left: 1%;
+      }
+      @media only screen and (max-width: 1000px) {
+
+          .card h5{
+              font-size: 2.25rem;
+          }
+          .card p {
+              font-size: 3rem;
+          }
+
+          .fa-cart-plus{
+             padding-left: 30%;
+          }
+
+          .pagination{
+              font-size: 2.50rem;
+          }
+
+      }
+  </style>
+
   <script type="text/javascript" charset="utf-8">
 
       var e = document.getElementById('cart_qty');

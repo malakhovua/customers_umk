@@ -1,50 +1,79 @@
-<% if flash[:alert] %>
-  <p><%= flash[:alert] %></p>
-<% end %>
 <%= form_tag do %>
-  <body>
-  <div class="container">
-    <div id="login">
-      <div id="login-row" class="row justify-content-center align-items-center">
-        <div id="login-column" class="col-md-10 col-lg-8">
-          <div id="login-box" class="col-md-10 col-lg-8">
-            <form id="login-form" class="form" action="" method="post">
-              <h3 class="text-center text-info display-md-4">Увійти</h3>
-              <div class="form-group">
-                <label for="username" class="text-info">Им'я користувача:</label><br>
-                <%= text_field_tag :name, params[:name], id: "username", class: "form-control" %>
+  <section class="vh-100 gradient-custom">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card bg-dark text-white" style="border-radius: 1rem;">
+            <div class="card-body p-5 text-center">
+
+              <p class="text-white-50 mb-5">УКРАЇНСЬКИЙ М'ЯСОКОМБІНАТ</p>
+
+              <div class="mb-md-5 mt-md-4 pb-5">
+
+                <h2 class="fw-bold mb-2 text-uppercase">Вхід</h2>
+                <p class="text-white-50 mb-5">Будь ласка, введіть свій логін та пароль!</p>
+
+                <div data-mdb-input-init class="form-outline form-white mb-4">
+                  <!--<input type="email" id="typeEmailX" class="form-control form-control-lg" />-->
+                  <%= text_field_tag :name, params[:name], id: "username", class: "form-control form-control-lg" %>
+                  <label class="form-label" for="typeEmailX">Им'я користувача або Email</label>
+                </div>
+
+                <div data-mdb-input-init class="form-outline form-white mb-4">
+                  <!-- <input type="password" id="typePasswordX" class="form-control form-control-lg" />-->
+                  <%= password_field_tag :password, params[:password], id: "password", class: "form-control form-control-lg" %>
+                  <label class="form-label" for="typePasswordX">Пароль:</label>
+                </div>
+
+                <!-- <p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">Forgot password?</a></p>-->
+
+                <!--<button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit">Увійти</button>
+                -->
+                <%= submit_tag "Увійти", class: "btn btn-outline-light btn-lg px-5" %>
+
+                <!-- <div class="d-flex justify-content-center text-center mt-4 pt-1">
+                   <a href="#!" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                   <a href="#!" class="text-white"><i class="fab fa-twitter fa-lg mx-4 px-2"></i></a>
+                   <a href="#!" class="text-white"><i class="fab fa-google fa-lg"></i></a>
+                 </div>-->
+
               </div>
-              <div class="form-group">
-                <label for="password" class="text-info">Пароль:</label><br>
-                <%= password_field_tag :password, params[:password], id: "password", class: "form-control" %>
+
+              <div>
+                <!-- <p class="mb-0">Don't have an account? <a href="#!" class="text-white-50 fw-bold">Sign Up</a>
+                 </p>-->
               </div>
-              <div class="form-group">
-                <%= submit_tag "Увійти", class: "btn btn-info btn-sm-lg" %>
-              </div>
-            </form>
+
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  </body>
+  </section>
 <% end %>
-
-
 
 <style>
     .container {
         padding-top: 80px;
     }
-    @media only screen and (max-width: 500px) {
-        .container{
 
-            font-size: xx-large;
+    @media only screen and (max-width: 1000px) {
+        .card {
+            width: 400px;
+            transform: scale(1.9);
+        }
+
+        .card:hover {
+            width: 400px;
+            transform: scale(2.5);
 
         }
-        .text-center {
-            font-size: xx-large;
+
+        .vh-100 {
+            height: 80vh !important;
         }
     }
+
+
 </style>
 
