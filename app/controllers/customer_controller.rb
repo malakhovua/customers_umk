@@ -26,7 +26,7 @@ class CustomerController < ApplicationController
   private
 
   def set_price_type
-    @price_type = @client&.pricetype
+    @price_type = @current_user&.pricetype || @client&.pricetype
   end
 
   private

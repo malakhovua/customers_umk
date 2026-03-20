@@ -198,6 +198,10 @@
           <div class="usr-select-wrap"><%= form.select :role, options_for_select(User.roles, selected: User.roles[@user.role]), {}, class: 'form-control' %></div>
         </div>
         <div class="usr-form-field">
+          <label>Тип ціни</label>
+          <div class="usr-select-wrap"><%= form.collection_select :pricetype_id, Pricetype.all, :id, :name, {include_blank: 'Не задано'}, class: "form-control" %></div>
+        </div>
+        <div class="usr-form-field">
           <label>Од. виміру в підборі</label>
           <% unit_array = Unit.all.map { |u| [u.name, u.id] } %>
           <div class="usr-select-wrap"><%= form.select :unit_id, options_for_select(unit_array, selected: @user.unit_id), {}, class: 'form-control' %></div>

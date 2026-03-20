@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_02_16_151015) do
+ActiveRecord::Schema.define(version: 2026_03_20_162042) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -278,6 +278,7 @@ ActiveRecord::Schema.define(version: 2026_02_16_151015) do
     t.bigint "access_group_id"
     t.string "unf_id"
     t.bigint "storage_place_id"
+    t.integer "pricetype_id"
     t.index ["access_group_id"], name: "index_users_on_access_group_id"
     t.index ["storage_place_id"], name: "index_users_on_storage_place_id"
     t.index ["unit_id"], name: "index_users_on_unit_id"
