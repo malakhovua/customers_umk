@@ -142,6 +142,7 @@
       <th>Ім'я</th>
       <th>Роль</th>
       <th>Підрозділ</th>
+      <th>Група доступу</th>
       <th>Код</th>
       <th colspan="2"></th>
     </tr>
@@ -152,6 +153,7 @@
         <td><%= user.name %></td>
         <td><%= user.role %></td>
         <td><%= user.storage_place.nil? ? 'Не задано' : user.storage_place.title %></td>
+        <th><%= user.access_group.nil? ? 'Не задано' : user.access_group.name %></th>
         <td><%= user.unf_id %></td>
         <td>
           <%= link_to edit_user_path(user), class: 'usr-action usr-action-edit', title: 'Редагувати' do %>
