@@ -57,7 +57,22 @@ class LineItemsController < ApplicationController
   # PATCH/PUT /line_items/1.json
   def update
     respond_to do |format|
-      if @line_item.update(line_item_params)
+
+      if params[:pop_cart] == 'true' #if update from pop_cart
+
+        unit = Unit.find(@line_item.unit_id)
+
+        if unit.piece
+          @line_item.amount = params[:line_item][:new_quantity]
+        else
+          @line_item.quantity = params[:line_item][:new_quantity]
+        end
+
+        @line_item.recount = @line_item.total_quantity
+
+      end
+
+      if @line_item.save
         format.html { redirect_to @line_item, notice: 'Line item was successfully updated.' }
         format.json { render :show, status: :ok, location: @line_item }
         format.js
@@ -65,6 +80,7 @@ class LineItemsController < ApplicationController
         format.html { render :edit }
         format.json { render json: @line_item.errors, status: :unprocessable_entity }
       end
+
     end
   end
 
@@ -83,6 +99,18 @@ class LineItemsController < ApplicationController
         format.js
       end
     end
+  end
+
+  def destroy_from_pop_cart
+
+    @cart = Cart.find(session[:cart_id])
+    @line_item = LineItem.find(params[:id])
+    @line_item.destroy
+
+    respond_to do |format|
+      format.js
+    end
+
   end
 
   def modal_product_qty
@@ -128,6 +156,14 @@ class LineItemsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def line_item_params
-    params.require(:line_item).permit(:product_id, :pack_id)
+    params.require(:line_item).permit(
+      :product_id,
+      :pack_id,
+      :quantity,
+      :amount,      # <-- ДОДАТИ якщо потрібно
+      :unit_id,
+      :comment
+    )
   end
+
 end

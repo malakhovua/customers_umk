@@ -3,7 +3,7 @@ class ProductExeptionsController < ApplicationController
 
   # GET /product_exeptions or /product_exeptions.json
   def index
-    @product_exeptions = ProductExeption.all
+    @product_exeptions = ProductExeption.all.page(params[:page])
   end
 
   # GET /product_exeptions/1 or /product_exeptions/1.json

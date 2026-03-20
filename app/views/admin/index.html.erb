@@ -1,94 +1,327 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link", style: "font-size: 20px" %></li>
-  </ol>
-</nav>
-<div class="container">
-  <div class="row">
-    <div class="col-md-6 border border-light rounded shadow-sm mb-5">
-      <div class="row" style="margin: 10px">
-        <h4>Загрузка справочников из 1с:</h4>
-        <div class="col-md-12" style="margin-top: 10px">
-          <%= link_to 'Узел обмена с 1с', exch_nodes_path, class: 'btn btn-secondary' %>
-        </div>
-        <div class="col-md-12" style="margin-top: 10px">
-          <%= link_to 'Загрузить группы доступа', access_groups_1c83_path, remote: true, class: 'btn btn-secondary' %>
-        </div>
-        <div class="col-md-12" style="margin-top: 10px">
-          <%= link_to 'Загрузить товары', products_1c83_path, remote: true, class: 'btn btn-secondary' %>
-        </div>
-        <div class="col-md-12" style="margin-top: 10px">
-          <%= link_to 'Загрузить упаковку ', packs_1c83_path, remote: true, class: 'btn btn-secondary' %>
-        </div>
-        <div class="col-md-12" style="margin-top: 10px">
-          <%= link_to 'Загрузить контрагентов', clients_1c83_path, remote: true, class: 'btn btn-secondary' %>
-        </div>
-        <div class="col-md-12" style="margin-top: 10px">
-          <%= link_to 'Загрузить адреса клиентов', addresses_1c383_path, remote: true, class: 'btn btn-secondary' %>
-        </div>
-        <div class="col-md-12" style="margin-top: 10px">
-          <%= link_to 'Загрузить типы цен', pricetypes_1c83_path, remote: true, class: 'btn btn-secondary' %>
-        </div>
-        <div class="col-md-12" style="margin-top: 10px">
-          <%= link_to 'Загрузить цены', prices_1c83_path, remote: true, class: 'btn btn-secondary' %>
-        </div>
-        <div class="col-md-12" style="margin-top: 10px">
-          <%= link_to 'Загрузить номенклатуру контрагентов', product_exceptions_1c83_path, remote: true, class: 'btn btn-secondary' %>
-        </div>
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+    }
 
-      </div>
-    </div>
-    <div class="col-md-6 border border-light rounded shadow-sm mb-5">
-      <div class="row" style="margin: 10px">
-        <h4>Справочники:</h4>
-        <div class="col-md-12" style="margin-top: 10px">
-          <%= link_to 'Пользователи', users_url, class: 'btn btn-link', style: 'font-size: 25px;' %>
-        </div>
-        <div class="col-md-12" style="margin-top: 1px">
-          <%= link_to 'Клиенты', clients_url, class: 'btn btn-link', style: 'font-size: 25px;' %>
-        </div>
-        <div class="col-md-12" style="margin-top: 1px">
-         <%= link_to 'Номенклатура контрагентов', product_exeptions_url, class: 'btn btn-link', style: 'font-size: 25px;' %>
-        </div>
-        <div class="col-md-12" style="margin-top: 1px">
-          <%= link_to 'Продукция', products_url, class: 'btn btn-link', style: 'font-size: 25px;' %>
-        </div>
-        <div class="col-md-12" style="margin-top: 1px">
-          <%= link_to 'Упаковка', packs_url, class: 'btn btn-link', style: 'font-size: 25px;' %>
-        </div>
-        <div class="col-md-12" style="margin-top: 1px">
-          <%= link_to 'Виды цен', pricetypes_url, class: 'btn btn-link', style: 'font-size: 25px;' %>
-        </div>
-        <div class="col-md-12" style="margin-top: 1px">
-          <%= link_to 'Цены', prices_url, class: 'btn btn-link', style: 'font-size: 25px;' %>
-        </div>
-        <div class="col-md-12" style="margin-top: 1px">
-          <%= link_to 'Группы доступа', access_groups_url, class: 'btn btn-link', style: 'font-size: 25px;' %>
-        </div>
+    /* ===== BREADCRUMB ===== */
+    .adm-breadcrumb {
+        display: flex;
+        align-items: center;
+        margin-bottom: 24px;
+    }
 
-      </div>
+    .adm-breadcrumb a {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--azure);
+        text-decoration: none;
+        font-weight: 600;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        background: rgba(26,122,175,0.07);
+        border: 1px solid rgba(26,122,175,0.18);
+        transition: background 0.2s;
+    }
+
+    .adm-breadcrumb a:hover { background: rgba(26,122,175,0.14); }
+
+    /* ===== СІТКА ===== */
+    .adm-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    @media (max-width: 700px) {
+        .adm-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ===== КАРТКА ===== */
+    .adm-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.07);
+    }
+
+    .adm-card-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 17px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 18px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid var(--border-soft);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .adm-card-title::before {
+        content: '';
+        display: inline-block;
+        width: 4px;
+        height: 18px;
+        background: linear-gradient(180deg, var(--azure-light), var(--azure));
+        border-radius: 3px;
+        flex-shrink: 0;
+    }
+
+    /* ===== КНОПКИ ===== */
+    .adm-btn-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .adm-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 18px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border: none;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        text-decoration: none;
+        cursor: pointer;
+        transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 3px 12px rgba(26,122,175,0.25);
+    }
+
+    .adm-btn-primary:hover {
+        opacity: 0.92;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(26,122,175,0.32);
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .adm-btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 16px;
+        background: rgba(26,122,175,0.07);
+        border: 1px solid rgba(26,122,175,0.20);
+        border-radius: 10px;
+        color: var(--azure);
+        font-size: 13px;
+        font-weight: 600;
+        font-family: 'Montserrat', sans-serif;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.15s;
+    }
+
+    .adm-btn-secondary:hover {
+        background: rgba(26,122,175,0.14);
+        transform: translateY(-1px);
+        color: var(--azure);
+        text-decoration: none;
+    }
+
+    .adm-btn-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 16px;
+        color: var(--azure);
+        font-size: 15px;
+        font-weight: 600;
+        font-family: 'Montserrat', sans-serif;
+        text-decoration: none;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        transition: background 0.2s, border-color 0.2s;
+    }
+
+    .adm-btn-link:hover {
+        background: rgba(26,122,175,0.07);
+        border-color: rgba(26,122,175,0.18);
+        text-decoration: none;
+        color: var(--azure);
+    }
+
+    .adm-btn-link i {
+        font-size: 13px;
+        color: var(--muted);
+    }
+
+    /* ===== ФОРМА ВІДПРАВКИ ===== */
+    .adm-form-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.07);
+    }
+
+    .adm-form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    @media (max-width: 500px) {
+        .adm-form-row { grid-template-columns: 1fr; }
+    }
+
+    .adm-form-field label {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        margin-bottom: 6px;
+    }
+
+    .adm-form-field .form-control {
+        width: 100%;
+        padding: 9px 12px;
+        font-size: 14px;
+        font-family: 'Montserrat', sans-serif;
+        color: var(--text);
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+        box-sizing: border-box;
+        -webkit-appearance: none;
+    }
+
+    .adm-form-field .form-control:focus {
+        border-color: var(--azure-light);
+        box-shadow: 0 0 0 3px rgba(26,122,175,0.10);
+        background: var(--surface);
+    }
+</style>
+
+<%# BREADCRUMB %>
+<div class="adm-breadcrumb">
+  <%= link_to account_url do %>
+    <i class="fa fa-home"></i> На головну
+  <% end %>
+</div>
+
+<div class="adm-grid">
+
+  <%# БЛОК 1: Завантаження з 1С %>
+  <div class="adm-card">
+    <div class="adm-card-title">Завантаження з 1С</div>
+    <div class="adm-btn-list">
+      <%= link_to all_data_1c83_path, remote: true, class: 'adm-btn-primary' do %>
+        <i class="fa fa-download"></i> Завантажити всі дані з 1С 8.3
+      <% end %>
+      <%= link_to exch_nodes_path, class: 'adm-btn-secondary' do %>
+        <i class="fa fa-exchange"></i> Вузол обміну з 1С
+      <% end %>
+      <%= link_to access_groups_1c83_path, remote: true, class: 'adm-btn-secondary' do %>
+        <i class="fa fa-users"></i> Групи доступу
+      <% end %>
+      <%= link_to products_1c83_path, remote: true, class: 'adm-btn-secondary' do %>
+        <i class="fa fa-cube"></i> Товари
+      <% end %>
+      <%= link_to packs_1c83_path, remote: true, class: 'adm-btn-secondary' do %>
+        <i class="fa fa-archive"></i> Упаковка
+      <% end %>
+      <%= link_to clients_1c83_path, remote: true, class: 'adm-btn-secondary' do %>
+        <i class="fa fa-building"></i> Контрагенти
+      <% end %>
+      <%= link_to addresses_1c383_path, remote: true, class: 'adm-btn-secondary' do %>
+        <i class="fa fa-map-marker"></i> Адреси клієнтів
+      <% end %>
+      <%= link_to pricetypes_1c83_path, remote: true, class: 'adm-btn-secondary' do %>
+        <i class="fa fa-tags"></i> Типи цін
+      <% end %>
+      <%= link_to prices_1c83_path, remote: true, class: 'adm-btn-secondary' do %>
+        <i class="fa fa-usd"></i> Ціни
+      <% end %>
+      <%= link_to product_exceptions_1c83_path, remote: true, class: 'adm-btn-secondary' do %>
+        <i class="fa fa-list"></i> Номенклатура контрагентів
+      <% end %>
     </div>
-    <%= form_tag orders_to_1c83_path({:id => @product_id, :pack_id => @pack_id}), class:"border border-light rounded shadow-sm mb-5", method: :get, remote: true do %>
-      <div class="form-group" style="margin: 30px">
-        <div class="row">
-          <div class="col">
-            <label for="inputEmail4">Начало периода:</label>
-            <%= date_field("date1","date_1",value: DateTime.now.strftime("%Y-%m-%d"), class: "form-control")%>
-          </div>
-          <div class="col">
-            <label for="inputEmail4">Окончание периода:</label>
-            <%= date_field("date2","date_2",value: DateTime.now.strftime("%Y-%m-%d"), class: "form-control" )%>
-          </div>
-        </div>
-        <div>
-        </div>
-      </div>
-        <div class="form-group row" style="margin: 30px">
-          <div class="col-sm-10">
-            <%= submit_tag 'Отправка заказа', class: 'btn btn-primary' %>
-          </div>
-        </div>
-    <% end %>
   </div>
 
+  <%# БЛОК 2: Довідники %>
+  <div class="adm-card">
+    <div class="adm-card-title">Довідники</div>
+    <div class="adm-btn-list">
+      <%= link_to users_url, class: 'adm-btn-link' do %>
+        <i class="fa fa-user"></i> Користувачі
+      <% end %>
+      <%= link_to clients_url, class: 'adm-btn-link' do %>
+        <i class="fa fa-building"></i> Клієнти
+      <% end %>
+      <%= link_to product_exeptions_url, class: 'adm-btn-link' do %>
+        <i class="fa fa-list-alt"></i> Номенклатура контрагентів
+      <% end %>
+      <%= link_to products_url, class: 'adm-btn-link' do %>
+        <i class="fa fa-cube"></i> Продукція
+      <% end %>
+      <%= link_to packs_url, class: 'adm-btn-link' do %>
+        <i class="fa fa-archive"></i> Упаковка
+      <% end %>
+      <%= link_to pricetypes_url, class: 'adm-btn-link' do %>
+        <i class="fa fa-tags"></i> Види цін
+      <% end %>
+      <%= link_to prices_url, class: 'adm-btn-link' do %>
+        <i class="fa fa-usd"></i> Ціни
+      <% end %>
+      <%= link_to access_groups_url, class: 'adm-btn-link' do %>
+        <i class="fa fa-shield"></i> Групи доступу
+      <% end %>
+      <%= link_to storage_places_url, class: 'adm-btn-link' do %>
+        <i class="fa fa-map-marker"></i> Місця зберігання
+      <% end %>
+      <%= link_to unit_products_url, class: 'adm-btn-link' do %>
+        <i class="fa fa-cube"></i> Одиниці продуктів
+      <% end %>
+      <%= link_to units_url, class: 'adm-btn-link' do %>
+        <i class="fa fa-balance-scale"></i> Одиниці виміру
+      <% end %>
+      <%= link_to addresses_url, class: 'adm-btn-link' do %>
+        <i class="fa fa-map-o"></i> Адреси
+      <% end %>
+    </div>
+  </div>
+
+</div>
+
+<%# ФОРМА ВІДПРАВКИ ЗАМОВЛЕНЬ %>
+<div class="adm-form-card">
+  <div class="adm-card-title">Відправка замовлень до 1С</div>
+  <%= form_tag orders_to_1c83_path({id: @product_id, pack_id: @pack_id}), method: :get, remote: true do %>
+    <div class="adm-form-row">
+      <div class="adm-form-field">
+        <label>Початок періоду</label>
+        <%= date_field "date1", "date_1", value: DateTime.now.strftime("%Y-%m-%d"), class: "form-control" %>
+      </div>
+      <div class="adm-form-field">
+        <label>Закінчення періоду</label>
+        <%= date_field "date2", "date_2", value: DateTime.now.strftime("%Y-%m-%d"), class: "form-control" %>
+      </div>
+    </div>
+    <%= submit_tag 'Відправити замовлення', class: 'adm-btn-primary' %>
+  <% end %>
 </div>

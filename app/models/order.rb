@@ -10,6 +10,7 @@ class Order < ApplicationRecord
   def add_line_items_from_cart(cart)
     cart.line_items.each do |item|
        item.cart_id  = nil
+       item.price     = Product.get_price(item.product.id, cart.client.pricetype, item.pack.nil? ? nil : item.pack.id,nil, self.date)
       line_items  <<  item
     end
   end
@@ -18,7 +19,7 @@ class Order < ApplicationRecord
     if self.client.pricetype.nil?
       return 0
     end
-    line_items.to_a.sum { |item| Product.get_price(item.product.id, self.client.pricetype.id, item.pack.nil? ? nil : item.pack.id,nil, self.date ) * (item.recount)}
+    line_items.to_a.sum { |item| item.price * (item.recount)}
   end
 
   def total_quantity

@@ -3,7 +3,7 @@ class UnitProductsController < ApplicationController
 
   # GET /unit_products or /unit_products.json
   def index
-    @unit_products = UnitProduct.all
+    @unit_products = UnitProduct.all.page(params[:page])
   end
 
   # GET /unit_products/1 or /unit_products/1.json

@@ -1,0 +1,118 @@
+<%= stylesheet_link_tag "sidebar" %>
+
+<div id="wrapper">
+  <div class="overlay"></div>
+
+  <%# ===== SIDEBAR ===== %>
+  <div id="sidebar-wrapper">
+    <%= form_tag '', id: "sidebar_tree" do %>
+
+      <%# Логотип %>
+      <div class="sidebar-header">
+        <div class="sidebar-brand">Український М'ясокомбінат</div>
+      </div>
+
+      <%# Замовник %>
+      <div class="sidebar-client-wrap">
+        <%= hidden_field_tag :client_id, @client_id %>
+        <div class="sidebar-client-row">
+          <%= text_field_tag :client_search,
+                             @client_id.present? ? Client.find_by(id: @client_id)&.name : "",
+                             class: 'sidebar-client-input',
+                             list: 'clients',
+                             id: 'client_input',
+                             placeholder: 'Оберіть замовника...' %>
+          <a href="#"
+             class="sidebar-client-clear fa fa-times-circle"
+             id="clearBtn"
+             onclick="ClearClient()"></a>
+        </div>
+
+        <datalist id="clients">
+          <% @clients.each do |client| %>
+            <option data-id="<%= client.id %>" value="<%= client.name %>">
+          <% end %>
+        </datalist>
+
+        <div class="sidebar-price-type" id="price_type">
+          <i class="fa fa-money"></i>
+          Тип прайсу: <strong><%= @price_type ? @price_type.name : '' %></strong>
+        </div>
+
+      </div>
+
+      <%# Навігація %>
+      <ul class="sidebar-nav">
+        <li>
+          <%= link_to account_url do %>
+            <i class="fa fa-home"></i> На головну
+          <% end %>
+        </li>
+        <li>
+          <%= link_to carts_url do %>
+            <i class="fa fa-shopping-cart"></i> Поточні покупки
+          <% end %>
+        </li>
+        <li>
+          <%= link_to orders_url do %>
+            <i class="fa fa-file-text-o"></i> Оформлені замовлення
+          <% end %>
+        </li>
+      </ul>
+
+      <%# Дерево товарів %>
+      <div class="sidebar-tree-wrap">
+        <div class="sidebar-tree-label">
+          Каталог продукції
+          <span id="sidebar-reset-btn">
+            <% if session[:selected_categories].present? %>
+              <a href="#"
+                 class="sidebar-tree-reset"
+                 id="clear-categories-btn"
+                 title="Скинути фільтр категорій">
+                <i class="fa fa-times-circle"></i> скинути
+              </a>
+            <% end %>
+          </span>
+        </div>
+        <ul class="tree" id="tree_id">
+          <li>
+            <span class="caret">Всі категорії</span>
+            <%= @products_tree.html_safe %>
+          </li>
+        </ul>
+      </div>
+
+    <% end %>
+  </div>
+
+  <%# ===== CONTENT ===== %>
+  <div id="page-content-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <%# Hamburger %>
+          <button type="button"
+                  class="hamburger is-closed"
+                  id="menu-toggle"
+                  data-toggle="offcanvas">
+            <span class="hamb-top"></span>
+            <span class="hamb-middle"></span>
+            <span class="hamb-bottom"></span>
+          </button>
+
+          <div class="container-fluid">
+            <%= render partial: "layouts/menu" %>
+            <div id="customer_content">
+              <%= render partial: 'customer/content' %>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= javascript_include_tag "sidebar.js" %>

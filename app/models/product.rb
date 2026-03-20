@@ -6,9 +6,14 @@ class Product < ApplicationRecord
     massege: 'must be a URL for GIF, JPG or PNG image.'
   }
   before_destroy :ensure_not_ref_by_any_line_item
+  scope :folders, -> { where(is_folder: true) }
+  scope :active, -> { where(not_active: false) }
+  scope :not_deleted, -> { where(deletion_mark: false) }
+
+  has_many :favorite_products
   has_many :line_items
   has_many :orders, through: :line_items
-  has_many :packs, class_name: 'Pack', foreign_key: :product_id_
+  has_many :packs, class_name: 'Pack', foreign_key: :product_id
   has_many :subs, class_name: 'Product', foreign_key: :parent_id
   belongs_to :superior, class_name: 'Product', foreign_key: :parent_id, optional: true
   has_many :price
@@ -22,42 +27,6 @@ class Product < ApplicationRecord
   paginates_per 50
   max_paginates_per 100
 
-  def self.get_price(prod_id, pricetype_id, pack_id = nil, product_unit_id = nil, period = nil)
-
-    return 0 if pricetype_id.nil?
-
-    period = if period.nil?
-               Time.now
-             else
-               period
-             end
-
-    product_unit = if product_unit_id.nil?
-                     default_unit(prod_id)
-                   else
-                     UnitProduct.find_by(id: product_unit)
-                   end
-
-    product_price = 0
-    pack_price = 0
-
-    # get product price
-    if product_unit.nil?
-      result = Price.all.where(product_id: prod_id, pricetype_id: pricetype_id).where('period <= ?', period).order(period: :DESC).limit(1)
-    else
-      result = Price.all.where(product_id: prod_id, pricetype_id: pricetype_id, unit_product_id: product_unit.id).where('period <= ?', period).order(period: :DESC).limit(1)
-    end
-    product_price = result[0].value unless result[0].nil?
-
-    # get pack price
-    unless pack_id.nil?
-      result = Price.where(pack_id: pack_id).where('period <= ?', period).order(period: :DESC).limit(1)
-      pack_price = result[0].value unless result[0].nil?
-    end
-
-    product_price + pack_price
-
-  end
 
   def params_json_to_object(dat)
 
@@ -98,19 +67,6 @@ class Product < ApplicationRecord
     self.image_url = 'folder.jpg' if self.is_folder == true
   end
 
-  def self.get_childs_product (parent_id)
-    Product.where(:products => { is_folder: true, unf_parent_id: parent_id, not_active: false }).order("title")
-  end
-
-  def self.get_level (current_id)
-    level = 1
-    while current_id != "00000000017" do
-      product = Product.find_by(unf_id: current_id)
-      current_id = product.unf_parent_id
-      level = level + 1
-    end
-    level
-  end
 
   def self.default_unit(product_id)
     UnitProduct.find_by(product_id: product_id, default: true)
@@ -124,32 +80,32 @@ class Product < ApplicationRecord
     res.many?
   end
 
-  # this method needs to rebuild
-  def self.get_packs_product (product_id, favorite, client_id)
-    # product pacs
-    text_query = 'SELECT
-       p.id,
-       p.title,
-       p.image_url,
-       p.description,
-       p.price,
-		   p.parent_id,
-		   perents.title AS parents_name,
-       pcs.name AS pack_name,
-       pcs.product_id,
-       pcs.id as pack_id
-       FROM products as p
-       LEFT JOIN packs AS pcs ON p.unf_id = pcs.product_id
-		   LEFT JOIN products AS perents ON p.parent_id = perents.id
-		   WHERE p.is_folder = false
-       AND NOT pcs.id = 0
-	     AND p.id = %d
-       AND NOT pcs.deletion_mark
-       AND NOT pcs.not_active'
+  def self.get_price(prod_id, price_type, pack_id = nil, product_unit_id = nil, period = nil)
+    return 0 if price_type.blank?
 
-    text_query = sprintf(text_query, product_id)
-    result = ActiveRecord::Base.connection.exec_query(text_query)
-    return result
+    period ||= Time.current
+    product_unit = product_unit_id ? UnitProduct.find_by(id: product_unit_id) : default_unit(prod_id)
+
+    # Ціна продукту
+    product_scope = Price.where(product_id: prod_id, pricetype_id: price_type.id)
+    product_scope = product_scope.where(unit_product_id: product_unit.id) if product_unit
+    product_price = product_scope.where('period <= ?', period)
+                                 .order(period: :desc)
+                                 .limit(1)
+                                 .first&.value || 0
+
+    # Ціна упаковки
+    pack_price = if pack_id
+                   Price.where(pack_id: pack_id)
+                        .where('period <= ?', period)
+                        .order(period: :desc)
+                        .limit(1)
+                        .first&.value || 0
+                 else
+                   0
+                 end
+
+    product_price + pack_price
   end
 
   private
@@ -161,3 +117,7 @@ class Product < ApplicationRecord
     end
   end
 end
+
+
+
+

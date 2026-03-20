@@ -1,22 +1,5 @@
-<div class="container-fluid">
-  <p id="info" style="display: none">Text to popup</p>
-  <%= render partial: "layouts/menu" %>
 
-  <!-- Modal add qty -->
-  <div id="modal-window" class="modal fade" tabindex="-1"
-       role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <%= render partial: 'line_items/modal_qty' %>
-  </div>
-  <!-- Modal -->
-
-  <!--  Modal  products tree
-  <div class="modal fade" id="productTreeModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-    <%#= render partial: 'products/product_tree_modal' %>
-  </div>-->
-
-  <div id='customer_content'>
-  <%= render partial: 'customer/content' %>
-  </div>
+  <%= render partial: "layouts/sidebar" %>
 
   <style>
 
@@ -28,6 +11,11 @@
           margin-left: 1%;
       }
       @media only screen and (max-width: 1000px) {
+
+          .card {
+              width: 17rem !important;
+              min-width: 280px;
+          }
 
           .card h5{
               font-size: 2.25rem;
@@ -52,7 +40,7 @@
       var e = document.getElementById('cart_qty');
       var ecl = document.getElementById('close_pop_cart')
 
-      e.onmouseover = function () {
+      e.onclick = function () {
           document.getElementById('pop_cart').style.display = 'block';
       };
       e.onmouseout = function () {
@@ -61,7 +49,5 @@
       onclickPopCart = function () {
           document.getElementById('pop_cart').style.display = 'none';
       }
-
   </script>
-</div>
 

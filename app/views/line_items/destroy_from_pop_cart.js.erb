@@ -1,0 +1,16 @@
+$('#cart_total_quantity').html("<%= sprintf('%0.02fкг',@cart.total_quantity)%>");
+$('#pop_cart').html("<%= j render :partial => 'carts/pop_cart' %>");
+
+
+$('#pop_cart_button').html('<%= escape_javascript(
+  if @cart.line_items.any?
+    button_to "Оформити замовлення",
+              cart_path(@cart),
+              method: :get,
+              data: {
+                confirm: @cart.client_id.nil? ? "Оберіть клієнта" : nil
+              },
+              class: "btn btn-primary",
+              disabled: @cart.client_id.nil?
+  end
+) %>');

@@ -1,44 +1,263 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link", style: "font-size: 20px"%></li>
-    <li class="breadcrumb-item"><%= link_to 'Андминистрирование', admin_url, class: "btn btn-link", style: "font-size: 20px"%></li>
-  </ol>
-</nav>
-<p id="notice"><%= notice %></p>
-<h4>Продукция</h4>
-<table class="table table-bordered">
-  <thead class="table table-dark">
-    <tr>
-      <th>id</th>
-      <th>parent_id</th>
-      <th>unf_id</th>
-      <th>unf_parent_id</th>
-      <th>Наименование</th>
-      <th>Описание</th>
-      <th>Вес, шт</th>
-      <th colspan="4"></th>
-    </tr>
-  </thead>
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+    }
 
-  <tbody>
+    .prd-breadcrumb {
+        display: flex; align-items: center; gap: 6px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .prd-breadcrumb a {
+        display: inline-flex; align-items: center; gap: 5px; color: var(--azure);
+        text-decoration: none; font-weight: 600; padding: 6px 14px; border-radius: 20px;
+        font-size: 13px; background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        font-family: 'Montserrat', sans-serif; transition: background 0.2s;
+    }
+    .prd-breadcrumb a:hover { background: rgba(26,122,175,0.14); text-decoration: none; color: var(--azure); }
+    .prd-breadcrumb span { color: var(--muted); font-size: 13px; font-family: 'Montserrat', sans-serif; }
+
+    .prd-notice {
+        background: rgba(14,112,64,0.08); border: 1px solid rgba(14,112,64,0.2);
+        border-radius: 10px; padding: 10px 16px; color: #0E7040;
+        font-size: 13px; margin-bottom: 16px; font-family: 'Montserrat', sans-serif;
+    }
+
+    .prd-page-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+    }
+    .prd-page-title {
+        font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 800;
+        color: var(--text); display: flex; align-items: center; gap: 10px;
+    }
+    .prd-page-title::before {
+        content: ''; display: inline-block; width: 5px; height: 24px;
+        background: linear-gradient(180deg, var(--azure-light), var(--azure)); border-radius: 3px;
+    }
+
+    .prd-btn-new {
+        display: inline-flex; align-items: center; gap: 7px; padding: 9px 20px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border: none; border-radius: 10px; color: #fff; font-size: 13px; font-weight: 700;
+        font-family: 'Montserrat', sans-serif; text-decoration: none;
+        transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 3px 12px rgba(26,122,175,0.25);
+    }
+    .prd-btn-new:hover { opacity: 0.92; transform: translateY(-1px); color: #fff; text-decoration: none; }
+
+    .prd-pagination {
+        display: flex; justify-content: center; padding: 16px 0 8px;
+    }
+    .prd-pagination a, .prd-pagination a:visited, .prd-pagination a:link {
+        color: var(--azure-light); text-decoration: none;
+    }
+    .prd-pagination .pagination {
+        display: flex; flex-wrap: wrap; align-items: center;
+        list-style: none; padding-left: 0; margin: 0; gap: 4px;
+    }
+    .prd-pagination .pagination .page-item { display: inline-flex; list-style: none; }
+    .prd-pagination .pagination .page-item .page-link {
+        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        color: var(--azure-light); border-radius: 10px; font-family: 'Montserrat', sans-serif;
+        font-size: 13px; font-weight: 600; padding: 7px 13px; text-decoration: none;
+        transition: background 0.2s, transform 0.15s;
+        display: inline-flex; align-items: center; min-width: 36px; justify-content: center;
+    }
+    .prd-pagination .pagination .page-item .page-link:hover {
+        background: rgba(26,122,175,0.15); color: var(--azure-light); transform: scale(1.06);
+    }
+    .prd-pagination .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border-color: var(--azure); color: #fff;
+        box-shadow: 0 4px 12px rgba(26,122,175,0.28); cursor: default;
+    }
+    .prd-pagination .pagination .page-item.disabled .page-link { opacity: 0.5; cursor: not-allowed; }
+
+    .prd-table-wrap {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; overflow-x: auto;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.07);
+        margin-bottom: 8px; -webkit-overflow-scrolling: touch;
+    }
+    .prd-table {
+        width: 100%; min-width: 800px; border-collapse: collapse;
+        font-size: 13px; font-family: 'Montserrat', sans-serif;
+    }
+    .prd-table thead tr { background: linear-gradient(135deg, #E0F2FF, #C8E8FA); border-bottom: 2px solid var(--border); }
+    .prd-table thead th {
+        padding: 11px 12px; font-size: 10px; letter-spacing: 0.12em;
+        text-transform: uppercase; color: var(--azure); font-weight: 700; white-space: nowrap;
+        position: sticky; top: 0; background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        z-index: 2; box-shadow: 0 2px 0 var(--border); text-align: left;
+    }
+    .prd-table tbody tr { border-bottom: 1px solid rgba(186,224,245,0.4); transition: background 0.15s; }
+    .prd-table tbody tr:last-child { border-bottom: none; }
+    .prd-table tbody tr:hover { background: rgba(26,122,175,0.04); }
+    .prd-table td { padding: 9px 12px; color: var(--text); vertical-align: middle; }
+    .prd-muted { color: var(--muted); font-size: 12px; }
+
+    .prd-action {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 30px; height: 30px; border-radius: 8px; font-size: 13px;
+        text-decoration: none; transition: background 0.2s, transform 0.15s;
+    }
+    .prd-action-show   { color: var(--azure); background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.15); }
+    .prd-action-show:hover   { background: rgba(26,122,175,0.14); transform: scale(1.08); color: var(--azure); text-decoration: none; }
+    .prd-action-edit   { color: #0E7490; background: rgba(14,116,144,0.07); border: 1px solid rgba(14,116,144,0.15); }
+    .prd-action-edit:hover   { background: rgba(14,116,144,0.14); transform: scale(1.08); color: #0E7490; text-decoration: none; }
+    .prd-action-delete { color: var(--red); background: rgba(192,57,43,0.07); border: 1px solid rgba(192,57,43,0.15); }
+    .prd-action-delete:hover { background: rgba(192,57,43,0.14); transform: scale(1.08); color: var(--red); text-decoration: none; }
+
+    /* ФІЛЬТРИ */
+    .prd-filter-wrap {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; padding: 16px 20px;
+        box-shadow: 0 2px 8px rgba(26,122,175,0.06); margin-bottom: 16px;
+    }
+    .prd-filter-title {
+        font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+        color: var(--muted); font-weight: 700; font-family: 'Montserrat', sans-serif;
+        margin-bottom: 12px;
+    }
+    .prd-filter-grid { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+    .prd-filter-item { display: flex; flex-direction: column; gap: 5px; width: 280px; min-width: 280px; }
+    .prd-filter-item label {
+        font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--azure); font-weight: 700; font-family: 'Montserrat', sans-serif;
+    }
+    .prd-filter-select {
+        width: 100%; padding: 8px 30px 8px 10px; font-size: 13px;
+        font-family: 'Montserrat', sans-serif; color: var(--text);
+        background: var(--bg); border: 1.5px solid var(--border);
+        border-radius: 10px; outline: none; cursor: pointer;
+        transition: border-color .2s, box-shadow .2s;
+        -webkit-appearance: none; -moz-appearance: none; appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231A7AAF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat; background-position: right 10px center;
+        box-sizing: border-box;
+    }
+    .prd-filter-select:focus { border-color: var(--azure-light); box-shadow: 0 0 0 3px rgba(26,122,175,0.10); }
+    .prd-filter-btn {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer;
+        font-size: 13px; font-weight: 600; font-family: 'Montserrat', sans-serif;
+        transition: opacity 0.2s, transform 0.15s;
+    }
+    .prd-filter-btn-apply {
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        color: #fff; box-shadow: 0 3px 10px rgba(26,122,175,0.25);
+    }
+    .prd-filter-btn-apply:hover { opacity: 0.9; transform: translateY(-1px); }
+    .prd-filter-btn-reset {
+        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        color: var(--azure); text-decoration: none;
+    }
+    .prd-filter-btn-reset:hover { background: rgba(26,122,175,0.14); }
+    @media (max-width: 600px) { .prd-filter-item { width: 100%; min-width: 100%; } }
+</style>
+
+<div class="prd-breadcrumb">
+  <%= link_to account_url do %><i class="fa fa-home"></i> На головну<% end %>
+  <span>/</span>
+  <%= link_to admin_url do %><i class="fa fa-cogs"></i> Адміністрування<% end %>
+  <span>/</span>
+  <span>Продукція</span>
+</div>
+
+<% if notice.present? %>
+  <div class="prd-notice"><%= notice %></div>
+<% end %>
+
+<div class="prd-page-header">
+  <div class="prd-page-title">Продукція</div>
+  <%= link_to new_product_path, class: 'prd-btn-new' do %>
+    <i class="fa fa-plus"></i> Додати товар
+  <% end %>
+</div>
+
+<%# ФІЛЬТР %>
+<div class="prd-filter-wrap">
+  <div class="prd-filter-title"><i class="fa fa-filter"></i> Встановити фільтр:</div>
+  <%= form_tag products_path, method: :get do %>
+    <div class="prd-filter-grid">
+      <div class="prd-filter-item">
+        <label>Група (назва)</label>
+        <%= select_tag :parent_name,
+                       options_for_select(
+                         Product.where(is_folder: true).order(:title).pluck(:title).map { |n| [n, n] },
+                         params[:parent_name]
+                       ),
+                       include_blank: 'Всі групи',
+                       class: 'prd-filter-select' %>
+      </div>
+      <button type="submit" class="prd-filter-btn prd-filter-btn-apply">
+        <i class="fa fa-search"></i> Застосувати
+      </button>
+      <%= link_to products_path, class: 'prd-filter-btn prd-filter-btn-reset' do %>
+        <i class="fa fa-times"></i> Скинути
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="prd-pagination">
+  <%= paginate @products %>
+</div>
+
+<div class="prd-table-wrap">
+  <table class="prd-table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Parent ID</th>
+      <th>Група</th>
+      <th>UNF ID</th>
+      <th>UNF Parent ID</th>
+      <th>Найменування</th>
+      <th>Опис</th>
+      <th>Вага, шт</th>
+      <th colspan="3"></th>
+    </tr>
+    </thead>
+    <tbody>
     <% @products.each do |product| %>
-      <tr class='table' >
-        <td><%= product.id%></td>
-        <td><%= product.parent_id%></td>
-        <td><%= product.unf_id%></td>
-        <td><%= product.unf_parent_id%></td>
-        <td><%= product.title %></td>
+      <tr>
+        <td class="prd-muted"><%= product.id %></td>
+        <td class="prd-muted"><%= product.parent_id %></td>
+        <td><%= product.parent_name %></td>
+        <td class="prd-muted"><%= product.unf_id %></td>
+        <td class="prd-muted"><%= product.unf_parent_id %></td>
+        <td><strong><%= product.title %></strong></td>
         <td><%= product.description %></td>
         <td><%= product.weight %></td>
-        <td><%= link_to 'Показать', product %></td>
-        <td><%= link_to 'Редактировать', edit_product_path(product) %></td>
-        <td><%= link_to 'Удалить', product, method: :delete, data: { confirm: 'Вы уверены?' } %></td>
+        <td>
+          <%= link_to product, class: 'prd-action prd-action-show', title: 'Показати' do %>
+            <i class="fa fa-eye"></i>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to edit_product_path(product), class: 'prd-action prd-action-edit', title: 'Редагувати' do %>
+            <i class="fa fa-pencil"></i>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to product, method: :delete, data: { confirm: 'Ви впевнені?' }, class: 'prd-action prd-action-delete', title: 'Видалити' do %>
+            <i class="fa fa-trash"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</div>
 
-<br>
-
-<%= link_to 'Добавить товар', new_product_path %>
-<%= paginate @products%>
+<div class="prd-pagination">
+  <%= paginate @products %>
+</div>

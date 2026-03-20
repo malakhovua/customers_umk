@@ -1,0 +1,9 @@
+$('#cart_total_quantity').html("<%= sprintf('%0.02fкг',@cart.total_quantity)%>");
+$('#pop_cart').html("<%= j render :partial => 'carts/pop_cart' %>");
+
+var button_cart = $('#pop_cart_button');
+<% if @cart.line_items.any? %>
+  button_cart.html("<%= j button_to 'Оформити замовлення', cart_path(@cart), method: :get, class: 'btn btn-primary' %>");
+<% else %>
+  button_cart.html("");
+<% end %>

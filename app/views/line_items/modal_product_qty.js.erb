@@ -1,8 +1,38 @@
+// 1. Спочатку ЗАВЖДИ очищаємо старий стан
+$('.modal-backdrop').remove();
+$('body').removeClass('modal-open');
+$('body').css('padding-right', '');
+
+// 2. Оновлюємо HTML
 $("#modal-window").html("<%= escape_javascript(render 'line_items/modal_qty',
 locals: {product_id:@product_id, pack_id:@pack_id, product_name:@product_name, unit:@unit, units_list:@units_list}) %>");
 
+// 3. Відкриваємо з невеликою затримкою (дає час Bootstrap підготуватися)
+setTimeout(function() {
+    $('#modal-window').modal('show');
+}, 200);
 
+// Очищаємо всі обробники
+$('#modal-window').off('shown.bs.modal hide.bs.modal hidden.bs.modal');
+$(document).off('click', '#close-modal-btn #close-modal-x');
 
+$('#modal-window').on('shown.bs.modal', function () {
+    $('#num_field').trigger('focus').select();
+});
 
+$('#modal-window').on('hide.bs.modal', function () {
+    $(this).find(':focus').blur();
+});
 
+// Очищення після закриття
+$('#modal-window').on('hidden.bs.modal', function () {
+    $('.modal-backdrop').remove();
+    $('body').removeClass('modal-open');
+    $('body').css('padding-right', '');
+});
 
+$(document).on('click', '#close-modal-btn, #close-modal-x', function(e) {
+    e.preventDefault();
+    $('#num_field').blur();
+    $('#modal-window').modal('hide');
+});

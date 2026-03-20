@@ -1,60 +1,542 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"> <%= link_to 'К списку заказов', orders_path, class: "btn btn-link" , style: "font-size: 20px"%></li>
-  </ol>
-</nav>
-<div class="container">
-  <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --green:        #0E7040;
+    }
 
-  <p id="notice"><%= notice %></p>
-    <h2>Заказ покупателя №<%= @order.id%> от <%= @order.date %></h2>
-    <br>
-  <h6>
-    <strong>Покупатель:</strong>
-    <%= @order.client.name %>
-  </h6>
+    /* Breadcrumb */
+    .order-show-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
 
-  <h6>
-    <strong>Адрес доставки:</strong>
-    <%= @order.address_id.nil? ? 'Адрес не указан' : Address.find(@order.address_id).name %>
-  </h6>
+    .order-show-breadcrumb a {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--azure);
+        text-decoration: none;
+        font-weight: 600;
+        padding: 5px 14px;
+        border-radius: 20px;
+        background: rgba(26,122,175,0.07);
+        border: 1px solid rgba(26,122,175,0.18);
+        transition: background 0.2s;
+        white-space: nowrap;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13px;
+    }
 
-  <h6>
-    <strong>Создал:</strong>
-    <%= @order.user.name %>
-  </h6>
-  <h6>
-    <strong>Комментарий:</strong>
-    <%= @order.comments %>
-  </h6>
-    <h6>
-      <strong>Стикеровать все:</strong>
-      <%= check_box_tag "","", @order.stick, :disabled => true%>
-    </h6>
-    <h6>
-      <strong>Стикеровать в упаковке:</strong>
-      <%= check_box_tag "","", @order.stick_pack, :disabled => true %>
-    </h6>
-    <br>
-  <table class="table table-bordered">
-  <thead>
-  <tr>
-    <th scope="col">#</th>
-    <th scope="col">Наименованиу</th>
-    <th scope="col">Упаковка</th>
-    <th scope="col">Стик.</th>
-    <th scope="col">Количество, пересчет</th>
-    <th scope="col">Количество,кг</th>
-    <th scope="col">Количество,шт</th>
-    <th scope="col">Ед.</th>
-    <th scope="col">Цена</th>
-    <th scope="col">Сумма</th>
-  </tr>
-  </thead>
-    <%= render partial: 'orders/line_items'%>
+    .order-show-breadcrumb a:hover { background: rgba(26,122,175,0.14); }
+
+    /* Notice */
+    .order-notice {
+        background: rgba(14,112,64,0.08);
+        border: 1px solid rgba(14,112,64,0.2);
+        border-radius: 10px;
+        padding: 10px 16px;
+        color: var(--green);
+        font-size: 13px;
+        margin-bottom: 20px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Заголовок */
+    .order-show-header {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+        margin-bottom: 20px;
+    }
+
+    .order-show-title-bar {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+        padding: 18px 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .order-show-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--text);
+        flex: 1;
+    }
+
+    .order-show-date {
+        font-size: 13px;
+        color: var(--muted);
+        font-family: 'Montserrat', sans-serif;
+        background: rgba(26,122,175,0.08);
+        border: 1px solid rgba(26,122,175,0.15);
+        border-radius: 20px;
+        padding: 3px 12px;
+    }
+
+    /* Деталі замовлення — стиль 1С */
+    .order-show-details {
+        padding: 8px 24px 4px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 24px;
+    }
+
+    @media (max-width: 768px) {
+        .order-show-details {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .order-detail-item {
+        display: flex;
+        align-items: baseline;
+        padding: 5px 0;
+        border-bottom: 1px solid rgba(186,224,245,0.3);
+        font-family: 'Montserrat', sans-serif;
+        gap: 6px;
+    }
+
+    .order-detail-label {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 500;
+        white-space: nowrap;
+        min-width: 160px;
+        flex-shrink: 0;
+    }
+
+    .order-detail-dots {
+        flex: 1;
+        border-bottom: 1px dotted #BAE0F5;
+        margin-bottom: 3px;
+        min-width: 10px;
+    }
+
+    .order-detail-value {
+        font-size: 13px;
+        color: var(--text);
+        font-weight: 600;
+        white-space: nowrap;
+        text-align: right;
+    }
+
+
+
+    /* Таблиця позицій */
+    .order-items-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+        margin-bottom: 20px;
+        overflow-x: auto;
+    }
+
+    .order-items-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .order-items-table thead tr {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+    }
+
+    .order-items-table thead th {
+        padding: 11px 14px;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .order-items-table tbody tr {
+        border-bottom: 1px solid rgba(186,224,245,0.4);
+        transition: background 0.15s;
+    }
+
+    .order-items-table tbody tr:last-child { border-bottom: none; }
+    .order-items-table tbody tr:hover { background: rgba(26,122,175,0.03); }
+
+    .order-items-table td {
+        padding: 10px 14px;
+        color: var(--text);
+        vertical-align: middle;
+    }
+
+    /* Підсумок */
+    .order-summary {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+    }
+
+    .order-summary-head {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        padding: 13px 22px;
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: var(--azure);
+        border-bottom: 1px solid var(--border);
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .order-summary-body { padding: 16px 22px; }
+
+    .order-summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 11px 0;
+        border-bottom: 1px solid rgba(186,224,245,0.4);
+        font-size: 14px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .order-summary-row:last-child { border-bottom: none; }
+    .order-summary-row span { color: var(--muted); font-weight: 500; }
+
+    .order-summary-val-qty {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--azure);
+    }
+
+    .order-summary-val-price {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--text);
+    }
+
+    /* Опції замовлення */
+    .order-section {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 20px 24px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+    }
+
+    .order-label {
+        display: block;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--azure);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        margin-bottom: 14px;
+    }
+
+    .order-checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .order-check-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        cursor: pointer;
+        padding: 9px 16px;
+        border-radius: 10px;
+        background: rgba(26,122,175,0.04);
+        border: 1px solid rgba(26,122,175,0.12);
+        transition: all 0.2s;
+    }
+
+    .order-check-label:hover {
+        background: rgba(26,122,175,0.08);
+        border-color: rgba(26,122,175,0.22);
+    }
+
+    .order-check-label input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--azure);
+    }
+
+    /* ===== MOBILE show ===== */
+    .order-items-cards { display: none !important; }
+
+    @media (max-width: 600px) {
+        .order-show-breadcrumb a { font-size: 14px; padding: 9px 14px; min-height: 44px; }
+
+        .order-show-title-bar { padding: 14px 16px; }
+        .order-show-title { font-size: 17px; }
+
+        .order-show-details {
+            grid-template-columns: 1fr !important;
+            padding: 8px 16px 4px;
+        }
+        .order-detail-label { min-width: 130px; font-size: 11px; }
+        .order-detail-value { font-size: 12px; }
+
+        .order-section { padding: 14px 16px; }
+        .order-check-label { font-size: 14px; padding: 10px 14px; min-height: 44px; }
+        .order-check-label input[type="checkbox"] { width: 20px; height: 20px; }
+
+        /* Ховаємо таблицю, показуємо картки */
+        .order-items-wrap { display: none !important; }
+        .order-items-cards { display: flex !important; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+        .order-item-card {
+            background: #FFFFFF;
+            border: 1px solid #BAE0F5;
+            border-radius: 14px;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 2px 8px rgba(26,122,175,0.07);
+        }
+        .order-item-card-title {
+            background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+            padding: 10px 14px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #0B2A3D;
+            border-bottom: 1px solid #BAE0F5;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .order-item-num {
+            background: #1A7AAF;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+        .order-item-card-body { padding: 10px 14px; display: flex; flex-direction: column; gap: 7px; }
+        .order-item-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .order-item-label { font-size: 12px; color: #4A7A96; font-weight: 500; flex-shrink: 0; }
+        .order-item-value { font-size: 13px; font-weight: 600; color: #0B2A3D; text-align: right; }
+        .order-item-value.azure { color: #1A7AAF; }
+        .order-item-value.green { color: #0E7040; font-size: 15px; }
+
+        /* Підсумок */
+        .order-summary-body { padding: 12px 16px; }
+        .order-summary-val-qty,
+        .order-summary-val-price { font-size: 20px; }
+    }
+</style>
+
+<%# BREADCRUMB %>
+<div class="order-show-breadcrumb">
+  <%= link_to customer_index_path do %>
+    <i class="fa fa-shopping-basket"></i> Продовжити покупку
+  <% end %>
+  <%= link_to orders_url do %>
+    <i class="fa fa-list"></i> До списку замовлень
+  <% end %>
+  <%= link_to account_url do %>
+    <i class="fa fa-home"></i> На головну
+  <% end %>
+</div>
+
+<%# NOTICE %>
+<% if notice.present? %>
+  <div class="order-notice"><%= notice %></div>
+<% end %>
+
+<%# HEADER — заголовок + деталі %>
+<div class="order-show-header">
+
+  <div class="order-show-title-bar">
+    <div class="order-show-title">
+      Замовлення покупця №<%= @order.id %>
+    </div>
+    <span class="order-show-date">
+      <i class="fa fa-calendar" style="margin-right:4px;"></i>
+      <%= @order.date.strftime("%d.%m.%Y") rescue @order.date %>
+    </span>
+  </div>
+
+  <div class="order-show-details">
+    <div class="order-detail-item">
+      <span class="order-detail-label">Замовник:</span>
+      <span class="order-detail-dots"></span>
+      <span class="order-detail-value"><%= @order.client.name %></span>
+    </div>
+    <div class="order-detail-item">
+      <span class="order-detail-label">Коментар:</span>
+      <span class="order-detail-dots"></span>
+      <span class="order-detail-value"><%= @order.comments.presence || '—' %></span>
+    </div>
+    <div class="order-detail-item">
+      <span class="order-detail-label">Адреса доставки:</span>
+      <span class="order-detail-dots"></span>
+      <span class="order-detail-value"><%= @order.address.nil? ? 'Не вказано' : @order.address.name %></span>
+    </div>
+    <div class="order-detail-item">
+      <span class="order-detail-label">Стікерувати все:</span>
+      <span class="order-detail-dots"></span>
+      <span class="order-detail-value"><%= @order.stick ? '✓ Так' : '— Ні' %></span>
+    </div>
+    <div class="order-detail-item">
+      <span class="order-detail-label">Створив:</span>
+      <span class="order-detail-dots"></span>
+      <span class="order-detail-value"><%= @order.user.name %></span>
+    </div>
+    <div class="order-detail-item">
+      <span class="order-detail-label">Стікерувати в упаковці:</span>
+      <span class="order-detail-dots"></span>
+      <span class="order-detail-value"><%= @order.stick_pack ? '✓ Так' : '— Ні' %></span>
+    </div>
+  </div>
+
+
+
+</div>
+
+<%# ОПЦІЇ ЗАМОВЛЕННЯ %>
+<div class="order-section">
+  <label class="order-label">Опції замовлення</label>
+  <div class="order-checks">
+    <label class="order-check-label">
+      <%= check_box_tag 'order[return]', "1", @order.return, disabled: true %>
+      Це повернення
+    </label>
+    <label class="order-check-label">
+      <%= check_box_tag 'order[return_item]', "1", @order.return_item, disabled: true %>
+      Забрати повернення
+    </label>
+    <label class="order-check-label">
+      <%= check_box_tag 'order[postponement]', "1", @order.postponement, disabled: true %>
+      Відстрочка
+    </label>
+    <label class="order-check-label">
+      <%= check_box_tag 'order[certificate]', "1", @order.certificate, disabled: true %>
+      Сертифікат
+    </label>
+    <label class="order-check-label">
+      <%= check_box_tag 'order[pickup]', "1", @order.pickup, disabled: true %>
+      Самовивіз
+    </label>
+  </div>
+</div>
+
+<%# ТАБЛИЦЯ ПОЗИЦІЙ %>
+<div class="order-items-wrap">
+  <table class="order-items-table">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>Найменування</th>
+      <th>Упаковка</th>
+      <th>Стік.</th>
+      <th>К-сть, перерахунок</th>
+      <th>К-сть, кг</th>
+      <th>К-сть, шт</th>
+      <th>Од.</th>
+      <th>Ціна</th>
+      <th>Сума</th>
+    </tr>
+    </thead>
+    <tbody>
+    <%= render partial: 'orders/line_items' %>
+    </tbody>
   </table>
-    <br>
-    <h5 >Общее количество товара: <%= sprintf("%0.02f кг",@order.total_quantity) %></h5>
-  <h5>На сумму: <%= sprintf("%0.02f грн.", @order.total_price) %></h5>
 </div>
+
+<%# ===== MOBILE: КАРТКИ ПОЗИЦІЙ ===== %>
+<div class="order-items-cards">
+  <% n = 1 %>
+  <% @order.line_items.order(:id).each do |item| %>
+    <% unit = Unit.find(item.unit_id) %>
+    <div class="order-item-card">
+      <div class="order-item-card-title">
+        <span class="order-item-num"><%= n %></span>
+        <%= item.product.title %>
+        <% unless item.pack.nil? %>
+          <span style="font-size:11px;font-weight:500;color:#4A7A96;">· <%= item.pack.name %></span>
+        <% end %>
+      </div>
+      <div class="order-item-card-body">
+        <div class="order-item-row">
+          <span class="order-item-label">Стікерувати</span>
+          <span class="order-item-value"><%= item.stick ? '✓ Так' : '— Ні' %></span>
+        </div>
+        <div class="order-item-row">
+          <span class="order-item-label">К-сть, кг</span>
+          <span class="order-item-value azure"><%= sprintf("%.2f кг", item.recount) %></span>
+        </div>
+        <div class="order-item-row">
+          <span class="order-item-label">К-сть, вага</span>
+          <span class="order-item-value"><%= item.quantity %></span>
+        </div>
+        <div class="order-item-row">
+          <span class="order-item-label">К-сть, шт</span>
+          <span class="order-item-value"><%= item.amount %></span>
+        </div>
+        <div class="order-item-row">
+          <span class="order-item-label">Одиниця</span>
+          <span class="order-item-value"><%= unit.name %></span>
+        </div>
+        <div class="order-item-row">
+          <span class="order-item-label">Ціна</span>
+          <span class="order-item-value"><%= sprintf("%.2f грн.", item.price) %></span>
+        </div>
+        <div class="order-item-row">
+          <span class="order-item-label">Сума</span>
+          <span class="order-item-value green"><%= sprintf("%.2f грн.", item.recount * item.price) %></span>
+        </div>
+      </div>
+    </div>
+    <% n += 1 %>
+  <% end %>
 </div>
+
+<%# ПІДСУМОК %>
+<div class="order-summary">
+  <div class="order-summary-head">Підсумок замовлення</div>
+  <div class="order-summary-body">
+    <div class="order-summary-row">
+      <span>Загальна кількість товару:</span>
+      <div class="order-summary-val-qty">
+        <%= sprintf("%0.02f кг", @order.total_quantity) %>
+      </div>
+    </div>
+    <div class="order-summary-row">
+      <span>На суму:</span>
+      <div class="order-summary-val-price">
+        <%= sprintf("%0.02f грн.", @order.total_price) %>
+      </div>
+    </div>
+  </div>
+</div>
+

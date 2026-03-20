@@ -1,19 +1,115 @@
-<p id="notice"><%= notice %></p>
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+    }
+    .en-breadcrumb {
+        display: flex; align-items: center; gap: 6px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .en-breadcrumb a {
+        display: inline-flex; align-items: center; gap: 5px; color: var(--azure);
+        text-decoration: none; font-weight: 600; padding: 6px 14px; border-radius: 20px;
+        font-size: 13px; background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        font-family: 'Montserrat', sans-serif; transition: background 0.2s;
+    }
+    .en-breadcrumb a:hover { background: rgba(26,122,175,0.14); text-decoration: none; color: var(--azure); }
+    .en-breadcrumb span { color: var(--muted); font-size: 13px; font-family: 'Montserrat', sans-serif; }
+    .en-notice {
+        background: rgba(14,112,64,0.08); border: 1px solid rgba(14,112,64,0.2);
+        border-radius: 10px; padding: 10px 16px; color: #0E7040;
+        font-size: 13px; margin-bottom: 16px; font-family: 'Montserrat', sans-serif;
+    }
+    .en-show-card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; overflow: hidden;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08); max-width: 560px;
+    }
+    .en-show-header {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+        padding: 16px 24px; display: flex; align-items: center; gap: 12px;
+    }
+    .en-show-icon {
+        width: 44px; height: 44px; border-radius: 12px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-size: 18px; flex-shrink: 0;
+    }
+    .en-show-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 18px; font-weight: 800; color: var(--text);
+    }
+    .en-show-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; }
+    .en-show-row {
+        display: flex; align-items: baseline; gap: 8px;
+        padding-bottom: 10px; border-bottom: 1px solid var(--border-soft);
+        font-family: 'Montserrat', sans-serif;
+    }
+    .en-show-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .en-show-label {
+        font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--muted); font-weight: 700; min-width: 130px; flex-shrink: 0;
+    }
+    .en-show-value { font-size: 14px; color: var(--text); font-weight: 500; word-break: break-all; }
+    .en-show-footer {
+        padding: 16px 24px; border-top: 1px solid var(--border-soft); display: flex; gap: 10px;
+    }
+    .en-btn-edit {
+        display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border-radius: 10px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        color: #fff; font-size: 13px; font-weight: 600;
+        font-family: 'Montserrat', sans-serif; text-decoration: none; transition: opacity 0.2s;
+    }
+    .en-btn-edit:hover { opacity: 0.88; text-decoration: none; color: #fff; }
+    .en-btn-back {
+        display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border-radius: 10px;
+        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        color: var(--azure); font-size: 13px; font-weight: 600;
+        font-family: 'Montserrat', sans-serif; text-decoration: none; transition: background 0.2s;
+    }
+    .en-btn-back:hover { background: rgba(26,122,175,0.14); text-decoration: none; color: var(--azure); }
+</style>
 
-<p>
-  <strong>Node:</strong>
-  <%= @exch_node.node %>
-</p>
+<div class="en-breadcrumb">
+  <%= link_to exch_nodes_path do %><i class="fa fa-arrow-left"></i> До списку<% end %>
+</div>
 
-<p>
-  <strong>Ser:</strong>
-  <%= @exch_node.ser %>
-</p>
+<% if notice.present? %>
+  <div class="en-notice"><%= notice %></div>
+<% end %>
 
-<p>
-  <strong>Cat:</strong>
-  <%= @exch_node.cat %>
-</p>
-
-<%= link_to 'Edit', edit_exch_node_path(@exch_node) %> |
-<%= link_to 'Back', exch_nodes_path %>
+<div class="en-show-card">
+  <div class="en-show-header">
+    <div class="en-show-icon"><i class="fa fa-exchange"></i></div>
+    <div class="en-show-title"><%= @exch_node.node %></div>
+  </div>
+  <div class="en-show-body">
+    <div class="en-show-row">
+      <span class="en-show-label">Код УНФ</span>
+      <span class="en-show-value"><%= @exch_node.code_unf %></span>
+    </div>
+    <div class="en-show-row">
+      <span class="en-show-label">Сервер 1С</span>
+      <span class="en-show-value"><%= @exch_node.ser %></span>
+    </div>
+    <div class="en-show-row">
+      <span class="en-show-label">Каталог HTTP</span>
+      <span class="en-show-value"><%= @exch_node.cat %></span>
+    </div>
+  </div>
+  <div class="en-show-footer">
+    <%= link_to edit_exch_node_path(@exch_node), class: 'en-btn-edit' do %>
+      <i class="fa fa-pencil"></i> Редагувати
+    <% end %>
+    <%= link_to exch_nodes_path, class: 'en-btn-back' do %>
+      <i class="fa fa-arrow-left"></i> Назад
+    <% end %>
+  </div>
+</div>

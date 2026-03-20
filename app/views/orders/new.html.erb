@@ -1,15 +1,87 @@
-<div class="container">
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><%= link_to 'К корзине', @cart, class: "btn btn-link", style: "font-size: 20px" %></li>
-    </ol>
-  </nav>
-  <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
-    <h1>Заказ покупателя <%= @order.id %></h1>
-    <div class="form-group">
-      <%= render 'form', order: @order %>
-    </div>
-  </div>
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+    }
+
+    .order-page-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .order-page-breadcrumb a {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--azure);
+        text-decoration: none;
+        font-weight: 600;
+        padding: 5px 14px;
+        border-radius: 20px;
+        background: rgba(26,122,175,0.07);
+        border: 1px solid rgba(26,122,175,0.18);
+        transition: background 0.2s;
+        white-space: nowrap;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13px;
+    }
+
+    .order-page-breadcrumb a:hover { background: rgba(26,122,175,0.14); }
+
+    .order-page-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .order-page-title::before {
+        content: '';
+        display: inline-block;
+        width: 5px; height: 26px;
+        background: linear-gradient(180deg, var(--azure-light), var(--azure));
+        border-radius: 3px;
+        flex-shrink: 0;
+    }
+
+    .order-id-badge {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--azure);
+        background: rgba(26,122,175,0.09);
+        border: 1px solid rgba(26,122,175,0.2);
+        border-radius: 20px;
+        padding: 3px 12px;
+        font-family: 'Montserrat', sans-serif;
+    }
+</style>
+
+<%# BREADCRUMB %>
+<div class="order-page-breadcrumb">
+  <%= link_to @cart do %>
+    <i class="fa fa-step-backward"></i> Повернутися до кошика
+  <% end %>
 </div>
 
+<%# ЗАГОЛОВОК %>
+<div class="order-page-title">
+  Замовлення покупця
+  <% if @order.id %>
+    <span class="order-id-badge">#<%= @order.id %></span>
+  <% end %>
+</div>
 
+<%# ФОРМА %>
+<%= render 'form', order: @order %>

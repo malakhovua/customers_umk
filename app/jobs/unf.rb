@@ -4,8 +4,22 @@ require 'json'
 require 'base64'
 
 class Unf
+
+  def get_all_data
+
+    get_access_groups
+    get_clients
+    get_addresses
+    get_products
+    get_packs
+    get_price_types
+    get_prices
+    get_product_exceptions_1c83
+
+  end
   def get_products
-    res = connect_1c.get(get_unf_path 'products')
+
+    res = connect_1c.get(get_unf_path('products'))
 
     data = JSON.parse res.body
 
@@ -29,7 +43,7 @@ class Unf
       prod[:weight] = dt['weight']
       prod[:created_at] = Time.now
 
-      if prod['binary_file'] == ''
+      if dt['binary_file'] == ''
         prod.image_url = 'image_url.jpg'
       else
         base64_image = dt['binary_file']
@@ -50,7 +64,11 @@ class Unf
       # end file
       prod.image_url = 'folder.jpg' if prod[:is_folder] == true
 
-      prod.save
+      begin
+        prod.save
+      rescue Exception => e
+        puts "An error occurred: #{e.message}"
+      end
 
       # create product units
       data_inits = dt['units']
@@ -70,10 +88,13 @@ class Unf
       end
       # end product units
     }
+
+     connect_1c.get(get_unf_path('delete_registration','2'))
+
   end
 
   def get_packs
-    res = connect_1c.get(get_unf_path 'packs')
+    res = connect_1c.get(get_unf_path('packs'))
 
     data = JSON.parse res.body
 
@@ -95,10 +116,13 @@ class Unf
       pack[:created_at] = Time.now
       pack.save
     }
+
+    connect_1c.get(get_unf_path('delete_registration','3'))
+
   end
 
   def get_clients
-    res = connect_1c.get(get_unf_path 'clients')
+    res = connect_1c.get(get_unf_path('clients'))
 
     data = JSON.parse res.body
 
@@ -110,7 +134,7 @@ class Unf
                end
 
       client[:unf_id] = dt['unf_id']
-      client[:access_group_id] = dt['access_group_id'].to_i != 0 ? dt['access_group_id'].to_i != 0 : ""
+      client[:access_group_id] = dt['access_group_id'].to_i != 0 ? dt['access_group_id'].to_i : ""
       client[:parent_id] = dt['parent_id']
       client[:pricetype_id] = dt['pricetype_id']
       client[:deletion_mark] = dt['deletion_mark']
@@ -124,6 +148,9 @@ class Unf
       client[:created_at] = Time.now
       client.save
     }
+
+    connect_1c.get(get_unf_path('delete_registration','4'))
+
   end
 
   def get_prices
@@ -160,6 +187,9 @@ class Unf
 
       price.save!
     }
+
+    connect_1c.get(get_unf_path('delete_registration','7'))
+
   end
 
   def get_addresses
@@ -185,6 +215,9 @@ class Unf
       addr[:created_at] = Time.now
       addr.save!
     }
+
+    connect_1c.get(get_unf_path('delete_registration','5'))
+
   end
 
   def get_access_groups
@@ -194,7 +227,7 @@ class Unf
 
     data.each { |dt|
       group = if AccessGroup.where(:id => dt['id'].to_i).present?
-               AccessGroup.find_by(id: dt['id'].to_i)
+                AccessGroup.find_by(id: dt['id'].to_i)
              else
                AccessGroup.new
              end
@@ -204,10 +237,12 @@ class Unf
       group.save!
     }
 
+    connect_1c.get(get_unf_path('delete_registration','1'))
+
   end
 
   def get_price_types
-    res = connect_1c.get(get_unf_path 'pricetype')
+    res = connect_1c.get(get_unf_path('pricetype'))
 
     data = JSON.parse res.body
 
@@ -223,11 +258,14 @@ class Unf
       pricetype[:name] = dt['name']
       pricetype.save!
     }
+
+    connect_1c.get(get_unf_path('delete_registration','6'))
+
   end
 
   def get_product_exceptions_1c83
 
-    res = connect_1c.get(get_unf_path 'product_exceptions')
+    res = connect_1c.get(get_unf_path('product_exceptions'))
 
     data = JSON.parse res.body
 
@@ -252,10 +290,13 @@ class Unf
       exception.save!
     }
 
+    connect_1c.get(get_unf_path('delete_registration','8'))
+
   end
 
   def connect_1c
     conn = Faraday.new
+    conn.options.timeout = 200
     conn.basic_auth('admin', 'wY7mixap')
     conn.response :json, :content_type => /\bjson$/
     conn
@@ -269,51 +310,55 @@ class Unf
     end
   end
 
-  def post_orders(date1, date2, user_id)
-    cont = '{"orders":['
+  def post_orders(date1="", date2="", user_id="",all_orders = false)
 
-    orders = Order.all.where(:date => date1..date2, :server_unf => nil).where(:user_id => user_id)
-    first = true
-    orders.each do |order|
-      address_id = order.address.nil? ? '' : order.address.unf_id
-      coma = first ? '' : ','
-      cont = cont + coma +
-        '{"header":' + order.to_json +
-        '"clien_unf_id":' + '"' + order.client['unf_id'].to_s + '"' +
-        '"address_id":' + '' + address_id + '' +
-        ',"line_items": [' + order.line_items.to_json + ']' + '}'
-      first = false
-    end
-
-    cont = cont + ']}'
-
-    resp = connect_1c.post(get_unf_path('orders'), cont,
-                           'Content-Type' => 'application/json')
-    if resp.nil?
-      resp
+    if all_orders
+      orders = Order.all.where(server_unf: nil)
     else
-      update_orders(resp)
+      orders = Order.all.where(date: date1..date2, server_unf: nil, user_id: user_id)
     end
 
+
+    orders_data = orders.map do |order|
+      {
+        header: order,
+        clien_unf_id: order.client['unf_id'].to_s,
+        address_id: order.address&.unf_id || '',
+        line_items: order.line_items
+      }
+    end
+
+    payload = { orders: orders_data }.to_json
+
+    resp = connect_1c.post(
+      get_unf_path('orders'),
+      payload,
+      'Content-Type' => 'application/json'
+    )
+
+    update_orders(resp) if resp
     resp
   end
 
   def update_orders(resp)
-    data = JSON.parse resp.body
+    data = JSON.parse(resp.body)
 
-    data.each { |dt|
-      if Order.where(:id => dt['id']).present?
-        ord = Order.find_by(id: dt['id'])
-        ord[:server_unf] = dt['server_unf']
-        ord[:server_unf_date] = dt['server_unf_date']
-        ord.save!
-      end
-    }
+    data.each do |dt|
+      order = Order.find_by(id: dt['id'])
+      next unless order
+
+      order.server_unf = dt['server_unf']
+      order.server_unf_date = dt['server_unf_date']
+      order.save!
+    end
+  rescue JSON::ParserError => e
+    Rails.logger.error("Failed to parse order response: #{e.message}")
+    nil
   end
 
-  def get_unf_path(method)
+  def get_unf_path(method, param = '')
     unf_base = ExchNode.first();
-    path_string = unf_base.ser + '/' + unf_base.cat + '/' + method + '/' + unf_base.code_unf
+    path_string = unf_base.ser + '/' + unf_base.cat + '/' + method + '/' + unf_base.code_unf + '/' + param
     path_string
   end
 end

@@ -6,6 +6,8 @@ class AddressesController < ApplicationController
   def index
     ensure_an_admin_role
     @addresses = Address.all
+    @addresses = @addresses.where(client_id: params[:client_id]) if params[:client_id].present?
+    @addresses = @addresses.page(params[:page])
   end
 
   # GET /addresses/1
@@ -63,13 +65,13 @@ class AddressesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_address
-      @address = Address.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_address
+    @address = Address.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def address_params
-      params.require(:address).permit(:description, :client_id)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def address_params
+    params.require(:address).permit(:description, :client_id)
+  end
 end

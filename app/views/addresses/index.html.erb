@@ -1,29 +1,234 @@
-<p id="notice"><%= notice %></p>
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+    }
+    .adr-breadcrumb {
+        display: flex; align-items: center; gap: 6px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .adr-breadcrumb a {
+        display: inline-flex; align-items: center; gap: 5px; color: var(--azure);
+        text-decoration: none; font-weight: 600; padding: 6px 14px; border-radius: 20px;
+        font-size: 13px; background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        font-family: 'Montserrat', sans-serif; transition: background 0.2s;
+    }
+    .adr-breadcrumb a:hover { background: rgba(26,122,175,0.14); text-decoration: none; color: var(--azure); }
+    .adr-breadcrumb span { color: var(--muted); font-size: 13px; font-family: 'Montserrat', sans-serif; }
+    .adr-notice {
+        background: rgba(14,112,64,0.08); border: 1px solid rgba(14,112,64,0.2);
+        border-radius: 10px; padding: 10px 16px; color: #0E7040;
+        font-size: 13px; margin-bottom: 16px; font-family: 'Montserrat', sans-serif;
+    }
+    .adr-page-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+    }
+    .adr-page-title {
+        font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 800;
+        color: var(--text); display: flex; align-items: center; gap: 10px;
+    }
+    .adr-page-title::before {
+        content: ''; display: inline-block; width: 5px; height: 24px;
+        background: linear-gradient(180deg, var(--azure-light), var(--azure)); border-radius: 3px;
+    }
+    .adr-btn-new {
+        display: inline-flex; align-items: center; gap: 7px; padding: 9px 20px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border: none; border-radius: 10px; color: #fff; font-size: 13px; font-weight: 700;
+        font-family: 'Montserrat', sans-serif; text-decoration: none;
+        transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 3px 12px rgba(26,122,175,0.25);
+    }
+    .adr-btn-new:hover { opacity: 0.92; transform: translateY(-1px); color: #fff; text-decoration: none; }
+    .adr-pagination {
+        display: flex; justify-content: center; padding: 16px 0 8px;
+    }
+    .adr-pagination a, .adr-pagination a:visited, .adr-pagination a:link { color: var(--azure-light); text-decoration: none; }
+    .adr-pagination .pagination { display: flex; flex-wrap: wrap; align-items: center; list-style: none; padding-left: 0; margin: 0; gap: 4px; }
+    .adr-pagination .pagination .page-item { display: inline-flex; list-style: none; }
+    .adr-pagination .pagination .page-item .page-link {
+        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        color: var(--azure-light); border-radius: 10px; font-family: 'Montserrat', sans-serif;
+        font-size: 13px; font-weight: 600; padding: 7px 13px; text-decoration: none;
+        transition: background 0.2s, transform 0.15s;
+        display: inline-flex; align-items: center; min-width: 36px; justify-content: center;
+    }
+    .adr-pagination .pagination .page-item .page-link:hover { background: rgba(26,122,175,0.15); transform: scale(1.06); }
+    .adr-pagination .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border-color: var(--azure); color: #fff; box-shadow: 0 4px 12px rgba(26,122,175,0.28); cursor: default;
+    }
+    .adr-pagination .pagination .page-item.disabled .page-link { opacity: 0.5; cursor: not-allowed; }
+    .adr-table-wrap {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; overflow-x: auto;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.07);
+        margin-bottom: 8px; -webkit-overflow-scrolling: touch;
+    }
+    .adr-table {
+        width: 100%; min-width: 400px; border-collapse: collapse;
+        font-size: 13px; font-family: 'Montserrat', sans-serif;
+    }
+    .adr-table thead tr { background: linear-gradient(135deg, #E0F2FF, #C8E8FA); border-bottom: 2px solid var(--border); }
+    .adr-table thead th {
+        padding: 11px 14px; font-size: 10px; letter-spacing: 0.12em;
+        text-transform: uppercase; color: var(--azure); font-weight: 700; white-space: nowrap;
+        position: sticky; top: 0; background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        z-index: 2; box-shadow: 0 2px 0 var(--border); text-align: left;
+    }
+    .adr-table tbody tr { border-bottom: 1px solid rgba(186,224,245,0.4); transition: background 0.15s; }
+    .adr-table tbody tr:last-child { border-bottom: none; }
+    .adr-table tbody tr:hover { background: rgba(26,122,175,0.04); }
+    .adr-table td { padding: 10px 14px; color: var(--text); vertical-align: middle; }
+    .adr-muted { color: var(--muted); font-size: 12px; }
+    .adr-action {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 30px; height: 30px; border-radius: 8px; font-size: 13px;
+        text-decoration: none; transition: background 0.2s, transform 0.15s;
+    }
+    .adr-action-show   { color: var(--azure); background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.15); }
+    .adr-action-show:hover   { background: rgba(26,122,175,0.14); transform: scale(1.08); color: var(--azure); text-decoration: none; }
+    .adr-action-edit   { color: #0E7490; background: rgba(14,116,144,0.07); border: 1px solid rgba(14,116,144,0.15); }
+    .adr-action-edit:hover   { background: rgba(14,116,144,0.14); transform: scale(1.08); color: #0E7490; text-decoration: none; }
+    .adr-action-delete { color: var(--red); background: rgba(192,57,43,0.07); border: 1px solid rgba(192,57,43,0.15); }
+    .adr-action-delete:hover { background: rgba(192,57,43,0.14); transform: scale(1.08); color: var(--red); text-decoration: none; }
 
-<h1>Addresses</h1>
+    /* ФІЛЬТРИ */
+    .adr-filter-wrap {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; padding: 16px 20px;
+        box-shadow: 0 2px 8px rgba(26,122,175,0.06); margin-bottom: 16px;
+    }
+    .adr-filter-title {
+        font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+        color: var(--muted); font-weight: 700; font-family: 'Montserrat', sans-serif;
+        margin-bottom: 12px;
+    }
+    .adr-filter-grid { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+    .adr-filter-item { display: flex; flex-direction: column; gap: 5px; width: 280px; min-width: 280px; }
+    .adr-filter-item label {
+        font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--azure); font-weight: 700; font-family: 'Montserrat', sans-serif;
+    }
+    .adr-filter-select {
+        width: 100%; padding: 8px 30px 8px 10px; font-size: 13px;
+        font-family: 'Montserrat', sans-serif; color: var(--text);
+        background: var(--bg); border: 1.5px solid var(--border);
+        border-radius: 10px; outline: none; cursor: pointer;
+        transition: border-color .2s, box-shadow .2s;
+        -webkit-appearance: none; -moz-appearance: none; appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231A7AAF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat; background-position: right 10px center;
+        box-sizing: border-box;
+    }
+    .adr-filter-select:focus { border-color: var(--azure-light); box-shadow: 0 0 0 3px rgba(26,122,175,0.10); }
+    .adr-filter-btn {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer;
+        font-size: 13px; font-weight: 600; font-family: 'Montserrat', sans-serif;
+        transition: opacity 0.2s, transform 0.15s;
+    }
+    .adr-filter-btn-apply {
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        color: #fff; box-shadow: 0 3px 10px rgba(26,122,175,0.25);
+    }
+    .adr-filter-btn-apply:hover { opacity: 0.9; transform: translateY(-1px); }
+    .adr-filter-btn-reset {
+        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        color: var(--azure); text-decoration: none;
+    }
+    .adr-filter-btn-reset:hover { background: rgba(26,122,175,0.14); }
+    @media (max-width: 600px) { .adr-filter-item { width: 100%; min-width: 100%; } }
+</style>
 
-<table class="table">
-  <thead>
+<div class="adr-breadcrumb">
+  <%= link_to account_url do %><i class="fa fa-home"></i> На головну<% end %>
+  <span>/</span>
+  <%= link_to admin_url do %><i class="fa fa-cogs"></i> Адміністрування<% end %>
+
+</div>
+
+<% if notice.present? %>
+  <div class="adr-notice"><%= notice %></div>
+<% end %>
+
+<div class="adr-page-header">
+  <div class="adr-page-title">Адреси</div>
+  <%= link_to new_address_path, class: 'adr-btn-new' do %>
+    <i class="fa fa-plus"></i> Нова адреса
+  <% end %>
+</div>
+
+<%# ФІЛЬТР %>
+<div class="adr-filter-wrap">
+  <div class="adr-filter-title"><i class="fa fa-filter"></i> Встановити фільтр:</div>
+  <%= form_tag addresses_path, method: :get do %>
+    <div class="adr-filter-grid">
+      <div class="adr-filter-item">
+        <label>Клієнт</label>
+        <%= select_tag :client_id,
+                       options_from_collection_for_select(Client.order(:name).where(is_folder: false), :id, :name, params[:client_id]),
+                       include_blank: 'Всі клієнти',
+                       class: 'adr-filter-select' %>
+      </div>
+      <button type="submit" class="adr-filter-btn adr-filter-btn-apply">
+        <i class="fa fa-search"></i> Застосувати
+      </button>
+      <%= link_to addresses_path, class: 'adr-filter-btn adr-filter-btn-reset' do %>
+        <i class="fa fa-times"></i> Скинути
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="adr-pagination">
+  <%= paginate @addresses %>
+</div>
+
+<div class="adr-table-wrap">
+  <table class="adr-table">
+    <thead>
     <tr>
-      <th>Description</th>
-      <th>Client</th>
+      <th>Опис</th>
+      <th>Клієнт</th>
+      <th>Адреса</th>
       <th colspan="3"></th>
     </tr>
-  </thead>
-
-  <tbody>
+    </thead>
+    <tbody>
     <% @addresses.each do |address| %>
       <tr>
         <td><%= address.description %></td>
-        <td><%= address.client %></td>
-        <td><%= link_to 'Show', address %></td>
-        <td><%= link_to 'Edit', edit_address_path(address) %></td>
-        <td><%= link_to 'Destroy', address, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= address.client.nil? ? '' : address.client.name %></td>
+        <td><%= address.name %></td>
+        <td>
+          <%= link_to address, class: 'adr-action adr-action-show', title: 'Показати' do %>
+            <i class="fa fa-eye"></i>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to edit_address_path(address), class: 'adr-action adr-action-edit', title: 'Редагувати' do %>
+            <i class="fa fa-pencil"></i>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to address, method: :delete, data: { confirm: 'Ви впевнені?' }, class: 'adr-action adr-action-delete', title: 'Видалити' do %>
+            <i class="fa fa-trash"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</div>
 
-<br>
-
-<%= link_to 'New Address', new_address_path %>
+<div class="adr-pagination">
+  <%= paginate @addresses %>
+</div>

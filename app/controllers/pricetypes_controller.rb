@@ -5,7 +5,7 @@ class PricetypesController < ApplicationController
   # GET /pricetypes.json
   def index
     ensure_an_admin_role
-    @pricetypes = Pricetype.all
+    @pricetypes = Pricetype.all.order(:name).page params[:page]
   end
 
   # GET /pricetypes/1

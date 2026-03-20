@@ -5,7 +5,7 @@ class PacksController < ApplicationController
   # GET /packs.json
   def index
     ensure_an_admin_role
-    @packs = Pack.all
+    @packs = Pack.all.order(:product_id).page params[:page]
   end
 
   # GET /packs/1

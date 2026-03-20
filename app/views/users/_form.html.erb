@@ -1,59 +1,208 @@
-<%= form_with(model: user, class: "row g-3", local: true) do |form| %>
-  <div class="col-md-4">
-    <%= form.label "Імʼя", class: "form-label", for: "validationDefault01" %>
-    <%= form.text_field :name, class: "form-control", id: "validationDefault01" %>
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+    }
 
-    <%= form.label :Прізвище, class: "form-label", for: "validationDefault02" %>
-    <%= form.text_field :surname, class: "form-control", id: "validationDefault02" %>
+    .usr-form-wrap {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; overflow: hidden;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+        max-width: 960px;
+        margin: 0 auto;
+    }
 
-    <%= form.label :Email_address, class: "form-label", for: "validationDefault02" %>
-    <%= form.email_field :email, class: "form-control", id: "exampleFormControlInput1", placeholder: "name@example.com" %>
+    .usr-form-header {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+        padding: 16px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+        flex-wrap: wrap; gap: 10px;
+    }
 
-    <%= form.label :Група_доступу, class: "form-label" %>
-    <% groups = AccessGroup.all.map { |group| [group.name, group.id] }%>
-    <%= form.select(:access_group_id, options_for_select(groups, selected: @user.access_group_id), {}, { :class => 'form-control' }) %>
+    .usr-form-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 18px; font-weight: 800; color: var(--text);
+    }
 
-    <%= form.label :Код_УНФ, class: "form-label", for: "validationDefault01" %>
-    <%= form.text_field :unf_id, class: "form-control", id: "validationDefault01" %>
+    .usr-form-body {
+        padding: 28px 28px 24px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px 24px;
+    }
 
-  </div>
+    @media (max-width: 600px) {
+        .usr-form-body { grid-template-columns: 1fr; padding: 16px; }
+    }
 
-  <div class="col-md-4">
-    <%= form.label :Пароль, class: "form-label" %>
-    <%= form.password_field :password, class: "form-control" %>
+    .usr-form-field { display: flex; flex-direction: column; gap: 6px; }
 
-    <%= form.label :Підтвердьте_пароль, class: "form-label" %>
-    <%= form.password_field :password_confirmation, class: "form-control" %>
+    .usr-form-field label {
+        font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+        color: var(--azure); font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+    }
 
-    <%= form.label :Підрозділ, class: "form-label" %>
-    <%= form.collection_select :storage_place_id, StoragePlace.all, :id, :title, {},class:"form-control"%>
+    .usr-form-field .form-control {
+        width: 100%;
+        padding: 9px 12px;
+        font-size: 14px;
+        font-family: 'Montserrat', sans-serif;
+        color: var(--text);
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+        box-sizing: border-box;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        box-shadow: none;
+    }
 
-    <% if current_user.admin? %>
-      <%= form.label :Роль, class: "form-label" %>
-      <% role_array = User.roles %>
-      <%= form.select(:role, options_for_select(role_array, selected: User.roles[@user.role]), {}, { :class => 'form-control' }) %>
+    .usr-form-field .form-control:focus {
+        border-color: var(--azure-light);
+        box-shadow: 0 0 0 3px rgba(26,122,175,0.10);
+        background: var(--surface);
+    }
+
+    .usr-select-wrap {
+        position: relative;
+    }
+
+    .usr-select-wrap::after {
+        content: '';
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 6px solid var(--azure);
+        pointer-events: none;
+    }
+
+    .usr-select-wrap select.form-control {
+        padding-right: 32px;
+        cursor: pointer;
+    }
+
+    /* Група паролів — два поля в рядок */
+    .usr-form-field-password-group {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        background: rgba(26,122,175,0.04);
+        border: 1px solid var(--border-soft);
+        border-radius: 12px;
+        padding: 16px 18px;
+    }
+
+    @media (max-width: 500px) {
+        .usr-form-field-password-group { grid-template-columns: 1fr; }
+    }
+
+    .usr-form-field-password-group .usr-form-field label {
+        color: var(--muted);
+    }
+
+    .usr-save-btn {
+        display: inline-flex; align-items: center; gap: 7px;
+        padding: 10px 24px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border: none; border-radius: 10px; color: #fff;
+        font-size: 13px; font-weight: 700; font-family: 'Montserrat', sans-serif;
+        cursor: pointer; transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 14px rgba(26,122,175,0.28); -webkit-appearance: none;
+    }
+    .usr-save-btn:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(26,122,175,0.35); }
+
+    .usr-errors {
+        background: rgba(192,57,43,0.07); border: 1px solid rgba(192,57,43,0.22);
+        border-radius: 10px; padding: 12px 18px; margin-bottom: 16px;
+        font-family: 'Montserrat', sans-serif; max-width: 800px;
+    }
+    .usr-errors ul { padding-left: 18px; color: var(--red); font-size: 13px; margin: 0; }
+    .usr-errors li { margin-bottom: 4px; }
+</style>
+
+<div class="usr-form-wrap">
+  <%= form_with(model: user, local: true) do |form| %>
+    <% if user.errors.any? %>
+      <div class="usr-errors" style="margin: 16px 24px 0; border-radius: 10px; background: rgba(192,57,43,0.07); border: 1px solid rgba(192,57,43,0.22); padding: 12px 18px; font-family: 'Montserrat', sans-serif;">
+        <ul style="padding-left: 18px; color: #C0392B; font-size: 13px; margin: 0;">
+          <% user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
     <% end %>
+    <div class="usr-form-header">
+      <div class="usr-form-title">
+        <%= user.new_record? ? 'Новий користувач' : "#{user.name}" %>
+      </div>
+      <%= form.submit "Застосувати", class: 'usr-save-btn' %>
+    </div>
 
-
-    <% if current_user.admin? %>
-      <label>Од. виміру в підборі:</label>
-      <% unit_array = Unit.all.map { |unit| [unit.name, unit.id] } %>
-      <%= form.select(:unit_id, options_for_select(unit_array, selected: @user.unit_id), {}, { :class => 'form-control' }) %>
-    <% end %>
-
-  </div>
-
-  <div class="col-md-3">
-  </div>
-
-  <div class="col-auto" style="margin-top: 20px">
-    <%= form.submit "Применить", class: "btn btn-primary" %>
-  </div>
-<% end %>
-
-<% if user.errors.any? %>
-  <% user.errors.full_messages.each do |message| %>
-    <p style="color: #B00100"><%= message %></p>
+    <div class="usr-form-body">
+      <div class="usr-form-field">
+        <label>Ім'я</label>
+        <%= form.text_field :name, class: "form-control" %>
+      </div>
+      <div class="usr-form-field">
+        <label>Прізвище</label>
+        <%= form.text_field :surname, class: "form-control" %>
+      </div>
+      <div class="usr-form-field">
+        <label>Email</label>
+        <%= form.email_field :email, class: "form-control" %>
+      </div>
+      <div class="usr-form-field">
+        <label>Група доступу</label>
+        <% groups = AccessGroup.all.map { |g| [g.name, g.id] } %>
+        <div class="usr-select-wrap"><%= form.select :access_group_id, options_for_select(groups, selected: @user.access_group_id), {}, class: 'form-control' %></div>
+      </div>
+      <div class="usr-form-field">
+        <label>Код УНФ</label>
+        <%= form.text_field :unf_id, class: "form-control" %>
+      </div>
+      <div class="usr-form-field">
+        <label>Підрозділ</label>
+        <div class="usr-select-wrap"><%= form.collection_select :storage_place_id, StoragePlace.all, :id, :title, {}, class: "form-control" %></div>
+      </div>
+      <div class="usr-form-field-password-group">
+        <div class="usr-form-field">
+          <label>Пароль</label>
+          <%= form.password_field :password, class: "form-control" %>
+        </div>
+        <div class="usr-form-field">
+          <label>Підтвердьте пароль</label>
+          <%= form.password_field :password_confirmation, class: "form-control" %>
+        </div>
+      </div>
+      <% if current_user.admin? %>
+        <div class="usr-form-field">
+          <label>Роль</label>
+          <div class="usr-select-wrap"><%= form.select :role, options_for_select(User.roles, selected: User.roles[@user.role]), {}, class: 'form-control' %></div>
+        </div>
+        <div class="usr-form-field">
+          <label>Од. виміру в підборі</label>
+          <% unit_array = Unit.all.map { |u| [u.name, u.id] } %>
+          <div class="usr-select-wrap"><%= form.select :unit_id, options_for_select(unit_array, selected: @user.unit_id), {}, class: 'form-control' %></div>
+        </div>
+      <% end %>
+    </div>
   <% end %>
-<% end %>
-
+</div>

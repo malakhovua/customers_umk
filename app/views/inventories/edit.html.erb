@@ -1,16 +1,67 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><%= link_to '<< До списку', inventories_path, class: "btn btn-link" , style: "font-size: 20px"%></li>
-  </ol>
-</nav>
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+        --green:        #0E7040;
+    }
 
-<div  id="inventory_partial">
-  <%=  render 'form', inventory: @inventory %>
+    /* ===== BREADCRUMB ===== */
+    .inv-edit-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .inv-edit-breadcrumb a {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--azure);
+        text-decoration: none;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 20px;
+        background: rgba(26,122,175,0.07);
+        border: 1px solid rgba(26,122,175,0.18);
+        transition: background 0.2s;
+        white-space: nowrap;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13px;
+    }
+
+    .inv-edit-breadcrumb a:hover { background: rgba(26,122,175,0.14); }
+
+    @media (max-width: 600px) {
+        .inv-edit-breadcrumb a { font-size: 14px; padding: 9px 14px; min-height: 44px; }
+    }
+</style>
+
+<%# BREADCRUMB ЗВЕРХУ %>
+<div class="inv-edit-breadcrumb">
+  <%= link_to inventories_path do %>
+    <i class="fa fa-arrow-left"></i> До списку
+  <% end %>
 </div>
 
-<ol class="breadcrumb">
-  <li class="breadcrumb-item"><%= link_to '<< До списку', inventories_path, class: "btn btn-link" , style: "font-size: 20px"%></li>
-</ol>
+<div id="inventory_partial">
+  <%= render 'form', inventory: @inventory %>
+</div>
+
+<%# BREADCRUMB ЗНИЗУ %>
+<div class="inv-edit-breadcrumb" style="margin-top: 20px; margin-bottom: 0;">
+  <%= link_to inventories_path do %>
+    <i class="fa fa-arrow-left"></i> До списку
+  <% end %>
+</div>
 
 <script type="text/javascript">
 
@@ -49,4 +100,3 @@
     }
 
 </script>
-

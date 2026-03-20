@@ -1,17 +1,94 @@
-<%= form_with(model: cart, local: true) do |form| %>
-  <% if cart.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(cart.errors.count, "error") %> prohibited this cart from being saved:</h2>
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+    }
 
-      <ul>
-        <% cart.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+    .cart-form-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+    }
+
+    .cart-form-errors {
+        background: rgba(192,57,43,0.07);
+        border: 1px solid rgba(192,57,43,0.2);
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 20px;
+        color: var(--red);
+        font-size: 13px;
+    }
+
+    .cart-form-errors h2 {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .cart-form-errors ul {
+        padding-left: 18px;
+    }
+
+    .cart-form-errors li {
+        margin-bottom: 4px;
+        font-size: 13px;
+    }
+
+    .cart-form-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+    }
+
+    .cart-form-submit {
+        padding: 10px 28px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border: none;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: opacity 0.2s, transform 0.2s;
+        box-shadow: 0 4px 14px rgba(26,122,175,0.25);
+    }
+
+    .cart-form-submit:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+</style>
+
+<div class="cart-form-wrap">
+  <%= form_with(model: cart, local: true) do |form| %>
+
+    <% if cart.errors.any? %>
+      <div class="cart-form-errors">
+        <h2><%= pluralize(cart.errors.count, "помилка") %> не дозволяє зберегти кошик:</h2>
+        <ul>
+          <% cart.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="cart-form-actions">
+      <%= form.submit class: "cart-form-submit" %>
     </div>
-  <% end %>
 
-  <div class="actions">
-    <%= form.submit %>
-  </div>
-<% end %>
+  <% end %>
+</div>

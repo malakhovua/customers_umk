@@ -1,61 +1,302 @@
-<%= form_with(model: order, local: true,) do |form| %>
-  <% if order.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(order.errors.count, "error") %> prohibited this order from being saved:</h2>
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+    }
 
-      <ul>
-        <% order.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+    .order-form-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .order-section {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border-soft);
+    }
+
+    .order-section:last-child { border-bottom: none; }
+
+    .order-label {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        margin-bottom: 7px;
+    }
+
+    .order-input,
+    .order-select,
+    .order-textarea {
+        width: 100%;
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        color: var(--text);
+        padding: 10px 14px;
+        font-size: 14px;
+        font-family: 'Montserrat', sans-serif;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        -webkit-appearance: none;
+    }
+
+    .order-select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231A7AAF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 34px;
+        cursor: pointer;
+    }
+
+    .order-textarea { resize: vertical; min-height: 90px; }
+
+    .order-input:focus,
+    .order-select:focus,
+    .order-textarea:focus {
+        border-color: var(--azure-light);
+        box-shadow: 0 0 0 3px rgba(26,122,175,0.10);
+        background: var(--surface);
+    }
+
+    .order-static {
+        background: var(--bg);
+        border: 1.5px solid var(--border-soft);
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 14px;
+        color: var(--muted);
+        font-weight: 600;
+    }
+
+    .order-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    @media (max-width: 600px) {
+        .order-grid-2 { grid-template-columns: 1fr; }
+        .order-section { padding: 16px; }
+    }
+
+    /* Чекбокси */
+    .order-checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .order-check-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--muted);
+        cursor: pointer;
+        padding: 8px 14px;
+        border-radius: 10px;
+        border: 1.5px solid var(--border);
+        background: var(--bg);
+        transition: background 0.2s, border-color 0.2s, color 0.2s;
+        user-select: none;
+    }
+
+    .order-check-label:hover {
+        background: rgba(26,122,175,0.07);
+        border-color: var(--azure-light);
+        color: var(--azure);
+    }
+
+    .order-check-label input[type="checkbox"] {
+        width: 15px; height: 15px;
+        accent-color: var(--azure);
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    /* Помилки */
+    .order-errors {
+        background: rgba(192,57,43,0.07);
+        border: 1px solid rgba(192,57,43,0.22);
+        border-radius: 10px;
+        padding: 14px 18px;
+    }
+
+    .order-errors-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--red);
+        margin-bottom: 8px;
+    }
+
+    .order-errors ul { padding-left: 18px; color: var(--red); font-size: 13px; }
+    .order-errors li { margin-bottom: 4px; }
+
+    /* Кнопка */
+    .order-submit-wrap {
+        padding: 20px 24px;
+        background: linear-gradient(135deg, #EBF6FF, #E0F2FF);
+        border-top: 2px solid var(--border);
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .order-submit-btn {
+        padding: 12px 36px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 16px rgba(26,122,175,0.28);
+        -webkit-appearance: none;
+    }
+
+    .order-submit-btn:hover {
+        opacity: 0.92;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 22px rgba(26,122,175,0.35);
+    }
+
+    .order-submit-btn:active { transform: translateY(0); }
+
+    @media (max-width: 600px) {
+        .order-grid-2 { grid-template-columns: 1fr; }
+        .order-section { padding: 16px; }
+        .order-input, .order-select, .order-textarea {
+            font-size: 16px; /* без zoom на Android */
+            padding: 12px 14px;
+        }
+        .order-check-label { font-size: 15px; padding: 10px 14px; min-height: 44px; }
+        .order-check-label input[type="checkbox"] { width: 20px; height: 20px; }
+        .order-submit-btn { width: 100%; padding: 15px; font-size: 15px; }
+        .order-submit-wrap { padding: 16px; }
+    }
+</style>
+
+<%= form_with(model: order, local: true) do |form| %>
+  <div class="order-form-wrap">
+
+    <%# ПОМИЛКИ %>
+    <% if order.errors.any? %>
+      <div class="order-section">
+        <div class="order-errors">
+          <div class="order-errors-title">
+            <%= pluralize(order.errors.count, "помилка") %> не дозволяє зберегти замовлення:
+          </div>
+          <ul>
+            <% order.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
+
+    <%# ДАТА + ЗАМОВНИК %>
+    <div class="order-section">
+      <div class="order-grid-2">
+        <div>
+          <label class="order-label">Дата</label>
+          <%= form.date_field :date,
+                              class: "order-input",
+                              value: DateTime.now.strftime("%Y-%m-%d") %>
+        </div>
+        <div>
+          <label class="order-label">Замовник</label>
+          <div class="order-static">
+            <i class="fa fa-building-o" style="color:var(--azure);margin-right:6px;"></i>
+            <%= @cart.client.name %>
+          </div>
+        </div>
+      </div>
     </div>
-  <% end %>
 
-  <div class="form-row">
-    <div class="form-group row">
-    <label for="example-date-input" class="col-2 col-form-label">Дата</label>
-    <div class="col-10">
-      <%= form.date_field :date, class: "form-control", type:"date", value: DateTime.now.strftime("%Y-%m-%d"), id:"example-date-input"%>
+    <%# АДРЕСА %>
+    <div class="order-section">
+      <div style="margin-bottom:14px;">
+        <label class="order-label">Адреса доставки</label>
+        <% addresses_array = Address.where(client_id: @cart.client_id).map { |a| [a.name, a.id] } %>
+        <%= form.select :address_id,
+                        options_for_select(addresses_array, selected: @order.address_id),
+                        {},
+                        class: "order-select", id: "address_id" %>
+      </div>
+      <div>
+        <label class="order-label">Примітки до адреси</label>
+        <%= form.text_field :shipping_address,
+                            class: "order-input",
+                            placeholder: "Місто, вулиця ..." %>
+      </div>
     </div>
+
+    <%# ОПЦІЇ %>
+    <div class="order-section">
+      <label class="order-label" style="margin-bottom:12px;">Опції замовлення</label>
+      <div class="order-checks">
+        <label class="order-check-label">
+          <%= check_box_tag 'order[return]', "1", @order.return %>
+          Це повернення
+        </label>
+        <label class="order-check-label">
+          <%= check_box_tag 'order[return_item]', "1", @order.return_item %>
+          Забрати повернення
+        </label>
+        <label class="order-check-label">
+          <%= check_box_tag 'order[postponement]', "1", @order.postponement %>
+          Відстрочка
+        </label>
+        <label class="order-check-label">
+          <%= check_box_tag 'order[certificate]', "1", @order.certificate %>
+          Сертифікат
+        </label>
+        <label class="order-check-label">
+          <%= check_box_tag 'order[pickup]', "1", @order.pickup %>
+          Самовивіз
+        </label>
+      </div>
     </div>
-  </div>
 
-<!--  <div class="form-group">
-    <label>Покупатель:</label>
-    <%# #clients_array = Client.all.map { |client| [client.name, client.id] } %>
-    <%#= #form.select(:client_id, options_for_select(clients_array, selected:@cart.client_id),{},{ :class => 'form-control' })%>
-  </div>-->
-
-  <div class="form-control field">
-    <%= Client.find(@cart.client_id).name %>
-  </div>
-
-  <div class="form-group" id= "addresses_group">
-    <label>Адрес доставки:</label>
-    <% addresses_array = Address.where(:client_id => @cart.client_id).map { |address| [address.name, address.id] } %>
-    <%= form.select(:address_id, options_for_select(addresses_array, selected:@order.address_id),{},{ :class => 'form-control', :id => 'address_id' })%>
-  </div>
-
-  <div class="form-group" >
-    <label>Адрес доставки(примечание):</label>
-    <%= form.text_field :shipping_address,class: "form-control", id: "inputAddress", placeholder: "Город, улица ..."%>
-  </div>
-
-  <div class="form-group" >
-    <div class="field">
-      <label>Комментарий:</label>
-      <%= form.text_area :comments, class: "form-control", id: "exampleFormControlTextarea1", rows:"3"%>
+    <%# КОМЕНТАР + СТВОРИВ %>
+    <div class="order-section">
+      <div style="margin-bottom:14px;">
+        <label class="order-label">Коментар</label>
+        <%= form.text_area :comments,
+                           class: "order-textarea",
+                           rows: 3,
+                           placeholder: "Додаткова інформація до замовлення..." %>
+      </div>
+      <div>
+        <label class="order-label">Створив</label>
+        <div class="order-static">
+          <i class="fa fa-user" style="color:var(--azure);margin-right:6px;"></i>
+          <%= current_user.name %>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="form-group">
-    <label>Пользователь:</label>
-    <div class="form-control field">
-      <%= current_user.name %>
+    <%# КНОПКА %>
+    <div class="order-submit-wrap">
+      <%= form.submit "Зберегти замовлення →", class: "order-submit-btn" %>
     </div>
-  </div>
 
-  <div class="actions">
-    <%= form.submit value: "Сохранить заказ", class: "btn btn-primary"%>
   </div>
 <% end %>

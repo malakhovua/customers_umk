@@ -4,7 +4,13 @@ class PricesController < ApplicationController
   # GET /prices
   # GET /prices.json
   def index
-    @prices = Price.all.order(:product_id, :period, :pricetype_id).page params[:page]
+
+    @prices = Price.all.order(:product_id, :period, :pricetype_id)
+    @prices = @prices.where(product_id: params[:product_id]) if params[:product_id].present?
+    #@prices = @prices.joins(:product).where(products: { unf_parent_id: params[:product_group_id] }) if params[:product_group_id].present?
+    @prices = @prices.where(pricetype_id: params[:pricetype_id]) if params[:pricetype_id].present?
+    @prices = @prices.page params[:page]
+
   end
 
   # GET /prices/1
@@ -62,13 +68,11 @@ class PricesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_price
-      @price = Price.find(params[:id])
-    end
+  def set_price
+    @price = Price.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def price_params
-      params.require(:price).permit(:value, :period)
-    end
+  def price_params
+    params.require(:price).permit(:value, :period)
+  end
 end

@@ -4,8 +4,10 @@ class ClientsController < ApplicationController
   # GET /clients
   # GET /clients.json
   def index
-    ensure_an_admin_role
-    @clients = Client.all.order(:parent_name)
+    @clients = Client.all.order(:access_group_id,:parent_id,:name)
+    @clients = @clients.where(access_group_id: params[:access_group_id]) if params[:access_group_id].present?
+    @clients = @clients.where(parent_name: params[:parent_name]) if params[:parent_name].present?
+    @clients = @clients.page params[:page]
   end
 
   # GET /clients/1

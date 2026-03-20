@@ -5,7 +5,7 @@ class FavoriteProductsController < ApplicationController
   # GET /favorite_products.json
   def index
     ensure_an_admin_role
-    @favorite_products = FavoriteProduct.all
+    @favorite_products = FavoriteProduct.all.page(params[:page])
   end
 
   # GET /favorite_products/1

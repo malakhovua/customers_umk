@@ -1,33 +1,103 @@
-<%= form_with(model: exch_node, local: true) do |form| %>
-  <% if exch_node.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(exch_node.errors.count, "error") %> prohibited this exch_node from being saved:</h2>
-      <ul>
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+    }
+    .en-form-wrap {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; overflow: hidden;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+        max-width: 560px;
+    }
+    .en-form-header {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+        padding: 16px 24px;
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .en-form-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 18px; font-weight: 800; color: var(--text);
+    }
+    .en-form-body {
+        padding: 24px;
+        display: flex; flex-direction: column; gap: 16px;
+    }
+    .en-form-field { display: flex; flex-direction: column; gap: 6px; }
+    .en-form-field label {
+        font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+        color: var(--azure); font-weight: 700; font-family: 'Montserrat', sans-serif;
+    }
+    .en-form-field .form-control {
+        width: 100%; padding: 9px 12px; font-size: 14px;
+        font-family: 'Montserrat', sans-serif; color: var(--text);
+        background: var(--bg); border: 1.5px solid var(--border);
+        border-radius: 10px; outline: none;
+        transition: border-color .2s, box-shadow .2s; box-sizing: border-box;
+    }
+    .en-form-field .form-control:focus {
+        border-color: var(--azure-light);
+        box-shadow: 0 0 0 3px rgba(26,122,175,0.10);
+        background: var(--surface);
+    }
+    .en-save-btn {
+        display: inline-flex; align-items: center; gap: 7px; padding: 10px 24px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border: none; border-radius: 10px; color: #fff;
+        font-size: 13px; font-weight: 700; font-family: 'Montserrat', sans-serif;
+        cursor: pointer; transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 14px rgba(26,122,175,0.28); -webkit-appearance: none;
+    }
+    .en-save-btn:hover { opacity: 0.92; transform: translateY(-1px); }
+    .en-errors {
+        background: rgba(192,57,43,0.07); border: 1px solid rgba(192,57,43,0.22);
+        border-radius: 10px; padding: 12px 18px; margin: 16px 24px 0;
+        font-family: 'Montserrat', sans-serif;
+    }
+    .en-errors ul { padding-left: 18px; color: var(--red); font-size: 13px; margin: 0; }
+</style>
+
+<% if exch_node.errors.any? %>
+  <div class="en-errors">
+    <ul>
       <% exch_node.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="mb-3">
-    <%= form.label :Узел, class:"form-label"%>
-    <%= form.text_field :node, class:"form-control"%>
-  </div>
-  <div class="mb-3">
-    <%= form.label :КодУНФ, class:"form-label"%>
-    <%= form.text_field :code_unf, class:"form-control"%>
-  </div>
-  <div class="mb-3">
-    <%= form.label :Сервер_1с, class:"form-label"%>
-    <%= form.text_field :ser, class:"form-control" %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :Каталог_http, class:"form-label" %>
-    <%= form.text_field :cat, class:"form-control" %>
-  </div>
-  <div class="actions">
-    <%= form.submit "Записать", class: "btn btn-primary"%>
+    </ul>
   </div>
 <% end %>
+
+<div class="en-form-wrap">
+  <%= form_with(model: exch_node, local: true) do |form| %>
+    <div class="en-form-header">
+      <div class="en-form-title">
+        <%= exch_node.new_record? ? 'Новий вузол' : exch_node.node %>
+      </div>
+      <%= form.submit "Зберегти", class: 'en-save-btn' %>
+    </div>
+    <div class="en-form-body">
+      <div class="en-form-field">
+        <label>Вузол</label>
+        <%= form.text_field :node, class: "form-control" %>
+      </div>
+      <div class="en-form-field">
+        <label>Код УНФ</label>
+        <%= form.text_field :code_unf, class: "form-control" %>
+      </div>
+      <div class="en-form-field">
+        <label>Сервер 1С</label>
+        <%= form.text_field :ser, class: "form-control" %>
+      </div>
+      <div class="en-form-field">
+        <label>Каталог HTTP</label>
+        <%= form.text_field :cat, class: "form-control" %>
+      </div>
+    </div>
+  <% end %>
+</div>

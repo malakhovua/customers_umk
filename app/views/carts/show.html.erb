@@ -1,21 +1,575 @@
-  <div class="container-fluid" style="margin-top: 0px">
-    <%= render @cart %>
-    <div class="row py-5 p-4 bg-white rounded shadow-sm">
-      <div class="col-lg-6">
-        <div class="bg-light  px-4 py-3 text-uppercase font-weight-bold">Итого:</div>
-        <div class="p-4">
-          <ul class="list-unstyled mb-4">
-            <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Общий вес:</strong>
-              <h5 class="font-weight-bold" id="footer_cart_qty"><%= sprintf("%0.02f кг.", @cart.total_quantity) %></h5>
-            </li>
-            <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Стоимость:</strong>
-              <h5 class="font-weight-bold" id="footer_cart_price"><%= sprintf("%0.02f грн.", @cart.total_price) %></h5>
-            </li>
-          </ul>
-          <%= link_to "Оформить заказ", new_order_path, method: :get, class: "btn btn-primary rounded-pill py-2 btn-block" , data: @cart.client_id.nil?  ?  { confirm: 'Выберите покупателя' } : ""%>
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+        --green:        #0E7040;
+    }
+
+    /* =============================================
+       BOOTSTRAP ЗАМІННИКИ — для _line_item partial
+       ============================================= */
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 6px 10px;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+        color: #0B2A3D;
+        background: #F0F8FF;
+        border: 1.5px solid #BAE0F5;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+        -webkit-appearance: none;
+        box-sizing: border-box;
+    }
+    .form-control:focus {
+        border-color: #3AA0D8;
+        box-shadow: 0 0 0 3px rgba(26,122,175,0.10);
+        background: #fff;
+    }
+    select.form-control {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231A7AAF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 30px;
+        cursor: pointer;
+    }
+    input[type="number"].form-control {
+        width: 90px;
+        text-align: center;
+    }
+    .align-middle        { vertical-align: middle !important; }
+    .text-muted          { color: #4A7A96 !important; }
+    .text-dark           { color: #0B2A3D !important; }
+    .d-inline-block      { display: inline-block !important; }
+    .d-block             { display: block !important; }
+    .font-weight-normal  { font-weight: 400 !important; }
+    .font-italic         { font-style: italic !important; }
+    .mb-0  { margin-bottom: 0 !important; }
+    .p-2   { padding: 8px !important; }
+    .ml-3  { margin-left: 12px !important; }
+    .cart-items-table a.text-dark {
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 13px;
+        transition: color 0.2s;
+    }
+    .cart-items-table a.text-dark:hover { color: #1A7AAF !important; }
+    .cart-items-table input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: #1A7AAF;
+        cursor: pointer;
+    }
+
+    /* ===== BREADCRUMB ===== */
+    .cart-show-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+    .cart-show-breadcrumb a {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--azure);
+        text-decoration: none;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 20px;
+        background: rgba(26,122,175,0.07);
+        border: 1px solid rgba(26,122,175,0.18);
+        transition: background 0.2s;
+        white-space: nowrap;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13px;
+    }
+    .cart-show-breadcrumb a:hover { background: rgba(26,122,175,0.15); }
+    .cart-show-breadcrumb a.danger {
+        color: var(--red);
+        background: rgba(192,57,43,0.07);
+        border-color: rgba(192,57,43,0.18);
+    }
+    .cart-show-breadcrumb a.danger:hover { background: rgba(192,57,43,0.14); }
+
+    /* ===== ЗАГОЛОВОК ===== */
+    .cart-show-header {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 22px 28px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+    }
+    .cart-show-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .cart-show-title::before {
+        content: '';
+        display: inline-block;
+        width: 5px; height: 22px;
+        background: linear-gradient(180deg, var(--azure-light), var(--azure));
+        border-radius: 3px;
+        flex-shrink: 0;
+    }
+    .cart-show-client {
+        font-size: 14px;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 4px;
+    }
+    .cart-show-client strong { color: var(--azure); }
+
+    /* ===== СТІКЕРИ ===== */
+    .cart-sticker-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 14px;
+        flex-wrap: wrap;
+    }
+    .cart-check-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--muted);
+        cursor: pointer;
+        padding: 7px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--border-soft);
+        background: var(--bg);
+        transition: background 0.2s, border-color 0.2s;
+        font-family: 'Montserrat', sans-serif;
+    }
+    .cart-check-label:hover {
+        background: rgba(26,122,175,0.07);
+        border-color: var(--azure-light);
+    }
+    .cart-check-label input[type="checkbox"] {
+        width: 15px; height: 15px;
+        accent-color: var(--azure);
+        cursor: pointer;
+    }
+
+    /* ===== ТАБЛИЦЯ ПОЗИЦІЙ ===== */
+    .cart-items-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+        margin-bottom: 24px;
+        overflow-x: auto;
+    }
+    .cart-items-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
+    }
+    .cart-items-table thead tr {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+    }
+    .cart-items-table thead th {
+        padding: 11px 14px;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        white-space: nowrap;
+        text-align: left;
+    }
+    .cart-items-table tbody tr {
+        border-bottom: 1px solid rgba(186,224,245,0.4);
+        transition: background 0.15s;
+    }
+    .cart-items-table tbody tr:last-child { border-bottom: none; }
+    .cart-items-table tbody tr:hover { background: rgba(26,122,175,0.03); }
+    .cart-items-table td,
+    .cart-items-table th[scope="row"] {
+        padding: 10px 14px;
+        color: var(--text);
+        vertical-align: middle;
+        font-weight: normal;
+        text-align: left;
+    }
+
+    /* ===== ПІДСУМОК ===== */
+    .cart-footer {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    .cart-summary {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+    }
+    .cart-summary-head {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        padding: 13px 22px;
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: var(--azure);
+        border-bottom: 1px solid var(--border);
+        font-family: 'Montserrat', sans-serif;
+    }
+    .cart-summary-body { padding: 16px 22px; }
+    .cart-summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(186,224,245,0.4);
+        font-size: 14px;
+        font-family: 'Montserrat', sans-serif;
+    }
+    .cart-summary-row:last-child { border-bottom: none; }
+    .cart-summary-row span { color: var(--muted); font-weight: 500; }
+    .cart-summary-val-qty  { font-size: 17px; font-weight: 800; color: var(--azure); }
+    .cart-summary-val-price { font-size: 17px; font-weight: 800; color: var(--text); }
+    .cart-submit-btn {
+        display: block;
+        width: 100%;
+        margin-top: 16px;
+        padding: 13px 20px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border: none;
+        border-radius: 12px;
+        color: #FFFFFF;
+        font-size: 14px;
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        transition: opacity 0.2s, transform 0.2s;
+        box-shadow: 0 4px 16px rgba(26,122,175,0.28);
+    }
+    .cart-submit-btn:hover { opacity: 0.92; transform: translateY(-1px); color: #fff; }
+    .cart-submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    /* ===== MOBILE ===== */
+    .cart-line-cards { display: none !important; }
+
+    @media (max-width: 600px) {
+        .cart-show-breadcrumb a { font-size: 14px; padding: 9px 14px; min-height: 44px; }
+        .cart-show-header { padding: 16px; margin-bottom: 14px; }
+        .cart-show-title { font-size: 18px; }
+        .cart-check-label { font-size: 15px; padding: 10px 14px; min-height: 44px; }
+        .cart-check-label input[type="checkbox"] { width: 20px; height: 20px; }
+
+        .cart-items-wrap { display: none !important; }
+        .cart-line-cards { display: flex !important; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+        .cart-line-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(26,122,175,0.07);
+            font-family: 'Montserrat', sans-serif;
+        }
+        .cart-line-card-title {
+            background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+            padding: 10px 14px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+        }
+        .cart-line-card-body {
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .cart-line-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .cart-line-label {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+        .cart-line-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            text-align: right;
+        }
+        .cart-mob-input {
+            background: #F0F8FF;
+            border: 1.5px solid #BAE0F5;
+            border-radius: 8px;
+            color: #0B2A3D;
+            padding: 8px 10px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            outline: none;
+            width: 100px;
+            text-align: center;
+            -webkit-appearance: none;
+        }
+        .cart-mob-input:focus {
+            border-color: #3AA0D8;
+            box-shadow: 0 0 0 3px rgba(26,122,175,0.10);
+            background: #fff;
+        }
+        .cart-mob-select {
+            background: #F0F8FF;
+            border: 1.5px solid #BAE0F5;
+            border-radius: 8px;
+            color: #0B2A3D;
+            padding: 8px 10px;
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+            outline: none;
+            max-width: 160px;
+        }
+        .cart-line-card-footer {
+            padding: 10px 14px;
+            border-top: 1px solid var(--border-soft);
+            display: flex;
+            justify-content: flex-end;
+        }
+        .cart-line-delete {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--red);
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            background: rgba(192,57,43,0.07);
+            border: 1px solid rgba(192,57,43,0.18);
+            transition: background 0.2s;
+        }
+        .cart-line-delete:hover { background: rgba(192,57,43,0.14); color: var(--red); }
+
+        .cart-footer { grid-template-columns: 1fr; }
+        .cart-summary-head { font-size: 12px; padding: 12px 16px; }
+        .cart-summary-body { padding: 12px 16px; }
+        .cart-summary-val-qty,
+        .cart-summary-val-price { font-size: 20px; }
+        .cart-submit-btn { font-size: 16px; padding: 15px 20px; border-radius: 14px; }
+    }
+</style>
+
+<%# ===== BREADCRUMB ===== %>
+<div class="cart-show-breadcrumb">
+  <%= link_to customer_index_path do %>
+    <i class="fa fa-shopping-basket"></i> Продовжити покупку
+  <% end %>
+  <%= link_to carts_url do %>
+    <i class="fa fa-list"></i> До списку кошиків
+  <% end %>
+  <%= link_to carts_path, method: :post do %>
+    <i class="fa fa-floppy-o"></i> Зберегти та створити новий
+  <% end %>
+  <%= link_to @cart, method: :delete,
+              data: { confirm: 'Ви впевнені?' },
+              class: "danger" do %>
+    <i class="fa fa-trash"></i> Видалити кошик
+  <% end %>
+</div>
+
+<%# ===== ЗАГОЛОВОК ===== %>
+<div class="cart-show-header">
+  <div class="cart-show-title">Кошик замовника №<%= @cart.id %></div>
+  <% unless @cart.client.nil? %>
+    <div class="cart-show-client">
+      <i class="fa fa-user" style="color:var(--azure)"></i>
+      Замовник: <strong><%= @cart.client.name %></strong>
+    </div>
+  <% end %>
+  <%= form_tag cart_path, method: :put, id: "cartFormHeader" do %>
+    <div class="cart-sticker-row">
+      <label class="cart-check-label">
+        <%= check_box_tag 'stick', "", @cart.stick, onclick: "boxDisable();" %>
+        Стікерувати все
+      </label>
+      <label class="cart-check-label">
+        <%= check_box_tag 'stick_pack', "", @cart.stick_pack, onclick: "boxDisable();" %>
+        Стікерувати тільки в упаковці
+      </label>
+    </div>
+  <% end %>
+</div>
+
+<%# ===== DESKTOP: ТАБЛИЦЯ ===== %>
+<div id="cart_show">
+  <%= form_tag cart_path, method: :put, id: "cartForm" do %>
+    <div class="cart-items-wrap">
+      <table class="cart-items-table">
+        <thead>
+        <tr>
+          <th>Продукція</th>
+          <th>Примітки</th>
+          <th>Вага, од.</th>
+          <th>Упаковка</th>
+          <th>Кількість, вага</th>
+          <th>Кількість, шт</th>
+          <th>Перерахунок, кг</th>
+          <th>Стікерувати</th>
+          <th>Ціна</th>
+          <th>Од.</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody id="line_items_body">
+        <%= render(@cart.line_items.order(:id)) %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>
+
+<%# ===== MOBILE: КАРТКИ ПОЗИЦІЙ ===== %>
+<div class="cart-line-cards" id="cart_show_mobile">
+  <%= form_tag cart_path, method: :put, id: "cartFormMobile" do %>
+    <% @cart.line_items.order(:id).each do |item| %>
+      <% product_catalog = Product.find_by(unf_id: item.product.unf_parent_id) %>
+      <% weight = item.pack.nil? ? item.product[:weight] : item.pack[:weight] %>
+      <% price = Product.get_price(item.product.id, @cart.client&.pricetype, item.pack.nil? ? nil : item.pack.id) %>
+      <% unit = Unit.find(item.unit_id) %>
+      <div class="cart-line-card">
+        <div class="cart-line-card-title">
+          <%= item.product.title %>
+          <% unless product_catalog.nil? %>
+            <div style="font-size:11px;font-weight:500;color:var(--muted);margin-top:2px;"><%= product_catalog.title %></div>
+          <% end %>
+        </div>
+        <div class="cart-line-card-body">
+          <div class="cart-line-row">
+            <span class="cart-line-label">Вага од.</span>
+            <span class="cart-line-value"><%= weight %></span>
+          </div>
+          <% unless item.pack.nil? %>
+            <div class="cart-line-row">
+              <span class="cart-line-label">Упаковка</span>
+              <span class="cart-line-value">
+                <%= select_tag 'packs' + item.id.to_s,
+                               options_from_collection_for_select(line_item_packs(item), 'id', 'name', item.pack.id),
+                               class: "cart-mob-select", onchange: "lineItemFieldOnChange()" %>
+              </span>
+            </div>
+          <% end %>
+          <div class="cart-line-row">
+            <span class="cart-line-label">К-сть, кг</span>
+            <span class="cart-line-value">
+              <% if item.quantity.to_f > 0 %>
+                <%= number_field_tag 'qty' + item.id.to_s, item.quantity, step: 0.01, class: "cart-mob-input", onchange: "lineItemFieldOnChange()" %>
+              <% else %>
+                <span style="color:var(--muted)">—</span>
+              <% end %>
+            </span>
+          </div>
+          <div class="cart-line-row">
+            <span class="cart-line-label">К-сть, шт</span>
+            <span class="cart-line-value">
+              <% if item.amount.to_f > 0 %>
+                <%= number_field_tag 'amount' + item.id.to_s, item.amount, step: 1, class: "cart-mob-input", onchange: "lineItemFieldOnChange()" %>
+              <% else %>
+                <span style="color:var(--muted)">—</span>
+              <% end %>
+            </span>
+          </div>
+          <div class="cart-line-row">
+            <span class="cart-line-label">Перерахунок</span>
+            <div class="cart-line-value" id="<%= 'recount' + item.id.to_s %>"><%= display_recount(item.recount) %></div>
+          </div>
+          <div class="cart-line-row">
+            <span class="cart-line-label">Стікерувати</span>
+            <span class="cart-line-value">
+              <%= check_box_tag 'stick' + item.id.to_s, "", item.stick,
+                                onclick: "lineItemFieldOnChange();",
+                                style: "width:20px;height:20px;accent-color:var(--azure);" %>
+            </span>
+          </div>
+          <div class="cart-line-row">
+            <span class="cart-line-label">Ціна / <%= unit.name %></span>
+            <span class="cart-line-value" style="color:var(--azure);font-size:15px;"><%= sprintf("%0.02f грн.", price) %></span>
+          </div>
+          <div class="cart-line-row" style="align-items:flex-start;">
+            <span class="cart-line-label" style="padding-top:8px;">Коментар</span>
+            <span class="cart-line-value" style="flex:1;">
+              <%= text_field_tag "comment" + item.id.to_s, item.comment,
+                                 class: "cart-mob-input", style: "width:100%;", onchange: "lineItemFieldOnChange()" %>
+            </span>
+          </div>
+        </div>
+        <div class="cart-line-card-footer">
+          <% if @cart.line_items.size == 1 %>
+            <%= link_to line_item_path(item), method: :delete, class: "cart-line-delete" do %>
+              <i class="fa fa-trash"></i> Видалити
+            <% end %>
+          <% else %>
+            <%= link_to line_item_path(item), method: :delete, remote: true, class: "cart-line-delete" do %>
+              <i class="fa fa-trash"></i> Видалити
+            <% end %>
+          <% end %>
         </div>
       </div>
+    <% end %>
+  <% end %>
+</div>
+
+<%# ===== ПІДСУМОК ===== %>
+<div class="cart-footer">
+  <div class="cart-summary">
+    <div class="cart-summary-head">Разом</div>
+    <div class="cart-summary-body">
+      <div class="cart-summary-row">
+        <span>Загальна вага:</span>
+        <div class="cart-summary-val-qty" id="footer_cart_qty">
+          <%= sprintf("%0.02f кг.", @cart.total_quantity) %>
+        </div>
+      </div>
+      <div class="cart-summary-row">
+        <span>Вартість:</span>
+        <div class="cart-summary-val-price" id="footer_cart_price">
+          <%= sprintf("%0.02f грн.", @cart.total_price) %>
+        </div>
+      </div>
+      <%= link_to "Оформити замовлення →", new_order_path, method: :get,
+                  class: "cart-submit-btn",
+                  data: @cart.client_id.nil? ? { confirm: 'Оберіть замовника' } : {} %>
     </div>
   </div>
-
-
+</div>

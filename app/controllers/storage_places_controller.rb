@@ -3,7 +3,7 @@ class StoragePlacesController < ApplicationController
 
   # GET /storage_places or /storage_places.json
   def index
-    @storage_places = StoragePlace.all
+    @storage_places = StoragePlace.all.page(params[:page])
   end
 
   # GET /storage_places/1 or /storage_places/1.json

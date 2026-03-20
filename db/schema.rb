@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_09_182825) do
+ActiveRecord::Schema.define(version: 2026_02_16_151015) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 2025_05_09_182825) do
     t.boolean "stick", default: false
     t.boolean "stick_pack", default: false
     t.bigint "client_id"
+    t.string "session_id"
     t.index ["client_id"], name: "index_carts_on_client_id"
   end
 
@@ -143,6 +144,7 @@ ActiveRecord::Schema.define(version: 2025_05_09_182825) do
     t.boolean "stick", default: false
     t.string "comment"
     t.float "recount"
+    t.float "price", default: 0.0, null: false
     t.index ["cart_id"], name: "index_line_items_on_cart_id"
     t.index ["order_id"], name: "index_line_items_on_order_id"
     t.index ["pack_id"], name: "index_line_items_on_pack_id"

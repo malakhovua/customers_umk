@@ -1,27 +1,163 @@
-<p id="notice"><%= notice %></p>
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+    }
+    .sp-breadcrumb {
+        display: flex; align-items: center; gap: 6px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .sp-breadcrumb a {
+        display: inline-flex; align-items: center; gap: 5px; color: var(--azure);
+        text-decoration: none; font-weight: 600; padding: 6px 14px; border-radius: 20px;
+        font-size: 13px; background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        font-family: 'Montserrat', sans-serif; transition: background 0.2s;
+    }
+    .sp-breadcrumb a:hover { background: rgba(26,122,175,0.14); text-decoration: none; color: var(--azure); }
+    .sp-breadcrumb span { color: var(--muted); font-size: 13px; font-family: 'Montserrat', sans-serif; }
+    .sp-notice {
+        background: rgba(14,112,64,0.08); border: 1px solid rgba(14,112,64,0.2);
+        border-radius: 10px; padding: 10px 16px; color: #0E7040;
+        font-size: 13px; margin-bottom: 16px; font-family: 'Montserrat', sans-serif;
+    }
+    .sp-page-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+    }
+    .sp-page-title {
+        font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 800;
+        color: var(--text); display: flex; align-items: center; gap: 10px;
+    }
+    .sp-page-title::before {
+        content: ''; display: inline-block; width: 5px; height: 24px;
+        background: linear-gradient(180deg, var(--azure-light), var(--azure)); border-radius: 3px;
+    }
+    .sp-btn-new {
+        display: inline-flex; align-items: center; gap: 7px; padding: 9px 20px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border: none; border-radius: 10px; color: #fff; font-size: 13px; font-weight: 700;
+        font-family: 'Montserrat', sans-serif; text-decoration: none;
+        transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 3px 12px rgba(26,122,175,0.25);
+    }
+    .sp-btn-new:hover { opacity: 0.92; transform: translateY(-1px); color: #fff; text-decoration: none; }
+    .sp-pagination {
+        display: flex; justify-content: center; padding: 16px 0 8px;
+    }
+    .sp-pagination a, .sp-pagination a:visited, .sp-pagination a:link { color: var(--azure-light); text-decoration: none; }
+    .sp-pagination .pagination { display: flex; flex-wrap: wrap; align-items: center; list-style: none; padding-left: 0; margin: 0; gap: 4px; }
+    .sp-pagination .pagination .page-item { display: inline-flex; list-style: none; }
+    .sp-pagination .pagination .page-item .page-link {
+        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        color: var(--azure-light); border-radius: 10px; font-family: 'Montserrat', sans-serif;
+        font-size: 13px; font-weight: 600; padding: 7px 13px; text-decoration: none;
+        transition: background 0.2s, transform 0.15s;
+        display: inline-flex; align-items: center; min-width: 36px; justify-content: center;
+    }
+    .sp-pagination .pagination .page-item .page-link:hover { background: rgba(26,122,175,0.15); transform: scale(1.06); }
+    .sp-pagination .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border-color: var(--azure); color: #fff; box-shadow: 0 4px 12px rgba(26,122,175,0.28); cursor: default;
+    }
+    .sp-pagination .pagination .page-item.disabled .page-link { opacity: 0.5; cursor: not-allowed; }
+    .sp-table-wrap {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; overflow-x: auto;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.07);
+        margin-bottom: 8px; -webkit-overflow-scrolling: touch;
+    }
+    .sp-table {
+        width: 100%; min-width: 400px; border-collapse: collapse;
+        font-size: 13px; font-family: 'Montserrat', sans-serif;
+    }
+    .sp-table thead tr { background: linear-gradient(135deg, #E0F2FF, #C8E8FA); border-bottom: 2px solid var(--border); }
+    .sp-table thead th {
+        padding: 11px 14px; font-size: 10px; letter-spacing: 0.12em;
+        text-transform: uppercase; color: var(--azure); font-weight: 700; white-space: nowrap;
+        position: sticky; top: 0; background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        z-index: 2; box-shadow: 0 2px 0 var(--border); text-align: left;
+    }
+    .sp-table tbody tr { border-bottom: 1px solid rgba(186,224,245,0.4); transition: background 0.15s; }
+    .sp-table tbody tr:last-child { border-bottom: none; }
+    .sp-table tbody tr:hover { background: rgba(26,122,175,0.04); }
+    .sp-table td { padding: 10px 14px; color: var(--text); vertical-align: middle; }
+    .sp-muted { color: var(--muted); font-size: 12px; }
+    .sp-action {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 30px; height: 30px; border-radius: 8px; font-size: 13px;
+        text-decoration: none; transition: background 0.2s, transform 0.15s;
+    }
+    .sp-action-show   { color: var(--azure); background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.15); }
+    .sp-action-show:hover   { background: rgba(26,122,175,0.14); transform: scale(1.08); color: var(--azure); text-decoration: none; }
+    .sp-action-edit   { color: #0E7490; background: rgba(14,116,144,0.07); border: 1px solid rgba(14,116,144,0.15); }
+    .sp-action-edit:hover   { background: rgba(14,116,144,0.14); transform: scale(1.08); color: #0E7490; text-decoration: none; }
+    .sp-action-delete { color: var(--red); background: rgba(192,57,43,0.07); border: 1px solid rgba(192,57,43,0.15); }
+    .sp-action-delete:hover { background: rgba(192,57,43,0.14); transform: scale(1.08); color: var(--red); text-decoration: none; }
+</style>
 
-<h1>Storage Places</h1>
+<div class="sp-breadcrumb">
+  <%= link_to account_url do %><i class="fa fa-home"></i> На головну<% end %>
+  <span>/</span>
+  <%= link_to admin_url do %><i class="fa fa-cogs"></i> Адміністрування<% end %>
 
-<table>
-  <thead>
+</div>
+
+<% if notice.present? %>
+  <div class="sp-notice"><%= notice %></div>
+<% end %>
+
+<div class="sp-page-header">
+  <div class="sp-page-title">Місця зберігання</div>
+  <%= link_to new_storage_place_path, class: 'sp-btn-new' do %>
+    <i class="fa fa-plus"></i> Нове місце зберігання
+  <% end %>
+</div>
+
+<div class="sp-pagination">
+  <%= paginate @storage_places %>
+</div>
+
+<div class="sp-table-wrap">
+  <table class="sp-table">
+    <thead>
     <tr>
+      <th>Назва</th>
+      <th>UNF ID</th>
       <th colspan="3"></th>
     </tr>
-  </thead>
-
-  <tbody>
-    <% @storage_places.each do |storage_place| %>
+    </thead>
+    <tbody>
+    <% @storage_places.each do |sp| %>
       <tr>
-        <td><%= storage_place.title%></td>
-        <td><%= storage_place.unf_id %></td>
-        <td><%= link_to 'Show', storage_place %></td>
-        <td><%= link_to 'Edit', edit_storage_place_path(storage_place) %></td>
-        <td><%= link_to 'Destroy', storage_place, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><strong><%= sp.title %></strong></td>
+        <td class="sp-muted"><%= sp.unf_id %></td>
+        <td>
+          <%= link_to sp, class: 'sp-action sp-action-show', title: 'Показати' do %>
+            <i class="fa fa-eye"></i>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to edit_storage_place_path(sp), class: 'sp-action sp-action-edit', title: 'Редагувати' do %>
+            <i class="fa fa-pencil"></i>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to sp, method: :delete, data: { confirm: 'Ви впевнені?' }, class: 'sp-action sp-action-delete', title: 'Видалити' do %>
+            <i class="fa fa-trash"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</div>
 
-<br>
-
-<%= link_to 'New Storage Place', new_storage_place_path %>
+<div class="sp-pagination">
+  <%= paginate @storage_places %>
+</div>

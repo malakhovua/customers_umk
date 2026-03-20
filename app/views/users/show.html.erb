@@ -1,19 +1,145 @@
-<div class="container">
-<p id="notice"><%= notice %></p>
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+    }
+    .usr-breadcrumb {
+        display: flex; align-items: center; gap: 6px;
+        margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .usr-breadcrumb a {
+        display: inline-flex; align-items: center; gap: 5px;
+        color: var(--azure); text-decoration: none; font-weight: 600;
+        padding: 6px 14px; border-radius: 20px; font-size: 13px;
+        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        font-family: 'Montserrat', sans-serif; transition: background 0.2s;
+    }
+    .usr-breadcrumb a:hover { background: rgba(26,122,175,0.14); text-decoration: none; color: var(--azure); }
+    .usr-breadcrumb span { color: var(--muted); font-size: 13px; font-family: 'Montserrat', sans-serif; }
 
-<p>
-  <strong>Информация о пользователе:</strong>
-  <br>
-  Имя: <%= @user.name %>
-  <br>Фамилия: <%= @user.surname %>
-  <br>
-  email: <%= @user.email%>
-  <br>
-  Ед. подбора: <%= @user.unit_id.nil? ? 'Не выбрана' : Unit.find(@user.unit_id).name%>
-  <br>
-  роль: <%=@user.role%>>
-</p>
+    .usr-show-card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; overflow: hidden;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+        max-width: 500px;
+    }
 
-<%= link_to 'Редактировать', edit_user_path(@user), class: "btn btn-link"%> |
-<%= link_to 'Назад', users_path , class: "btn btn-link"%>
+    .usr-show-header {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+        padding: 16px 24px;
+        display: flex; align-items: center; gap: 12px;
+    }
+
+    .usr-show-avatar {
+        width: 48px; height: 48px; border-radius: 50%;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-size: 20px; font-weight: 700;
+        font-family: 'Montserrat', sans-serif; flex-shrink: 0;
+    }
+
+    .usr-show-name {
+        font-family: 'Playfair Display', serif;
+        font-size: 18px; font-weight: 800; color: var(--text);
+    }
+
+    .usr-show-body {
+        padding: 20px 24px;
+        display: flex; flex-direction: column; gap: 12px;
+    }
+
+    .usr-show-row {
+        display: flex; align-items: baseline; gap: 8px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border-soft);
+        font-family: 'Montserrat', sans-serif;
+    }
+    .usr-show-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .usr-show-label {
+        font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--muted); font-weight: 700; min-width: 140px; flex-shrink: 0;
+    }
+
+    .usr-show-value { font-size: 14px; color: var(--text); font-weight: 500; }
+
+    .usr-show-footer {
+        padding: 16px 24px; border-top: 1px solid var(--border-soft);
+        display: flex; gap: 10px;
+    }
+
+    .usr-btn-edit {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 8px 18px; border-radius: 10px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        color: #fff; font-size: 13px; font-weight: 600;
+        font-family: 'Montserrat', sans-serif; text-decoration: none;
+        transition: opacity 0.2s;
+    }
+    .usr-btn-edit:hover { opacity: 0.88; text-decoration: none; color: #fff; }
+
+    .usr-btn-back {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 8px 18px; border-radius: 10px;
+        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        color: var(--azure); font-size: 13px; font-weight: 600;
+        font-family: 'Montserrat', sans-serif; text-decoration: none;
+        transition: background 0.2s;
+    }
+    .usr-btn-back:hover { background: rgba(26,122,175,0.14); text-decoration: none; color: var(--azure); }
+
+    .usr-notice {
+        background: rgba(14,112,64,0.08); border: 1px solid rgba(14,112,64,0.2);
+        border-radius: 10px; padding: 10px 16px; color: #0E7040;
+        font-size: 13px; margin-bottom: 16px; font-family: 'Montserrat', sans-serif;
+    }
+</style>
+
+<div class="usr-breadcrumb">
+  <%= link_to users_path do %><i class="fa fa-arrow-left"></i> До списку<% end %>
+</div>
+
+<% if notice.present? %>
+  <div class="usr-notice"><%= notice %></div>
+<% end %>
+
+<div class="usr-show-card">
+  <div class="usr-show-header">
+    <div class="usr-show-avatar"><%= @user.name[0].upcase %></div>
+    <div class="usr-show-name"><%= @user.name %> <%= @user.surname %></div>
+  </div>
+  <div class="usr-show-body">
+    <div class="usr-show-row">
+      <span class="usr-show-label">Email</span>
+      <span class="usr-show-value"><%= @user.email %></span>
+    </div>
+    <div class="usr-show-row">
+      <span class="usr-show-label">Роль</span>
+      <span class="usr-show-value"><%= @user.role %></span>
+    </div>
+    <div class="usr-show-row">
+      <span class="usr-show-label">Підрозділ</span>
+      <span class="usr-show-value"><%= @user.storage_place.nil? ? 'Не задано' : @user.storage_place.title %></span>
+    </div>
+    <div class="usr-show-row">
+      <span class="usr-show-label">Од. для підбору</span>
+      <span class="usr-show-value"><%= @user.unit_id.nil? ? 'Не вибрано' : Unit.find(@user.unit_id).name %></span>
+    </div>
+  </div>
+  <div class="usr-show-footer">
+    <%= link_to edit_user_path(@user), class: 'usr-btn-edit' do %>
+      <i class="fa fa-pencil"></i> Редагувати
+    <% end %>
+    <%= link_to users_path, class: 'usr-btn-back' do %>
+      <i class="fa fa-arrow-left"></i> Назад
+    <% end %>
+  </div>
 </div>

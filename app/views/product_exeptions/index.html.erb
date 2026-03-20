@@ -1,35 +1,181 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link", style: "font-size: 20px"%></li>
-    <li class="breadcrumb-item"><%= link_to 'Андминистрирование', admin_url, class: "btn btn-link", style: "font-size: 20px"%></li>
-  </ol>
-</nav>
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+    }
 
+    .pe-breadcrumb {
+        display: flex; align-items: center; gap: 6px;
+        margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .pe-breadcrumb a {
+        display: inline-flex; align-items: center; gap: 5px;
+        color: var(--azure); text-decoration: none; font-weight: 600;
+        padding: 6px 14px; border-radius: 20px; font-size: 13px;
+        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        font-family: 'Montserrat', sans-serif; transition: background 0.2s;
+    }
+    .pe-breadcrumb a:hover { background: rgba(26,122,175,0.14); text-decoration: none; color: var(--azure); }
+    .pe-breadcrumb span { color: var(--muted); font-size: 13px; font-family: 'Montserrat', sans-serif; }
 
-<h1>Product Exeptions</h1>
+    .pe-page-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+    }
 
-<table  class="table table-bordered">
-  <thead class="table table-dark">
+    .pe-page-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 24px; font-weight: 800; color: var(--text);
+        display: flex; align-items: center; gap: 10px;
+    }
+    .pe-page-title::before {
+        content: ''; display: inline-block; width: 5px; height: 24px;
+        background: linear-gradient(180deg, var(--azure-light), var(--azure));
+        border-radius: 3px;
+    }
+
+    .pe-btn-new {
+        display: inline-flex; align-items: center; gap: 7px;
+        padding: 9px 20px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border: none; border-radius: 10px; color: #fff;
+        font-size: 13px; font-weight: 700; font-family: 'Montserrat', sans-serif;
+        text-decoration: none; transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 3px 12px rgba(26,122,175,0.25);
+    }
+    .pe-btn-new:hover { opacity: 0.92; transform: translateY(-1px); color: #fff; text-decoration: none; }
+
+    .pe-pagination {
+        display: flex; justify-content: center; padding: 16px 0 8px;
+    }
+    .pe-pagination a, .pe-pagination a:visited, .pe-pagination a:link {
+        color: var(--azure-light); text-decoration: none;
+    }
+    .pe-pagination .pagination {
+        display: flex; flex-wrap: wrap; align-items: center;
+        list-style: none; padding-left: 0; margin: 0; gap: 4px;
+    }
+    .pe-pagination .pagination .page-item { display: inline-flex; list-style: none; }
+    .pe-pagination .pagination .page-item .page-link {
+        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        color: var(--azure-light); border-radius: 10px; margin: 0;
+        font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600;
+        padding: 7px 13px; text-decoration: none;
+        transition: background 0.2s, transform 0.15s;
+        display: inline-flex; align-items: center; min-width: 36px; justify-content: center;
+    }
+    .pe-pagination .pagination .page-item .page-link:hover {
+        background: rgba(26,122,175,0.15); color: var(--azure-light); transform: scale(1.06);
+    }
+    .pe-pagination .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border-color: var(--azure); color: #fff;
+        box-shadow: 0 4px 12px rgba(26,122,175,0.28); cursor: default;
+    }
+    .pe-pagination .pagination .page-item.disabled .page-link {
+        opacity: 0.5; cursor: not-allowed;
+    }
+
+    .pe-table-wrap {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; overflow-x: auto;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.07);
+        margin-bottom: 8px; -webkit-overflow-scrolling: touch;
+    }
+
+    .pe-table {
+        width: 100%; min-width: 500px; border-collapse: collapse;
+        font-size: 13px; font-family: 'Montserrat', sans-serif;
+    }
+
+    .pe-table thead tr { background: linear-gradient(135deg, #E0F2FF, #C8E8FA); border-bottom: 2px solid var(--border); }
+    .pe-table thead th {
+        padding: 11px 16px; font-size: 10px; letter-spacing: 0.12em;
+        text-transform: uppercase; color: var(--azure); font-weight: 700;
+        white-space: nowrap; position: sticky; top: 0;
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        z-index: 2; box-shadow: 0 2px 0 var(--border);
+    }
+
+    .pe-table tbody tr { border-bottom: 1px solid rgba(186,224,245,0.4); transition: background 0.15s; }
+    .pe-table tbody tr:last-child { border-bottom: none; }
+    .pe-table tbody tr:hover { background: rgba(26,122,175,0.04); }
+    .pe-table td { padding: 10px 16px; color: var(--text); vertical-align: middle; }
+
+    .pe-action {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 30px; height: 30px; border-radius: 8px; font-size: 13px;
+        text-decoration: none; transition: background 0.2s, transform 0.15s;
+    }
+    .pe-action-show  { color: var(--azure); background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.15); }
+    .pe-action-show:hover  { background: rgba(26,122,175,0.14); transform: scale(1.08); color: var(--azure); text-decoration: none; }
+    .pe-action-edit  { color: #0E7490; background: rgba(14,116,144,0.07); border: 1px solid rgba(14,116,144,0.15); }
+    .pe-action-edit:hover  { background: rgba(14,116,144,0.14); transform: scale(1.08); color: #0E7490; text-decoration: none; }
+    .pe-action-delete { color: var(--red); background: rgba(192,57,43,0.07); border: 1px solid rgba(192,57,43,0.15); }
+    .pe-action-delete:hover { background: rgba(192,57,43,0.14); transform: scale(1.08); color: var(--red); text-decoration: none; }
+</style>
+
+<div class="pe-breadcrumb">
+  <%= link_to account_url do %><i class="fa fa-home"></i> На головну<% end %>
+  <span>/</span>
+  <%= link_to admin_url do %><i class="fa fa-cogs"></i> Адміністрування<% end %>
+  <span>/</span>
+  <span>Номенклатура контрагентів</span>
+</div>
+
+<div class="pe-page-header">
+  <div class="pe-page-title">Номенклатура контрагентів</div>
+  <%= link_to new_product_exeption_path, class: 'pe-btn-new' do %>
+    <i class="fa fa-plus"></i> Новий запис
+  <% end %>
+</div>
+
+<div class="pe-pagination">
+  <%= paginate @product_exeptions %>
+</div>
+
+<div class="pe-table-wrap">
+  <table class="pe-table">
+    <thead>
     <tr>
-      <th>Products</th>
-      <th>Clients</th>
+      <th>Продукт</th>
+      <th>Клієнт</th>
       <th colspan="3"></th>
     </tr>
-  </thead>
-
-  <tbody>
-    <% @product_exeptions.each do |product_exeption| %>
+    </thead>
+    <tbody>
+    <% @product_exeptions.each do |pe| %>
       <tr>
-        <td><%= product_exeption.product.title%></td>
-        <td><%= product_exeption.client.name %></td>
-        <td><%= link_to 'Show', product_exeption %></td>
-        <td><%= link_to 'Edit', edit_product_exeption_path(product_exeption) %></td>
-        <td><%= link_to 'Destroy', product_exeption, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= pe.product.title %></td>
+        <td><%= pe.client.name %></td>
+        <td>
+          <%= link_to pe, class: 'pe-action pe-action-show', title: 'Показати' do %>
+            <i class="fa fa-eye"></i>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to edit_product_exeption_path(pe), class: 'pe-action pe-action-edit', title: 'Редагувати' do %>
+            <i class="fa fa-pencil"></i>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to pe, method: :delete, data: { confirm: 'Ви впевнені?' }, class: 'pe-action pe-action-delete', title: 'Видалити' do %>
+            <i class="fa fa-trash"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</div>
 
-<br>
-
-<%= link_to 'New Product Exeption', new_product_exeption_path %>
+<div class="pe-pagination">
+  <%= paginate @product_exeptions %>
+</div>

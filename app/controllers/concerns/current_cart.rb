@@ -2,9 +2,16 @@ module CurrentCart
   private
 
   def set_cart
-    @cart = Cart.find(session[:cart_id])
-  rescue ActiveRecord::RecordNotFound
-    @cart = Cart.create
+    @cart = Cart.find_by(id: session[:cart_id]) ||
+            Cart.where(session_id: session.id.to_s).order(created_at: :desc).first ||
+            Cart.create(session_id: session.id.to_s)
+
     session[:cart_id] = @cart.id
   end
+
+  def current_cart
+    session[:cart_id] = @cart.id
+  end
+
+
 end

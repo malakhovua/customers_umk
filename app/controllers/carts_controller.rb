@@ -2,6 +2,9 @@ class CartsController < ApplicationController
   before_action :set_cart, only: [:show, :edit, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, with: :invalid_cart
 
+  layout 'cart'
+
+
   # GET /carts
   # GET /carts.json
   def index
@@ -16,7 +19,7 @@ class CartsController < ApplicationController
 
   # GET /carts/new
   def new
-    @cart = Cart.new
+
   end
 
   # GET /carts/1/edit
@@ -27,10 +30,12 @@ class CartsController < ApplicationController
   # POST /carts.json
   def create
     @cart = Cart.new(cart_params)
+    session[:client_id] = nil
 
     respond_to do |format|
       if @cart.save
-        format.html { redirect_to @cart, notice: 'Cart was successfully created.' }
+        session[:cart_id] = @cart.id
+        format.html { redirect_to customer_index_url}
         format.json { render :show, status: :created, location: @cart }
       else
         format.html { render :new }
@@ -43,23 +48,28 @@ class CartsController < ApplicationController
   # PATCH/PUT /carts/1.json
   def update
 
-    @cart.stick = !!params['stick']
-    @cart.stick_pack = !!params['stick_pack']
-    @lines_hash = Hash.new
-    @cart.line_items.each do |line_item|
-      line_item.pack = Pack.find(params['packs' + line_item.id.to_s]) unless params['packs' + line_item.id.to_s].nil?
-      line_item.quantity = params['qty' + line_item.id.to_s].to_f
-      line_item.amount = params['amount' + line_item.id.to_s].to_f
-      line_item.stick = !!params['stick' + line_item.id.to_s]
-      line_item.comment = params['comment' + line_item.id.to_s]
-      line_item.recount = line_item.total_quantity
-      line_item.save
-      @lines_hash["item" + line_item.id.to_s] = [line_item.id.to_s, line_item.recount]
+    if params[:data_type] == 'header'
+      @cart.stick = !!params['stick']
+      @cart.stick_pack = !!params['stick_pack']
+    end
+
+    if params[:data_type] == 'line_items'
+      @lines_hash = Hash.new
+      @cart.line_items.each do |line_item|
+        line_item.pack = Pack.find(params['packs' + line_item.id.to_s]) unless params['packs' + line_item.id.to_s].nil?
+        line_item.quantity = params['qty' + line_item.id.to_s].to_f
+        line_item.amount = params['amount' + line_item.id.to_s].to_f
+        line_item.stick = !!params['stick' + line_item.id.to_s]
+        line_item.comment = params['comment' + line_item.id.to_s]
+        line_item.recount = line_item.total_quantity
+        line_item.save
+        @lines_hash["item" + line_item.id.to_s] = [line_item.id.to_s, line_item.recount]
+      end
     end
 
     respond_to do |format|
       if @cart.update(cart_params)
-        format.html { redirect_to @cart, notice: 'Корзина была обновлена!' }
+        format.html { redirect_to @cart, notice: 'Корзина була обновлена!' }
         format.js
       else
         format.html { render :edit }
@@ -71,11 +81,13 @@ class CartsController < ApplicationController
   # DELETE /carts/1
   # DELETE /carts/1.json
   def destroy
-    @cart.destroy if @cart.id == session[:cart_id]
-    session[:cart_id] = nil
-    session[:client_id] = nil
+
+    redirect_path = carts_url
+
+    @cart.destroy
+
     respond_to do |format|
-      format.html { redirect_to customer_index_url, notice: 'Ваша корзина была полностью очищена.' }
+      format.html { redirect_to redirect_path}
       format.json { head :no_content }
     end
   end
@@ -85,6 +97,7 @@ class CartsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_cart
     @cart = Cart.find(params[:id])
+    session[:cart_id] = @cart.id
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
@@ -96,7 +109,7 @@ class CartsController < ApplicationController
 
   def invalid_cart
     logger.error "Attemp to access invalid cart #{params[:id]}"
-    redirect_to customer_index_url, notice: 'Ошибка доступа к корзине'
+    redirect_to customer_index_url, notice: 'Помилка доступу до кошика'
 
   end
 

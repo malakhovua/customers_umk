@@ -2,6 +2,8 @@ class UsersController < ApplicationController
 
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
+  layout 'users'
+
   # GET /users
   # GET /users.json
   def index
@@ -33,7 +35,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.save
         format.html { redirect_to users_url,
-                                  notice: "Пользователь #{@user.name} был успешно создан." }
+                                  notice: "Користувача #{@user.name} було успішно створено." }
         format.json { render :show, status: :created, location: @user }
       else
         format.html { render :new }
@@ -49,7 +51,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to users_url,
-                                  notice: "Пользователь #{@user.name}  был успешно обновлен." }
+                                  notice: "Користувача #{@user.name}  було успішно оновлено." }
         format.json { render :show, status: :ok, location: @user }
       else
         format.html { render :edit }
@@ -63,7 +65,7 @@ class UsersController < ApplicationController
   def destroy
     @user.destroy
     respond_to do |format|
-      format.html { redirect_to users_url, notice: "Пользователь #{@user.name} удален." }
+      format.html { redirect_to users_url, notice: "Користувача #{@user.name} видалено." }
       format.json { head :no_content }
     end
   end

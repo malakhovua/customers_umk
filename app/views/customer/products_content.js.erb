@@ -1,0 +1,37 @@
+$('#customer_content').html(
+    "<%= j render :partial => 'customer/content' %>"
+);
+$('#price_type').html(
+    '<i class="fa fa-money" aria-hidden="true"></i> Тип прайсу: <%= j(@price_type&.name || '') %>'
+);
+
+$('#pop_cart_check_client_nill').html('<% if @cart.client_id.nil? %> \
+  <div class="alert alert-danger m-3" role="alert"> \
+    Оберіть замовника! \
+  </div> \
+<% end %>')
+
+$('#pop_cart_button').html('<%= escape_javascript(
+  if @cart.line_items.any?
+    button_to "Оформити замовлення",
+              cart_path(@cart),
+              method: :get,
+              data: {
+                confirm: @cart.client_id.nil? ? "Оберіть клієнта" : nil
+              },
+              class: "btn btn-primary",
+              disabled: @cart.client_id.nil?
+  end
+) %>');
+
+// Оновлюємо кнопку "скинути" в sidebar
+<% if session[:selected_categories].present? %>
+$('#sidebar-reset-btn').html(
+    '<a href="#" class="sidebar-tree-reset" id="clear-categories-btn" title="Скинути фільтр категорій">' +
+    '<i class="fa fa-times-circle"></i> скинути</a>'
+);
+// Перевішуємо обробник після оновлення DOM
+bindResetBtn();
+<% else %>
+$('#sidebar-reset-btn').html('');
+<% end %>

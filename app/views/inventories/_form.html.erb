@@ -1,13 +1,355 @@
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+        --green:        #0E7040;
+        --yellow:       #EDF68B;
+    }
+
+    /* ===== BOOTSTRAP ЗАМІННИКИ ===== */
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 7px 11px;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+        color: var(--text);
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+        -webkit-appearance: none;
+        box-sizing: border-box;
+    }
+
+    .form-control:focus {
+        border-color: var(--azure-light);
+        box-shadow: 0 0 0 3px rgba(26,122,175,0.10);
+        background: var(--surface);
+    }
+
+    .form-control[readonly],
+    .form-control[disabled] {
+        background: #E8F4FB;
+        color: var(--muted);
+        cursor: default;
+    }
+
+    select.form-control {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231A7AAF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 30px;
+        cursor: pointer;
+    }
+
+    /* ===== ЗАГОЛОВОК ФОРМИ ===== */
+    .inv-form-header {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+        margin-bottom: 20px;
+    }
+
+    .inv-form-header-bar {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .inv-form-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--text);
+    }
+
+    .inv-form-body {
+        padding: 20px 24px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
+    }
+
+    .inv-form-field label {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        margin-bottom: 6px;
+    }
+
+    /* ===== КНОПКА ЗБЕРЕГТИ ===== */
+    .inv-save-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 24px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border: none;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        cursor: pointer;
+        transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 14px rgba(26,122,175,0.28);
+        -webkit-appearance: none;
+    }
+
+    .inv-save-btn:hover {
+        opacity: 0.92;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(26,122,175,0.35);
+    }
+
+    .inv-save-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* ===== ТАБЛИЦЯ ПОЗИЦІЙ ===== */
+    .inv-items-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: visible;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+        margin-bottom: 20px;
+    }
+
+    .inv-items-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .inv-items-table {
+        width: 100%;
+        min-width: 900px;
+        border-collapse: collapse;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .inv-items-table thead tr {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+    }
+
+    .inv-items-table thead th {
+        padding: 11px 12px;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        white-space: nowrap;
+        text-align: left;
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+    }
+
+    /* Фіксований хедер-клон */
+    #inv-form-header-fixed {
+        display: none;
+        position: fixed;
+        top: 0;
+        z-index: 999;
+        overflow: hidden;
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+        box-shadow: 0 2px 8px rgba(26,122,175,0.12);
+    }
+
+    #inv-form-header-fixed table {
+        border-collapse: collapse;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    #inv-form-header-fixed th {
+        padding: 11px 12px;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        white-space: nowrap;
+        text-align: left;
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+    }
+
+    .inv-items-table tbody tr {
+        border-bottom: 1px solid rgba(186,224,245,0.4);
+        transition: background 0.15s;
+    }
+
+    .inv-items-table tbody tr:last-child { border-bottom: none; }
+    .inv-items-table tbody tr:hover { background: rgba(26,122,175,0.03); }
+
+    .inv-items-table td {
+        padding: 8px 12px;
+        color: var(--text);
+        vertical-align: middle;
+    }
+
+    /* Інпути в таблиці */
+    .inv-items-table .form-control {
+        padding: 5px 8px;
+        font-size: 13px;
+        border-radius: 7px;
+    }
+
+    /* Сума в рядках — менший шрифт */
+    .inv-items-table td input[id^="sum"] {
+        font-size: 11px !important;
+        padding: 4px 6px !important;
+    }
+
+    /* Група — менший шрифт, перенос */
+    .inv-items-table td:nth-child(2) {
+        font-size: 11px !important;
+        word-break: break-word;
+        line-height: 1.3;
+    }
+
+    /* Сума разом — підсвічена */
+    #total_sum {
+        background: var(--yellow) !important;
+        border-color: #c8d44a !important;
+        font-weight: 700;
+        color: #3a4a00;
+        text-align: right;
+        padding: 5px 8px;
+        border-radius: 7px;
+        border: 1.5px solid #c8d44a;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
+        min-width: 100px;
+        display: inline-block;
+    }
+
+    /* Кнопка додати рядок */
+    .inv-add-row {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--azure);
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        margin-left: 8px;
+        padding: 3px 8px;
+        border-radius: 6px;
+        background: rgba(26,122,175,0.08);
+        border: 1px solid rgba(26,122,175,0.18);
+        transition: background 0.2s;
+    }
+
+    .inv-add-row:hover {
+        background: rgba(26,122,175,0.16);
+        color: var(--azure);
+    }
+
+    /* Помилки */
+    .inv-errors {
+        background: rgba(192,57,43,0.07);
+        border: 1px solid rgba(192,57,43,0.22);
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 16px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .inv-errors ul { padding-left: 18px; color: var(--red); font-size: 13px; }
+    .inv-errors li { margin-bottom: 4px; }
+
+    /* Коментар в хедері */
+    .inv-header-comment {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+        min-width: 200px;
+        max-width: 400px;
+    }
+
+    .inv-header-comment-label {
+        font-size: 10px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .inv-header-comment-input {
+        background: rgba(255,255,255,0.7);
+        border: 1.5px solid rgba(26,122,175,0.3);
+        border-radius: 8px;
+        color: var(--text);
+        padding: 7px 12px;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .inv-header-comment-input:focus {
+        border-color: var(--azure-light);
+        box-shadow: 0 0 0 3px rgba(26,122,175,0.10);
+        background: #fff;
+    }
+
+    .inv-header-comment-input[readonly] {
+        opacity: 0.7;
+        cursor: default;
+    }
+
+    /* Modal */
+    #modal-window .modal-content {
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        box-shadow: 0 8px 32px rgba(26,122,175,0.15);
+    }
+
+    @media (max-width: 600px) {
+        .inv-form-body { grid-template-columns: 1fr; padding: 16px; }
+        .inv-form-header-bar { padding: 14px 16px; }
+        .inv-form-title { font-size: 17px; }
+        .inv-save-btn { width: 100%; justify-content: center; padding: 13px; font-size: 14px; }
+        .inv-items-table .form-control { font-size: 16px; }
+    }
+</style>
+
 <%= form_with(model: @inventory, local: true, id: "inventory_line_items_partial") do |form| %>
- <% disabled = if current_user.admin?
-                 ''
-               else
-                 Inventory.statuses[@inventory.status] == 0 ? '' : 'disabled="disabled"'
-               end %>
-  <fieldset <%=disabled%>>
+  <% disabled = current_user.admin? ? '' : (Inventory.statuses[@inventory.status] == 0 ? '' : 'disabled="disabled"') %>
+  <fieldset <%= disabled %>>
+
+    <%# ПОМИЛКИ %>
     <% if @inventory.errors.any? %>
-      <div id="error_explanation">
-        <h2><%= pluralize(inventory.errors.count, "error") %> prohibited this inventory from being saved:</h2>
+      <div class="inv-errors">
         <ul>
           <% @inventory.errors.full_messages.each do |message| %>
             <li><%= message %></li>
@@ -15,87 +357,153 @@
         </ul>
       </div>
     <% end %>
-    <div class="actions" style="margin: 10px">
-      <%= form.submit 'Зберегти документ', class: 'btn btn-primary' %>
-    </div>
-    <div class="col-md-8 order-md-1">
-      <div class="row">
-        <div class="col-md-6 mb-3" >
-          <label for="firstName">Номер:</label>
-          <%= form.text_field :unf_number, class: "form-control", readonly: true %>
+
+    <%# ЗАГОЛОВОК + ПОЛЯ %>
+    <div class="inv-form-header">
+      <div class="inv-form-header-bar">
+        <div class="inv-form-title">
+          Інвентаризація <%= @inventory.unf_number.present? ? "№#{@inventory.unf_number}" : "" %>
         </div>
-        <div class="col-md-6 mb-3">
-          <label for="lastName">Дата:</label>
-          <%= form.date_field :date, class: "form-control", type: "date", value: @inventory.date.strftime("%Y-%m-%d"), id: "example-date-input", readonly: (not current_user.admin?) %>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label for="lastName">Статус:</label>
-          <%= form.select(:status, options_for_select(Inventory.statuses, selected:  Inventory.statuses[@inventory.status]), {}, { :class => 'form-control' }) %>
-        </div>
+        <%= form.submit 'Зберегти документ', class: 'inv-save-btn' %>
+
       </div>
 
-      <% if current_user.admin? %>
-        <div class="form-group">
-          <div class="col-md-15">
-            <label for="firstName">Торгівельна точка:</label>
-            <% list_storage = current_user.admin? ? StoragePlace.all : StoragePlace.where(id: @inventory.storage_place) %>
+      <div class="inv-form-body">
+        <div class="inv-form-field">
+          <label>Номер</label>
+          <%= form.text_field :unf_number, class: "form-control", readonly: true %>
+        </div>
+        <div class="inv-form-field">
+          <label>Дата</label>
+          <%= form.date_field :date, class: "form-control",
+                              value: @inventory.date.strftime("%Y-%m-%d"),
+                              readonly: !current_user.admin? %>
+        </div>
+        <div class="inv-form-field">
+          <label>Статус</label>
+          <%= form.select :status,
+                          options_for_select(Inventory.statuses, selected: Inventory.statuses[@inventory.status]),
+                          {}, class: 'form-control' %>
+        </div>
+        <% if current_user.admin? %>
+          <div class="inv-form-field">
+            <label>Торговельна точка</label>
+            <% list_storage = StoragePlace.all %>
             <%= form.collection_select :storage_place_id, list_storage, :id, :title, {}, class: "form-control" %>
           </div>
-          <div class="col-md-15">
-            <label for="lastName">Відповідпльна особа:</label>
-            <% list_user = current_user.admin? ? User.all : User.where(id: @inventory.user) %>
+          <div class="inv-form-field">
+            <label>Відповідальна особа</label>
+            <% list_user = User.all %>
             <%= form.collection_select :user_id, list_user, :id, :name, {}, class: "form-control" %>
           </div>
-        </div>
-      <% end %>
+        <% end %>
+
+      </div>
     </div>
-    <table class="table table-bordered table-hover table-of-contents">
-      <thead class="sticky-top" style="background-color: aliceblue; text-align: left">
-      <th scope="col" class="">
-        <div class="p-2 px-3 text-uppercase"  style="text-align: -webkit-left">№</div>
-      </th>
-      <th scope="col" class="" style="width: 130px">
-        <div class="p-2 px-3 text-uppercase">Група</div>
-      </th>
-      <th scope="col" class="">
-        <div class="p-2 px-3 text-uppercase">Номенклатура</div>
-        <%= link_to ' Додати рядок з номенклатурою', "", :data => { :toggle => 'modal', :target => '#modal-window' }, remote: true, class: "fa fa-plus-square", style: "color: royalblue;" %>
-      </th>
-      <th scope="col" class="" style="width: 130px">
-        <div class="p-2 px-3 text-uppercase">Код РРО</div>
-      </th>
-      <th scope="col" class="">
-        <div class="p-2 px-3 text-uppercase">Од.</div>
-      </th>
-      <th scope="col" class="">
-        <div class="py-2 text-uppercase" style="min-width:80px">Ціна</div>
-      </th>
-      <th scope="col" class="" style="width: 130px">
-        <div class="py-2 text-uppercase">Кількість, од.</div>
-      </th>
-      <th scope="col" class="">
-        <div class="py-2 text-uppercase" style="min-width:90px">Сума разом:
-          <div class=form-control", id="total_sum" , style="background-color: #EDF68B"><%= sprintf('%.2f', @inventory.sum.nil? ? 0.0 : @inventory.sum).gsub(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1 ") %></div>
-        </div>
-      </th>
-      <th scope="col" class="">
-        <div class="p-2 px-3 text-uppercase">Коментар</div>
-        <%= form.text_field :desc, class: "form-control", id: "exampleFormControlTextarea1", rows: "3", readonly: current_user.admin? ? false : true %>
-      </th>
-      <th scope="col" class="">
-        <div class="p-2 px-3 text-uppercase"></div>
-      </th>
-      <th scope="col" class="">
-      </th>
-      </thead>
-      <% @n = 0 %>
-      <%= render @inventory.inventory_line_items.left_outer_joins(:product).order(:row_number) %>
-    </table>
+
+    <%# ТАБЛИЦЯ ПОЗИЦІЙ %>
+    <div class="inv-items-wrap">
+      <div class="inv-items-scroll">
+        <table class="inv-items-table">
+          <thead>
+          <tr>
+            <th style="width:40px;">№</th>
+            <th style="width:70px;">Група</th>
+            <th>
+              Номенклатура
+              <%= link_to '', "", data: { toggle: 'modal', target: '#modal-window' },
+                          remote: true,
+                          class: "fa fa-plus-square inv-add-row",
+                          title: "Додати рядок з номенклатурою" %>
+            </th>
+            <th style="width:80px;white-space:normal;">Код<br>РРО</th>
+            <th style="width:40px;">Од.</th>
+            <th style="width:100px;">Ціна</th>
+            <th style="width:115px;white-space:normal;">К-сть,<br>од.</th>
+            <th style="width:110px;white-space:normal;">
+              Сума<br>разом:
+              <div id="total_sum"><%= sprintf('%.2f', @inventory.sum.nil? ? 0.0 : @inventory.sum).gsub(/(\d)(?=(\d\d\d)+(?!\d))/, "\1 ") %></div>
+            </th>
+            <th style="width:120px;white-space:normal;">
+              Коментар
+              <%= form.text_field :desc, class: "form-control",
+                                  placeholder: "Коментар...",
+                                  readonly: !current_user.admin? %>
+            </th>
+            <th></th>
+          </tr>
+          </thead>
+          <% @n = 0 %>
+          <%= render @inventory.inventory_line_items.left_outer_joins(:product).order(:row_number) %>
+        </table>
+      </div>
+    </div>
+
+  </fieldset>
 <% end %>
 
 <div id="modal-window" class="modal fade" tabindex="-1"
      role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <%= render partial: 'inventory_line_items/new_item' %>
 </div>
-</fieldset>
 
+<div id="inv-form-header-fixed"></div>
+
+<script>
+    // ============================================
+    //  ФІКСОВАНИЙ ХЕДЕР ТАБЛИЦІ (edit форма)
+    // ============================================
+    (function() {
+        var fixedHeader = document.getElementById('inv-form-header-fixed');
+        var table = document.querySelector('.inv-items-table');
+        if (!table || !fixedHeader) return;
+
+        var thead = table.querySelector('thead');
+
+        function syncHeader() {
+            var tableRect = table.getBoundingClientRect();
+
+            if (tableRect.top < 0 && tableRect.bottom > 50) {
+                var origThs = thead.querySelectorAll('th');
+                var fixedTable = fixedHeader.querySelector('table');
+
+                if (!fixedTable) {
+                    fixedTable = document.createElement('table');
+                    fixedTable.className = 'inv-items-table';
+                    var fixedThead = thead.cloneNode(true);
+                    fixedTable.appendChild(fixedThead);
+                    fixedHeader.appendChild(fixedTable);
+                }
+
+                var fixedThs = fixedHeader.querySelectorAll('th');
+                origThs.forEach(function(th, i) {
+                    if (fixedThs[i]) {
+                        fixedThs[i].style.width = th.offsetWidth + 'px';
+                        fixedThs[i].style.minWidth = th.offsetWidth + 'px';
+                    }
+                });
+
+                var scrollEl = document.querySelector('.inv-items-scroll');
+                if (scrollEl) {
+                    var rect = scrollEl.getBoundingClientRect();
+                    fixedHeader.style.left = rect.left + 'px';
+                    fixedHeader.style.right = (window.innerWidth - rect.right) + 'px';
+                    fixedTable.style.marginLeft = -scrollEl.scrollLeft + 'px';
+                }
+
+                fixedHeader.style.display = 'block';
+            } else {
+                fixedHeader.style.display = 'none';
+            }
+        }
+
+        window.addEventListener('scroll', syncHeader);
+
+        var scrollEl = document.querySelector('.inv-items-scroll');
+        if (scrollEl) {
+            scrollEl.addEventListener('scroll', syncHeader);
+        }
+
+        window.addEventListener('resize', syncHeader);
+    })();
+</script>

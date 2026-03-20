@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Інвентаризації — Український М'ясокомбінат</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <%# Bootstrap JS тільки — БЕЗ CSS %>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      min-height: 100%;
+      background: #F0F8FF;
+      font-family: 'Montserrat', sans-serif;
+      color: #0B2A3D;
+      -webkit-text-size-adjust: 100%;
+    }
+    .inv-layout-content {
+      width: 100%;
+      padding: 24px 30px 40px;
+    }
+    @media (max-width: 600px) {
+      .inv-layout-content { padding: 16px 12px 32px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="inv-layout-content">
+    <%= yield %>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <%= javascript_include_tag "application", "data-turbo-track": "reload" %>
+</body>
+</html>

@@ -6,6 +6,13 @@ class AdminController < ApplicationController
     ensure_an_admin_role
   end
 
+  def all_data_1c83
+    exchenge = Unf.new
+    exchenge.get_all_data
+    respond_to do |format|
+      format.js
+    end
+  end
   def products_1c83
     exchenge = Unf.new
     exchenge.get_products
@@ -80,7 +87,7 @@ class AdminController < ApplicationController
     @orders = Order.all
     respond_to do |format|
       #format.js
-            format.html { redirect_to orders_url, notice: 'Заказы отправлены!' }
+            format.html { redirect_to orders_url, notice: 'Замовлення відправлені!' }
     end
   end
 

@@ -1,0 +1,589 @@
+/* ============================================
+   SIDEBAR — Azure Theme
+   ============================================ */
+
+$sidebar-w: 450px;
+$sidebar-bg: #0B2A3D;
+$azure: #1A7AAF;
+$azure-light: #3AA0D8;
+$border-color: rgba(186, 224, 245, 0.15);
+$text-dim: rgba(186, 224, 245, 0.75);
+$text-bright: #ffffff;
+
+/* ============================================
+   WRAPPER & TRANSITIONS
+   ============================================ */
+#wrapper {
+  transition: all .4s cubic-bezier(.4, 0, .2, 1);
+}
+
+#wrapper.menuDisplayed #page-content-wrapper {
+  padding-left: $sidebar-w + 20px;
+}
+
+/* Hamburger рухається разом з сайдбаром */
+#wrapper.menuDisplayed .hamburger {
+  left: $sidebar-w + 10px;
+}
+
+/* ============================================
+   SIDEBAR
+   ============================================ */
+#sidebar-wrapper {
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  overflow: hidden;
+  background: $sidebar-bg;
+  transition: width .4s cubic-bezier(.4, 0, .2, 1);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+}
+
+#wrapper.menuDisplayed #sidebar-wrapper {
+  width: $sidebar-w;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(58, 160, 216, 0.25) transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-thumb { background: rgba(58, 160, 216, 0.25); border-radius: 2px; }
+}
+
+/* ============================================
+   PAGE CONTENT
+   ============================================ */
+#page-content-wrapper {
+  width: 100%;
+  position: absolute;
+  padding: 15px;
+  transition: padding-left .4s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* ============================================
+   SIDEBAR HEADER
+   ============================================ */
+.sidebar-header {
+  padding: 20px 18px 14px;
+  border-bottom: 1px solid $border-color;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.sidebar-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, $azure-light, #0EA5E9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   CLIENT SELECTOR
+   ============================================ */
+.sidebar-client-wrap {
+  padding: 12px 16px;
+  border-bottom: 1px solid $border-color;
+  flex-shrink: 0;
+}
+
+.sidebar-client-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sidebar-client-input {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(186, 224, 245, 0.18);
+  border-radius: 9px;
+  color: $text-bright;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: 'Montserrat', sans-serif;
+  outline: none;
+  transition: border-color .2s, background .2s;
+
+  &::placeholder { color: rgba(186, 224, 245, 0.35); }
+  &:focus {
+    border-color: $azure-light;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.sidebar-client-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  color: rgba(186, 224, 245, 0.4);
+  font-size: 16px;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: color .2s, background .2s;
+
+  &:hover {
+    color: #e74c3c;
+    background: rgba(231, 76, 60, 0.15);
+  }
+}
+
+.sidebar-price-type {
+  margin-top: 7px;
+  font-size: 11px;
+  font-family: 'Montserrat', sans-serif;
+  color: rgba(186, 224, 245, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  strong { color: $azure-light; font-weight: 600; }
+  i { font-size: 12px; }
+}
+
+/* ============================================
+   NAV LINKS
+   ============================================ */
+.sidebar-nav {
+  list-style: none;
+  padding: 8px 0;
+  margin: 0;
+  flex-shrink: 0;
+
+  > li > a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: $text-dim;
+    text-decoration: none;
+    white-space: nowrap;
+    border-left: 3px solid transparent;
+    transition: background .2s, color .2s, padding-left .2s, border-color .2s;
+
+    i {
+      font-size: 14px;
+      color: $azure-light;
+      flex-shrink: 0;
+      width: 16px;
+      text-align: center;
+    }
+
+    &:hover {
+      background: rgba(26, 122, 175, 0.15);
+      color: $text-bright;
+      padding-left: 26px;
+      border-left-color: $azure-light;
+    }
+  }
+}
+
+/* ============================================
+   PRODUCT TREE
+   ============================================ */
+.sidebar-tree-wrap {
+  flex: 1;
+  padding: 0 0 20px 0;
+}
+
+.sidebar-tree-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(186, 224, 245, 0.3);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  padding: 10px 20px 6px;
+  border-top: 1px solid $border-color;
+}
+
+/* Caret — займає залишок рядка після чекбокса */
+.caret {
+  cursor: pointer;
+  user-select: none;
+  flex: 1;                  /* займає весь простір після checkbox */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 8px 6px;
+  font-size: 13px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: rgba(186, 224, 245, 0.9);
+  white-space: nowrap;
+  transition: background .2s, color .2s;
+  min-height: 36px;
+  line-height: 1;
+  border-radius: 0 6px 6px 0;
+
+  /* Стрілка ▶ — перша в рядку, велика */
+  &::before {
+    content: "\25B6";
+    color: $azure-light;
+    font-size: 17px;
+    width: 18px;
+    flex-shrink: 0;
+    transition: transform .3s ease;
+    line-height: 1;
+  }
+
+  .fa-folder {
+    color: #F0A500;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  &:hover { background: rgba(26, 122, 175, 0.12); }
+}
+
+.caret-down::before {
+  transform: rotate(90deg);
+}
+
+/* Tree UL/LI */
+.tree, .tree ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tree li {
+  font-size: 13px;
+  font-family: 'Montserrat', sans-serif;
+  color: $text-dim;
+  line-height: 1.3;
+  position: relative;
+
+  /* Рядок: [checkbox] [caret зі стрілкою + папка + текст] */
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;  /* щоб вкладений ul переносився на новий рядок */
+
+  /* Вкладений ul займає весь рядок */
+  > ul.nested {
+    flex: 0 0 100%;
+    width: 100%;
+  }
+}
+
+/* Листовий вузол (без дітей): [checkbox] [fa-folder] [label текст] */
+.tree label,
+.nested label {
+  flex: 1;                  /* займає залишок після checkbox та іконки */
+  display: flex;
+  align-items: center;
+  padding: 8px 16px 8px 4px;
+  cursor: default;
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+  min-height: 36px;
+  line-height: 1;
+  font-size: 13px;
+  font-family: 'Montserrat', sans-serif;
+  color: rgba(186, 224, 245, 0.75);
+}
+
+/* Іконка папки поза label — як окремий flex-елемент li */
+.tree li > .fa-folder,
+.nested li > .fa-folder {
+  color: #F0A500;
+  font-size: 15px;
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+}
+
+.tree li:hover > label,
+.nested li:hover > label {
+  color: #ffffff;
+}
+
+/* Чекбокси */
+.tree input[type="checkbox"],
+.nested input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: $azure-light;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0 4px 0 16px;   /* відступ зліва від краю сайдбару */
+  align-self: center;
+}
+
+/* Nested рівні - кожен наступний має відступ 24px */
+.nested {
+  padding-left: 24px !important;
+  display: none;
+  /* display керується sidebar.js */
+}
+
+/* Вкладені caret також з відступом */
+.nested .caret {
+  padding-left: 20px;
+}
+
+/* Глибші рівні вкладеності */
+.nested .nested {
+  padding-left: 24px !important;
+}
+
+.nested .nested .nested {
+  padding-left: 24px !important;
+}
+
+.nested .nested .nested .nested {
+  padding-left: 24px !important;
+}
+
+/* ============================================
+   HAMBURGER
+   ============================================ */
+.hamburger {
+  position: fixed;
+  top: 70px;
+  left: 10px;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  background: $sidebar-bg;
+  border: 1.5px solid rgba(186, 224, 245, 0.2);
+  border-radius: 9px;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  transition: left .4s cubic-bezier(.4, 0, .2, 1),
+  background .2s,
+  border-color .2s,
+  box-shadow .2s;
+
+  &:hover, &:focus, &:active { outline: none; }
+
+  &:hover {
+    background: $azure;
+    border-color: $azure-light;
+    box-shadow: 0 4px 16px rgba(26, 122, 175, 0.4);
+  }
+}
+
+.hamb-top, .hamb-middle, .hamb-bottom {
+  position: absolute;
+  left: 50%;
+  height: 2px;
+  width: 18px;
+  background: rgba(186, 224, 245, 0.85);
+  border-radius: 2px;
+  transform: translateX(-50%);
+  transition: all .28s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* Closed state */
+.hamburger.is-closed {
+  .hamb-top    { top: 10px; }
+  .hamb-middle { top: 50%; margin-top: -1px; }
+  .hamb-bottom { top: auto; bottom: 10px; }
+}
+
+/* Open state → X */
+.hamburger.is-open {
+  .hamb-top {
+    top: 50%;
+    margin-top: -1px;
+    transform: translateX(-50%) rotate(45deg);
+  }
+  .hamb-middle { opacity: 0; }
+  .hamb-bottom {
+    bottom: auto;
+    top: 50%;
+    margin-top: -1px;
+    transform: translateX(-50%) rotate(-45deg);
+  }
+}
+
+/* ============================================
+   OVERLAY
+   ============================================ */
+.overlay {
+  position: fixed;
+  display: none;
+  inset: 0;
+  background: rgba(11, 42, 61, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 999;
+}
+
+/* Кнопка скинути фільтр дерева */
+.sidebar-tree-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-tree-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(192,57,43,0.7);
+  text-decoration: none;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(192,57,43,0.25);
+  background: rgba(192,57,43,0.07);
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  i { font-size: 12px; }
+
+  &:hover {
+    color: #C0392B;
+    background: rgba(192,57,43,0.15);
+    border-color: rgba(192,57,43,0.4);
+  }
+}
+
+
+
+
+/* ============================================
+   MOBILE — OnePlus 12 та інші (≤ 600px)
+   ============================================ */
+@media (max-width: 600px) {
+
+  /* Сайдбар — ширший */
+  #wrapper.menuDisplayed #sidebar-wrapper {
+    width: 88vw;
+  }
+
+  #wrapper.menuDisplayed #page-content-wrapper {
+    padding-left: 15px;
+  }
+
+  /* Hamburger */
+  .hamburger {
+    top: 8px;
+    left: 8px;
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+  }
+
+  #wrapper.menuDisplayed .hamburger {
+    left: calc(88vw + 8px);
+  }
+
+  .hamb-top,
+  .hamb-middle,
+  .hamb-bottom {
+    width: 24px;
+    height: 3px;
+  }
+
+  .hamburger.is-closed .hamb-top    { top: 12px; }
+  .hamburger.is-closed .hamb-middle { top: 50%; margin-top: -1.5px; }
+  .hamburger.is-closed .hamb-bottom { top: auto; bottom: 12px; }
+
+  .hamburger.is-open .hamb-top    { top: 50%; margin-top: -1.5px; }
+  .hamburger.is-open .hamb-bottom { top: 50%; margin-top: -1.5px; bottom: auto; }
+
+  /* Логотип */
+  .sidebar-brand { font-size: 13px; }
+
+  /* Замовник */
+  .sidebar-client-input {
+    font-size: 16px;
+    padding: 11px 14px;
+  }
+
+  .sidebar-client-clear {
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+  }
+
+  .sidebar-price-type { font-size: 13px; }
+
+  /* Навігаційні посилання */
+  .sidebar-nav > li > a {
+    font-size: 17px;
+    padding: 14px 20px;
+    min-height: 52px;
+  }
+
+  .sidebar-nav > li > a i {
+    font-size: 19px;
+    width: 22px;
+  }
+
+  /* Дерево */
+  .sidebar-tree-label {
+    font-size: 12px;
+    padding: 12px 20px 8px;
+  }
+
+  .sidebar-tree-reset {
+    font-size: 13px;
+    padding: 5px 10px;
+  }
+
+  .caret {
+    font-size: 16px;
+    min-height: 48px;
+    padding: 10px 16px 10px 6px;
+  }
+
+  .caret::before {
+    font-size: 18px;
+    width: 22px;
+  }
+
+  .caret .fa-folder { font-size: 18px; }
+
+  .tree li,
+  .nested li { font-size: 15px; }
+
+  .tree label,
+  .nested label {
+    font-size: 15px;
+    min-height: 46px;
+    padding: 10px 16px 10px 4px;
+  }
+
+  .tree li > .fa-folder,
+  .nested li > .fa-folder {
+    font-size: 18px;
+    width: 24px;
+  }
+
+  /* Чекбокси */
+  .tree input[type="checkbox"],
+  .nested input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 0 6px 0 16px;
+  }
+
+  /* Hamburger під modal */
+  .hamburger.modal-open-hide {
+    z-index: 0;
+  }
+}

@@ -1,5 +1,25 @@
-<h1>New Exch Node</h1>
+<style>
+    .en-breadcrumb {
+        display: flex; align-items: center; gap: 6px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .en-breadcrumb a {
+        display: inline-flex; align-items: center; gap: 5px; color: #1A7AAF;
+        text-decoration: none; font-weight: 600; padding: 6px 14px; border-radius: 20px;
+        font-size: 13px; background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        font-family: 'Montserrat', sans-serif; transition: background 0.2s;
+    }
+    .en-breadcrumb a:hover { background: rgba(26,122,175,0.14); text-decoration: none; color: #1A7AAF; }
+    .en-breadcrumb span { color: #4A7A96; font-size: 13px; font-family: 'Montserrat', sans-serif; }
+</style>
+
+<div class="en-breadcrumb">
+  <%= link_to account_url do %><i class="fa fa-home"></i> На головну<% end %>
+  <span>/</span>
+  <%= link_to admin_url do %><i class="fa fa-cogs"></i> Адміністрування<% end %>
+  <span>/</span>
+  <%= link_to exch_nodes_path do %><i class="fa fa-exchange"></i> Вузли обміну<% end %>
+  <span>/</span>
+  <span>Новий вузол</span>
+</div>
 
 <%= render 'form', exch_node: @exch_node %>
-
-<%= link_to 'Back', exch_nodes_path %>

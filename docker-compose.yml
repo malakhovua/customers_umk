@@ -1,0 +1,66 @@
+services:
+  web:
+    build: .
+    command: bundle exec rails s -b '0.0.0.0'
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/customers_umk
+    depends_on:
+      - postgres_db
+    develop:
+      watch:
+        - action: rebuild
+          path: .
+    deploy:
+      resources:
+        limits:
+          memory: 2G #
+  postgres_db:
+    image: postgres:16
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: umkdev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Rtyuehe19
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  cron:
+    build: .
+    volumes:
+      - .:/customers_umk
+    working_dir: /customers_umk
+    environment:
+      RAILS_ENV: development
+      DISABLE_SPRING: 1
+    command: >
+      bash -c "
+        bundle install --path /usr/local/bundle &&
+        mkdir -p /customers_umk/log &&
+        touch /customers_umk/log/cron.log &&
+        touch /customers_umk/log/cron_error.log &&
+        bundle exec whenever --update-crontab --set environment=development &&
+        service cron start &&
+        tail -f /customers_umk/log/cron.log /customers_umk/log/cron_error.log
+      "
+    depends_on:
+      postgres_db:
+        condition: service_started
+        required: true
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: malakhovua@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: D28m12g2006
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres_db
+
+volumes:
+  pgdata:

@@ -1,10 +1,12 @@
 class OrdersController < ApplicationController
 
+  layout 'order'
+
   include CurrentCart
 
   before_action :set_cart
 
-  before_action :ensure_cart_isnt_empty, only: :new
+  before_action :ensure_cart_is_not_empty, only: :new
   before_action :initialize_collections, only: [:new, :create, :update]
   before_action :set_order, only: [:show, :edit, :update, :destroy]
 
@@ -12,10 +14,13 @@ class OrdersController < ApplicationController
   # GET /orders.json
   def index
     unless helpers.current_user_admin
-      @orders = Order.all.order('id DESC').where("user_id = #{helpers.current_user.id}").page params[:page]
+      @orders = Order.all.order('id DESC').where("user_id = #{helpers.current_user.id}")
     else
-      @orders = Order.all.order('id DESC').page params[:page]
+      @orders = Order.all.order('id DESC')
     end
+    @orders = @orders.where(client_id: params[:client_id]) if params[:client_id].present?
+    @orders = @orders.where(return: params[:return] == 'true') if params[:return].present?
+    @orders = @orders.page params[:page]
   end
 
   # GET /orders/1
@@ -28,7 +33,7 @@ class OrdersController < ApplicationController
     if @cart.client_id.nil?
       respond_to do |format|
         format.html { redirect_to @cart,
-                                  notice: 'выберите покупателя.' }
+                                  notice: 'Оберіть клієнта-покупця.' }
       end
       return
     end
@@ -51,10 +56,11 @@ class OrdersController < ApplicationController
     respond_to do |format|
       if @order.save
         Cart.destroy(session[:cart_id])
-        session[:cart_id] = nil
+
+        @cart.delete
+
         OrderMailer.received(@order).deliver_later
-        format.html { redirect_to customer_index_url,
-                                  notice: 'Благодарим за Ваш заказ.' }
+        format.html { redirect_to orders_url}
         format.json { render :show, status: :created, location: @order }
       else
         format.html { render :new }
@@ -66,9 +72,18 @@ class OrdersController < ApplicationController
   # PATCH/PUT /orders/1
   # PATCH/PUT /orders/1.json
   def update
+
+    if @order.server_unf.present?
+      respond_to do |format|
+        format.html { redirect_to orders_url,
+                                  alert: 'Документ відправлено в базу 1С. Операція неможлива.' }
+      end
+      return
+    end
+
     respond_to do |format|
       if @order.update(order_params)
-        format.html { redirect_to @order, notice: 'Order was successfully updated.' }
+        format.html { redirect_to @order}
         format.json { render :show, status: :ok, location: @order }
       else
         format.html { render :edit }
@@ -80,16 +95,21 @@ class OrdersController < ApplicationController
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
+
+    if @order.server_unf.present?
+      # Use `alert` for error messages
+      flash[:alert] = 'Документ відправлено в базу 1С. Операція неможлива.'
+      redirect_to orders_url
+      return
+    end
+
     @order.destroy
     respond_to do |format|
-      format.html { redirect_to orders_url, notice: 'Order was successfully destroyed.' }
+      format.html { redirect_to orders_url}
       format.json { head :no_content }
     end
   end
 
-  def add_clients_to_user
-
-  end
 
   private
 
@@ -98,9 +118,9 @@ class OrdersController < ApplicationController
     @clients = Client.all
   end
 
-  def ensure_cart_isnt_empty
+  def ensure_cart_is_not_empty
     if @cart.line_items.empty?
-      redirect_to customer_index_url, notice: 'Ваша корзина пуста'
+      redirect_to customer_index_url
     end
   end
 
@@ -111,6 +131,6 @@ class OrdersController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def order_params
     user = User.find_by(id: session[:user_id])
-    params.require(:order).permit(:client_id, :date, :shipping_address, :comments, :address_id).merge!({ user: user })
+    params.require(:order).permit(:client_id, :date, :shipping_address, :comments, :address_id, :pickup, :certificate, :postponement, :return, :return_item).merge!({ user: user })
   end
 end

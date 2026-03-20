@@ -5,21 +5,16 @@
         <h5 class="mb-0"><a href="#" class="text-dark d-inline-block align-middle"><%= line_item.product.title %></a>
           <% product_catalog = Product.find_by(unf_id: line_item.product.unf_parent_id) %>
         </h5>
-        <span class="text-muted font-weight-normal font-italic d-block">Категория: <%= product_catalog.nil? ? "" : product_catalog.title %></span>
+        <span class="text-muted font-weight-normal font-italic d-block">Категорія: <%= product_catalog.nil? ? "" : product_catalog.title %></span>
       </div>
     </div>
   </th>
   <th scope="row" class="align-middle">
-    <%= text_field_tag("comment" + line_item.id.to_s, line_item.comment, class: "form-control", :onchange => "inputFieldOnChange()") %>
+    <%= text_field_tag("comment" + line_item.id.to_s, line_item.comment, class: "form-control", :onchange => "lineItemFieldOnChange()") %>
   </th>
   <td class="align-middle"><strong><%= line_item.pack.nil? ? line_item.product[:weight] : line_item.pack[:weight] %></td>
   <% unless line_item.pack.nil? %>
-    <% packs_arr = Product.get_packs_product(line_item.product.id, 0, 0).to_hash %>
-    <% packs = [] %>
-    <% packs_arr.each do |p| %>
-      <% packs.push(Pack.find(p['pack_id'])) %>
-    <% end %>
-    <td class="align-middle"><%= select_tag 'packs' + line_item.id.to_s, options_from_collection_for_select(packs, 'id', 'name', line_item.pack.id), class: "form-control", :onchange => "inputFieldOnChange()" %></td>
+    <td class="align-middle"><%= select_tag 'packs' + line_item.id.to_s, options_from_collection_for_select(line_item_packs(line_item), 'id', 'name', line_item.pack.id), class: "form-control", :onchange => "lineItemFieldOnChange()" %></td>
   <% else %>
     <td class="align-middle"></td>
   <% end %>
@@ -28,7 +23,7 @@
     </td>
   <% else %>
     <td class="align-middle">
-      <strong id="cart_onchange"><%= number_field_tag 'qty' + line_item.id.to_s, line_item.quantity, :step => 0.01, class: "form-control", :onchange => "inputFieldOnChange()" %></strong>
+      <strong id="cart_onchange"><%= number_field_tag 'qty' + line_item.id.to_s, line_item.quantity, :step => 0.01, class: "form-control", :onchange => "lineItemFieldOnChange()" %></strong>
     </td>
   <% end %>
   <% if line_item.amount == 0 || line_item.amount == nil %>
@@ -36,7 +31,7 @@
     </td>
   <% else %>
     <td class="align-middle">
-      <strong id="cart_onchange"><%= number_field_tag 'amount' + line_item.id.to_s, line_item.amount, :step => 1, class: "form-control", :onchange => "inputFieldOnChange()" %></strong>
+      <strong id="cart_onchange"><%= number_field_tag 'amount' + line_item.id.to_s, line_item.amount, :step => 1, class: "form-control", :onchange => "lineItemFieldOnChange()" %></strong>
     </td>
   <% end %>
   <td class="align-middle">
@@ -45,10 +40,11 @@
     </div>
   </td>
   <td class="align-middle">
-    <strong id="cart_onchange_chkbx"> <%= check_box_tag 'stick' + line_item.id.to_s, "", line_item.stick, :onclick => "boxDisable();" %></strong>
+    <strong id="cart_onchange_chkbx"> <%= check_box_tag 'stick' + line_item.id.to_s, "", line_item.stick, :onclick => "lineItemFieldOnChange();" %></strong>
   </td>
   <td class="align-middle">
-    <strong><%= sprintf("%0.02f грн.", Product.get_price(line_item.product.id,@cart.client.pricetype_id, line_item.pack.nil? ? nil : line_item.pack.id )) %></strong></td>
+    <strong><%= sprintf("%0.02f грн.", @cart.client.nil? ? 0 :
+                        Product.get_price(line_item.product.id,@cart.client.pricetype, line_item.pack.nil? ? nil : line_item.pack.id )) %></strong></td>
   <% unit_ref = Unit.find(line_item.unit_id) %>
   <td class="align-middle"><strong><%= unit_ref.name %></strong></td>
   <td class="align-middle">

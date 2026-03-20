@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="uk" style="height:100%; margin:0; padding:0;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Вхід — Український М'ясокомбінат</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      width: 100%;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden;
+      background: #F0F8FF;
+    }
+  </style>
+</head>
+<body>
+  <%= yield %>
+</body>
+</html>

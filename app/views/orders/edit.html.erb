@@ -1,13 +1,13 @@
-
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><%= link_to 'Просмотр', @order, class: "btn btn-link", style: "font-size: 20px"%> </li>
-    <li class="breadcrumb-item"><%= link_to 'К списку заказов', orders_path, class: "btn btn-link" , style: "font-size: 20px"%></li>
-  </ol>
-</nav>
-<div class="container">
-  <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
-<h1>Редактирование заказа</h1>
+<div class="order-page-breadcrumb" style="display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap;">
+  <%= link_to @order, style: "display:inline-flex;align-items:center;gap:5px;color:#1A7AAF;text-decoration:none;font-weight:600;padding:5px 14px;border-radius:20px;background:rgba(26,122,175,0.07);border:1px solid rgba(26,122,175,0.18);font-family:'Montserrat',sans-serif;font-size:13px;" do %>
+    <i class="fa fa-eye"></i> Перегляд
+  <% end %>
+  <%= link_to carts_url, style: "display:inline-flex;align-items:center;gap:5px;color:#1A7AAF;text-decoration:none;font-weight:600;padding:5px 14px;border-radius:20px;background:rgba(26,122,175,0.07);border:1px solid rgba(26,122,175,0.18);font-family:'Montserrat',sans-serif;font-size:13px;" do %>
+    <i class="fa fa-shopping-cart"></i> Поточні покупки
+  <% end %>
+</div>
+<div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:#0B2A3D;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+  <span style="display:inline-block;width:5px;height:22px;background:linear-gradient(180deg,#3AA0D8,#1A7AAF);border-radius:3px;"></span>
+  Редагувати замовлення
+</div>
 <%= render 'form', order: @order %>
-</div>
-</div>

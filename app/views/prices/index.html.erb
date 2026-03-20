@@ -1,41 +1,300 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><%= link_to 'На главную', account_url, class: "btn btn-link", style: "font-size: 20px"%></li>
-    <li class="breadcrumb-item"><%= link_to 'Андминистрирование', admin_url, class: "btn btn-link", style: "font-size: 20px"%></li>
-  </ol>
-</nav>
-<p id="notice"><%= notice %></p>
-<h4>Цены</h4>
-<table class="table table-bordered">
-  <thead class="table table-dark">
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+    }
+    .pr-breadcrumb {
+        display: flex; align-items: center; gap: 6px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .pr-breadcrumb a {
+        display: inline-flex; align-items: center; gap: 5px; color: var(--azure);
+        text-decoration: none; font-weight: 600; padding: 6px 14px; border-radius: 20px;
+        font-size: 13px; background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        font-family: 'Montserrat', sans-serif; transition: background 0.2s;
+    }
+    .pr-breadcrumb a:hover { background: rgba(26,122,175,0.14); text-decoration: none; color: var(--azure); }
+    .pr-breadcrumb span { color: var(--muted); font-size: 13px; font-family: 'Montserrat', sans-serif; }
+    .pr-notice {
+        background: rgba(14,112,64,0.08); border: 1px solid rgba(14,112,64,0.2);
+        border-radius: 10px; padding: 10px 16px; color: #0E7040;
+        font-size: 13px; margin-bottom: 16px; font-family: 'Montserrat', sans-serif;
+    }
+    .pr-page-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+    }
+    .pr-page-title {
+        font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 800;
+        color: var(--text); display: flex; align-items: center; gap: 10px;
+    }
+    .pr-page-title::before {
+        content: ''; display: inline-block; width: 5px; height: 24px;
+        background: linear-gradient(180deg, var(--azure-light), var(--azure)); border-radius: 3px;
+    }
+    .pr-btn-new {
+        display: inline-flex; align-items: center; gap: 7px; padding: 9px 20px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border: none; border-radius: 10px; color: #fff; font-size: 13px; font-weight: 700;
+        font-family: 'Montserrat', sans-serif; text-decoration: none;
+        transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 3px 12px rgba(26,122,175,0.25);
+    }
+    .pr-btn-new:hover { opacity: 0.92; transform: translateY(-1px); color: #fff; text-decoration: none; }
+    .pr-pagination {
+        display: flex; justify-content: center; padding: 16px 0 8px;
+    }
+    .pr-pagination a, .pr-pagination a:visited, .pr-pagination a:link { color: var(--azure-light); text-decoration: none; }
+    .pr-pagination .pagination { display: flex; flex-wrap: wrap; align-items: center; list-style: none; padding-left: 0; margin: 0; gap: 4px; }
+    .pr-pagination .pagination .page-item { display: inline-flex; list-style: none; }
+    .pr-pagination .pagination .page-item .page-link {
+        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        color: var(--azure-light); border-radius: 10px; font-family: 'Montserrat', sans-serif;
+        font-size: 13px; font-weight: 600; padding: 7px 13px; text-decoration: none;
+        transition: background 0.2s, transform 0.15s;
+        display: inline-flex; align-items: center; min-width: 36px; justify-content: center;
+    }
+    .pr-pagination .pagination .page-item .page-link:hover { background: rgba(26,122,175,0.15); transform: scale(1.06); }
+    .pr-pagination .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border-color: var(--azure); color: #fff; box-shadow: 0 4px 12px rgba(26,122,175,0.28); cursor: default;
+    }
+    .pr-pagination .pagination .page-item.disabled .page-link { opacity: 0.5; cursor: not-allowed; }
+    .pr-table-wrap {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; overflow-x: auto;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.07);
+        margin-bottom: 8px; -webkit-overflow-scrolling: touch;
+    }
+    .pr-table {
+        width: 100%; min-width: 700px; border-collapse: collapse;
+        font-size: 13px; font-family: 'Montserrat', sans-serif;
+    }
+    .pr-table thead tr { background: linear-gradient(135deg, #E0F2FF, #C8E8FA); border-bottom: 2px solid var(--border); }
+    .pr-table thead th {
+        padding: 11px 14px; font-size: 10px; letter-spacing: 0.12em;
+        text-transform: uppercase; color: var(--azure); font-weight: 700; white-space: nowrap;
+        position: sticky; top: 0; background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        z-index: 2; box-shadow: 0 2px 0 var(--border); text-align: left;
+    }
+    .pr-table tbody tr { border-bottom: 1px solid rgba(186,224,245,0.4); transition: background 0.15s; }
+    .pr-table tbody tr:last-child { border-bottom: none; }
+    .pr-table tbody tr:hover { background: rgba(26,122,175,0.04); }
+    .pr-table td { padding: 10px 14px; color: var(--text); vertical-align: middle; }
+    .pr-muted { color: var(--muted); font-size: 12px; }
+    .pr-badge-deleted {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600;
+        background: rgba(192,57,43,0.09); color: var(--red);
+        border: 1px solid rgba(192,57,43,0.20);
+    }
+    .pr-action {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 30px; height: 30px; border-radius: 8px; font-size: 13px;
+        text-decoration: none; transition: background 0.2s, transform 0.15s;
+    }
+    .pr-action-show   { color: var(--azure); background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.15); }
+    .pr-action-show:hover   { background: rgba(26,122,175,0.14); transform: scale(1.08); color: var(--azure); text-decoration: none; }
+    .pr-action-edit   { color: #0E7490; background: rgba(14,116,144,0.07); border: 1px solid rgba(14,116,144,0.15); }
+    .pr-action-edit:hover   { background: rgba(14,116,144,0.14); transform: scale(1.08); color: #0E7490; text-decoration: none; }
+    .pr-action-delete { color: var(--red); background: rgba(192,57,43,0.07); border: 1px solid rgba(192,57,43,0.15); }
+    .pr-action-delete:hover { background: rgba(192,57,43,0.14); transform: scale(1.08); color: var(--red); text-decoration: none; }
+
+    /* ===== ФІЛЬТРИ ===== */
+    .pr-filter-wrap {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; padding: 16px 20px;
+        box-shadow: 0 2px 8px rgba(26,122,175,0.06);
+        margin-bottom: 16px;
+    }
+    .pr-filter-title {
+        font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+        color: var(--muted); font-weight: 700; font-family: 'Montserrat', sans-serif;
+        margin-bottom: 12px;
+    }
+    .pr-filter-grid {
+        display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;
+    }
+    .pr-filter-item {
+        display: flex; flex-direction: column; gap: 5px;
+        width: 260px; min-width: 260px;
+    }
+    .pr-filter-item label {
+        font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--azure); font-weight: 700; font-family: 'Montserrat', sans-serif;
+    }
+    .pr-filter-select {
+        width: 100%; padding: 8px 30px 8px 10px; font-size: 13px;
+        font-family: 'Montserrat', sans-serif; color: var(--text);
+        background: var(--bg); border: 1.5px solid var(--border);
+        border-radius: 10px; outline: none; cursor: pointer;
+        transition: border-color .2s, box-shadow .2s;
+        -webkit-appearance: none; -moz-appearance: none; appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231A7AAF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat; background-position: right 10px center;
+        box-sizing: border-box;
+    }
+    .pr-filter-select:focus { border-color: var(--azure-light); box-shadow: 0 0 0 3px rgba(26,122,175,0.10); }
+    .pr-filter-btn {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer;
+        font-size: 13px; font-weight: 600; font-family: 'Montserrat', sans-serif;
+        transition: opacity 0.2s, transform 0.15s;
+    }
+    .pr-filter-btn-apply {
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        color: #fff; box-shadow: 0 3px 10px rgba(26,122,175,0.25);
+    }
+    .pr-filter-btn-apply:hover { opacity: 0.9; transform: translateY(-1px); }
+    .pr-filter-btn-reset {
+        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        color: var(--azure); text-decoration: none;
+    }
+    .pr-filter-btn-reset:hover { background: rgba(26,122,175,0.14); }
+
+    /* Чекбокс фільтр */
+    .pr-filter-check {
+        display: flex; align-items: center; gap: 8px;
+        padding: 9px 14px;
+        background: rgba(26,122,175,0.05);
+        border: 1.5px solid rgba(26,122,175,0.18);
+        border-radius: 10px; cursor: pointer;
+        font-family: 'Montserrat', sans-serif; font-size: 13px;
+        font-weight: 600; color: var(--text);
+        user-select: none; transition: background 0.2s, border-color 0.2s;
+        white-space: nowrap;
+    }
+    .pr-filter-check:hover { background: rgba(26,122,175,0.10); border-color: var(--azure-light); }
+    .pr-filter-check input[type="checkbox"] {
+        width: 16px; height: 16px; accent-color: var(--azure);
+        cursor: pointer; flex-shrink: 0;
+    }
+
+    @media (max-width: 600px) {
+        .pr-filter-item { width: 100%; min-width: 100%; }
+    }
+</style>
+
+<div class="pr-breadcrumb">
+  <%= link_to account_url do %><i class="fa fa-home"></i> На головну<% end %>
+  <span>/</span>
+  <%= link_to admin_url do %><i class="fa fa-cogs"></i> Адміністрування<% end %>
+
+</div>
+
+<% if notice.present? %>
+  <div class="pr-notice"><%= notice %></div>
+<% end %>
+
+<div class="pr-page-header">
+  <div class="pr-page-title">Ціни</div>
+  <%= link_to new_price_path, class: 'pr-btn-new' do %>
+    <i class="fa fa-plus"></i> Нова ціна
+  <% end %>
+</div>
+
+<%# ФІЛЬТРИ %>
+<div class="pr-filter-wrap">
+  <div class="pr-filter-title"><i class="fa fa-filter"></i> Встановити фільтр:</div>
+  <%= form_tag prices_path, method: :get do %>
+    <div class="pr-filter-grid">
+      <div class="pr-filter-item">
+        <label>Продукція</label>
+        <%= select_tag :product_id,
+                       options_from_collection_for_select(Product.order(:title).where(is_folder:[false, nil]), :id, :title, params[:product_id]),
+                       include_blank: 'Всі продукти',
+                       class: 'pr-filter-select' %>
+      </div>
+     <!-- <div class="pr-filter-item">
+        <label>Група продукції</label>
+        <%= select_tag :product_group_id,
+                       options_for_select(
+                         Product.where(is_folder: true).order(:parent_name).map { |p| [p.parent_name, p.unf_parent_id] },
+                         params[:product_group_id]
+                       ),
+                       include_blank: 'Всі групи',
+                       class: 'pr-filter-select' %>
+      </div>-->
+      <div class="pr-filter-item">
+        <label>Вид ціни</label>
+        <%= select_tag :pricetype_id,
+                       options_from_collection_for_select(Pricetype.order(:name), :id, :name, params[:pricetype_id]),
+                       include_blank: 'Всі види цін',
+                       class: 'pr-filter-select' %>
+      </div>
+      <button type="submit" class="pr-filter-btn pr-filter-btn-apply">
+        <i class="fa fa-search"></i> Застосувати
+      </button>
+      <%= link_to prices_path, class: 'pr-filter-btn pr-filter-btn-reset' do %>
+        <i class="fa fa-times"></i> Скинути
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="pr-pagination">
+  <%= paginate @prices %>
+</div>
+
+<div class="pr-table-wrap">
+  <table class="pr-table">
+    <thead>
     <tr>
-      <th>Период</th>
-      <th>Продукция</th>
+      <th>Період</th>
+      <th>Продукція</th>
+      <th>Група</th>
+      <th>Група id</th>
       <th>Упаковка</th>
-      <th>Единица</th>
-      <th>Вид цены</th>
-      <th>Цена</th>
+      <th>Одиниця</th>
+      <th>Вид ціни</th>
+      <th>Видалено</th>
+      <th>Ціна</th>
       <th colspan="3"></th>
     </tr>
-  </thead>
-  <tbody>
+    </thead>
+    <tbody>
     <% @prices.each do |price| %>
       <tr>
-        <td><%= price.period%></td>
-        <td><%= price.product.nil? ? "" : price.product.title %></td>
-        <td><%= price.pack.nil? ? "" : price.pack.name %></td>
-        <td><%= price.unit_product.nil? ? "" : price.unit_product.name %></td>
-        <td><%= price.pricetype.nil? ? "" : price.pricetype.name %></td>
-        <td><%= price.value %></td>
-        <td><%= link_to 'Show', price %></td>
-        <td><%= link_to 'Edit', edit_price_path(price) %></td>
-        <td><%= link_to 'Destroy', price, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= price.period %></td>
+        <td><%= price.product.nil? ? '' : price.product.title %></td>
+        <td class="pr-muted"><%= price.product.nil? ? '' : price.product.parent_name %></td>
+        <td class="pr-muted"><%= price.product.nil? ? '' : price.product.unf_parent_id %></td>
+        <td><%= price.pack.nil? ? '' : price.pack.name %></td>
+        <td><%= price.unit_product.nil? ? '' : price.unit_product.name %></td>
+        <td><%= price.pricetype.nil? ? '' : price.pricetype.name %></td>
+        <td>
+          <% unless price.pricetype.nil? || !price.pricetype.deletion_mark %>
+            <span class="pr-badge-deleted"><i class="fa fa-trash"></i> Так</span>
+          <% end %>
+        </td>
+        <td><strong><%= price.value %></strong></td>
+        <td>
+          <%= link_to price, class: 'pr-action pr-action-show', title: 'Показати' do %>
+            <i class="fa fa-eye"></i>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to edit_price_path(price), class: 'pr-action pr-action-edit', title: 'Редагувати' do %>
+            <i class="fa fa-pencil"></i>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to price, method: :delete, data: { confirm: 'Ви впевнені?' }, class: 'pr-action pr-action-delete', title: 'Видалити' do %>
+            <i class="fa fa-trash"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</div>
 
-<br>
-
-<%= link_to 'New Price', new_price_path %>
-<%= paginate @prices%>
+<div class="pr-pagination">
+  <%= paginate @prices %>
+</div>

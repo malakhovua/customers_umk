@@ -29,9 +29,13 @@ Rails.application.routes.draw do
   get 'admin/addresse_1c83' => 'admin#addresses_1c83', :as => :addresses_1c383
   get 'admin/access_groups_1c83'=>'admin#access_groups_1c83', :as => :access_groups_1c83
   get 'admin/product_exceptions_1c83' => 'admin#product_exceptions_1c83', :as => :product_exceptions_1c83
+  get 'admin/all_data_1c83' => 'admin#all_data_1c83', :as => :all_data_1c83
 
+  get "customer/products_content" => 'customer#products_content', :as => :products_content
 
   get "line_items/modal_product_qty" => 'line_items#modal_product_qty', :as => :modal_product_qty
+  delete "line_items/destroy_from_pop_cart" => 'line_items#destroy_from_pop_cart', :as => :destroy_from_pop_cart
+
   get "products/return_child_products" => 'products#return_child_products', :as => :return_child_products
   post "products/return_subdirectory/:group_id/:top" => 'products#return_subdirectory', :as => :return_subdirectory
   get "products/select_group_product" => 'products#select_group_product',   :as => :select_group_product

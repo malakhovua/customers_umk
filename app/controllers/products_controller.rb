@@ -6,7 +6,9 @@ class ProductsController < ApplicationController
   # GET /products.json
   def index
     ensure_an_admin_role
-    @products = Product.order(:parent_name).page params[:page]
+    @products = Product.order(:parent_name,:title)
+    @products = @products.where(parent_name: params[:parent_name]) if params[:parent_name].present?
+    @products = @products.page params[:page]
   end
 
   # GET /products/1
@@ -66,8 +68,8 @@ class ProductsController < ApplicationController
   def return_child_products
 
     @current_id = params[:current_id]
-    level  =  params[:way] == "down" ? params[:level].to_i + 1 : params[:level].to_i - 1
-    @level      = level
+    level = params[:way] == "down" ? params[:level].to_i + 1 : params[:level].to_i - 1
+    @level = level
     @level_arr = params[:level_arr]
     @level_arr[level] = params[:current_id]
 
@@ -75,15 +77,15 @@ class ProductsController < ApplicationController
       format.html
       format.js
     end
-  end
 
+  end
 
   def return_subdirectory
 
     @current_group_id = params[:group_id]
     @top = params[:top]
-    @current_group_id_element = '#' + @current_group_id
-    @id_element_sub_div = 'sub_' + @current_group_id
+    @current_group_id_element = "##{@current_group_id}"
+    @id_element_sub_div = "sub_#{@current_group_id}"
     @groups = Product.get_childs_product(@current_group_id)
 
     respond_to do |format|
@@ -91,6 +93,8 @@ class ProductsController < ApplicationController
     end
 
   end
+
+
 
   def select_group_product
     @group_name = params[:group_name]
@@ -101,14 +105,14 @@ class ProductsController < ApplicationController
     end
   end
 
-
   private
-    # Use callbacks to share common setup or constraints between actions.
+
+  # Use callbacks to share common setup or constraints between actions.
   def set_product
     @product = Product.find(params[:id])
   end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
+  # Never trust parameters from the scary internet, only allow the white list through.
   def product_params
     params.require(:product).permit(:title, :description, :image_url, :price, :is_folder, :parent_id)
   end

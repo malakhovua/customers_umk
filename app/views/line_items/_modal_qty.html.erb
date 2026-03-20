@@ -1,38 +1,162 @@
+<style>
+    /* ===== MODAL QTY ===== */
+    .mqty-body {
+        padding: 20px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
 
-<%= form_tag line_items_path({:id => @product_id, :pack_id => @pack_id}), method: :post, remote: true do %>
-  <div class="modal-dialog" role="document">
+    .mqty-row {
+        display: flex;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .mqty-input {
+        flex: 1;
+        background: #F0F8FF;
+        border: 1.5px solid #BAE0F5;
+        border-radius: 10px;
+        color: #0B2A3D;
+        padding: 11px 14px;
+        font-size: 16px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+        -webkit-appearance: none;
+        min-width: 0;
+    }
+
+    .mqty-input:focus {
+        border-color: #3AA0D8;
+        box-shadow: 0 0 0 3px rgba(26,122,175,0.12);
+        background: #fff;
+    }
+
+    .mqty-select {
+        background: #F0F8FF;
+        border: 1.5px solid #BAE0F5;
+        border-radius: 10px;
+        color: #0B2A3D;
+        padding: 11px 32px 11px 14px;
+        font-size: 15px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+        cursor: pointer;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231A7AAF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+    }
+
+    .mqty-select:focus {
+        border-color: #3AA0D8;
+        box-shadow: 0 0 0 3px rgba(26,122,175,0.12);
+        background-color: #fff;
+    }
+
+    .mqty-textarea {
+        width: 100%;
+        background: #F0F8FF;
+        border: 1.5px solid #BAE0F5;
+        border-radius: 10px;
+        color: #0B2A3D;
+        padding: 11px 14px;
+        font-size: 14px;
+        font-family: 'Montserrat', sans-serif;
+        outline: none;
+        resize: vertical;
+        min-height: 80px;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+    .mqty-textarea:focus {
+        border-color: #3AA0D8;
+        box-shadow: 0 0 0 3px rgba(26,122,175,0.12);
+        background: #fff;
+    }
+
+    .mqty-textarea::placeholder { color: rgba(74,122,150,0.5); }
+
+    .mqty-alert {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        background: rgba(240,167,0,0.1);
+        border: 1px solid rgba(240,167,0,0.3);
+        border-radius: 10px;
+        color: #8a6500;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+    }
+
+    .mqty-alert::before {
+        content: '\f071';
+        font-family: 'FontAwesome';
+        font-size: 14px;
+        color: #F0A700;
+        flex-shrink: 0;
+    }
+</style>
+
+<%= form_tag line_items_path({id: @product_id, pack_id: @pack_id}), method: :post, remote: true do %>
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
+
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"><%= @product_name %></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <h5 class="modal-title">
+          <%= @product_name %>
+          <% if @pack_name.present? %>
+            <span style="font-size:13px; font-weight:500; color:#4A7A96; margin-left:4px;">(<%= @pack_name %>)</span>
+          <% end %>
+        </h5>
+        <button type="button" class="close" id="close-modal-x" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-      <form>
-        <div class="form-row">
-          <div class="col">
-            <%= number_field_tag 'qty', '',  :step => 0.01, class: "form-control", id: "num_field"%>
-          </div>
-          <div class="col">
-            <%= select_tag "units", options_from_collection_for_select(Unit.all, "id", "name", current_user.unit_id.nil? ? "1" : current_user.unit_id),
-                           {:class => 'form-control', :id => 'units'} %>
-          </div>
+
+      <div class="mqty-body">
+        <div class="mqty-row">
+          <%= number_field_tag 'qty', '',
+                               step: 0.01,
+                               class: "mqty-input",
+                               id: "num_field",
+                               required: true,
+                               min: 0.01,
+                               placeholder: "Кількість" %>
+
+          <%= select_tag "units",
+                         options_from_collection_for_select(
+                           Unit.all, "id", "name",
+                           current_user.unit_id.nil? ? "1" : current_user.unit_id
+                         ),
+                         class: 'mqty-select',
+                         id: 'units' %>
         </div>
-          <br>
-        <div class="form-floating">
-          <%=text_area_tag "comment", "",class:"form-control", id:"floatingTextarea", placeholder:"Комментарий..." %>
-          </div>
-        </form>
+
+        <%= text_area_tag "comment", "",
+                          class: "mqty-textarea",
+                          id: "floatingTextarea",
+                          placeholder: "Коментар..." %>
+
+        <% if @has_line_item %>
+          <div class="mqty-alert">Товар вже додано у кошик!</div>
+        <% end %>
       </div>
-      <% if @has_line_item %>
-        <div class="modal-body" style="color: #B00100">Данный товар уже в корзине!!!</div>
-      <%end%>
+
       <div class="modal-footer">
-        <%= submit_tag 'В корзину', class: 'btn btn-primary', id:'inCartSubmit' %>
-        <%= submit_tag 'Закрыть', class: 'btn btn-primary', :data => {:dismiss => "modal"} %>
+        <%= submit_tag 'В кошик', class: 'btn btn-primary' %>
+        <button type="button" class="btn btn-secondary" id="close-modal-btn">
+          <i class="fa fa-times"></i> Закрити
+        </button>
       </div>
+
     </div>
   </div>
 <% end %>
-

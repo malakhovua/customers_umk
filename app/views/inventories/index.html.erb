@@ -1,128 +1,680 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><%= link_to 'На головну', account_url, class: "btn btn-link", style: "font-size: 20px" %></li>
-  </ol>
-</nav>
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+        --green:        #0E7040;
+    }
 
-<p id="notice"><%= notice %></p>
+    /* ===== BREADCRUMB ===== */
+    .inv-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 24px;
+        font-size: 13px;
+        color: var(--muted);
+    }
 
-<h1>Інвентаризації</h1>
+    .inv-breadcrumb a {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--azure);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s;
+    }
 
+    .inv-breadcrumb a:hover { color: var(--azure-light); }
+
+    /* ===== ЗАГОЛОВОК СТОРІНКИ ===== */
+    .inv-page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .inv-page-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: 0.02em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .inv-page-title::before {
+        content: '';
+        display: inline-block;
+        width: 5px;
+        height: 26px;
+        background: linear-gradient(180deg, var(--azure-light), var(--azure));
+        border-radius: 3px;
+    }
+
+    /* ===== ПАНЕЛЬ ФІЛЬТРІВ ===== */
+    .inv-filter-panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 20px 22px;
+        margin-bottom: 22px;
+        box-shadow: 0 2px 10px rgba(26,122,175,0.06);
+    }
+
+    .inv-filter-title {
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+    .inv-filter-title::before {
+        content: '';
+        display: inline-block;
+        width: 14px; height: 2px;
+        background: var(--azure);
+        border-radius: 2px;
+    }
+
+    .inv-filter-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .inv-filter-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex: 0 0 auto;
+        width: 260px;
+    }
+
+    @media (max-width: 900px) {
+        .inv-filter-item {
+            width: 220px;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .inv-filter-item {
+            width: 100%;
+        }
+    }
+
+    .inv-select,
+    .inv-date {
+        flex: 1;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+        background: var(--bg);
+        border: 1px solid var(--border-soft);
+        border-radius: 10px;
+        color: var(--text);
+        padding: 8px 12px;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231A7AAF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 30px;
+        cursor: pointer;
+    }
+
+    .inv-date {
+        background-image: none;
+        padding-right: 12px;
+        cursor: default;
+    }
+
+    .inv-select:focus,
+    .inv-date:focus {
+        border-color: var(--azure-light);
+        box-shadow: 0 0 0 3px rgba(26,122,175,0.10);
+    }
+
+    .inv-clear-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px; height: 28px;
+        background: rgba(192,57,43,0.07);
+        border: 1px solid rgba(192,57,43,0.15);
+        border-radius: 7px;
+        color: rgba(139,26,26,0.6);
+        font-size: 13px;
+        text-decoration: none;
+        flex-shrink: 0;
+        transition: background 0.2s, color 0.2s;
+        cursor: pointer;
+    }
+
+    .inv-clear-btn:hover {
+        background: rgba(192,57,43,0.14);
+        color: var(--red);
+    }
+
+    /* ===== ПАГІНАЦІЯ ===== */
+    .inv-pagination {
+        display: flex;
+        justify-content: center;
+        padding: 10px 0;
+    }
+
+    .inv-pagination a,
+    .inv-pagination a:visited,
+    .inv-pagination a:link {
+        color: #3AA0D8 !important;
+        text-decoration: none !important;
+    }
+
+    .inv-pagination .pagination {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        list-style: none !important;
+        padding-left: 0 !important;
+        margin: 0 !important;
+        gap: 4px !important;
+    }
+
+    .inv-pagination .pagination .page-item {
+        display: inline-flex !important;
+        list-style: none !important;
+    }
+
+    .inv-pagination .pagination .page-item .page-link {
+        background: rgba(26,122,175,0.07) !important;
+        border: 1px solid rgba(26,122,175,0.18) !important;
+        color: #3AA0D8 !important;
+        border-radius: 10px !important;
+        margin: 0 !important;
+        font-family: 'Montserrat', sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        padding: 7px 13px !important;
+        text-decoration: none !important;
+        transition: background 0.2s, transform 0.15s, box-shadow 0.2s !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-width: 36px !important;
+    }
+
+    .inv-pagination .pagination .page-item .page-link:hover {
+        background: rgba(26,122,175,0.15) !important;
+        border-color: #3AA0D8 !important;
+        color: #3AA0D8 !important;
+        transform: scale(1.06) !important;
+        box-shadow: 0 3px 10px rgba(26,122,175,0.15) !important;
+    }
+
+    .inv-pagination .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, #3AA0D8, #1A7AAF) !important;
+        border-color: #1A7AAF !important;
+        color: #fff !important;
+        box-shadow: 0 4px 12px rgba(26,122,175,0.28) !important;
+        transform: none !important;
+        cursor: default !important;
+    }
+
+    .inv-pagination .pagination .page-item.disabled .page-link {
+        background: rgba(26,122,175,0.03) !important;
+        border-color: rgba(26,122,175,0.10) !important;
+        color: var(--muted) !important;
+        opacity: 0.5 !important;
+        cursor: not-allowed !important;
+        transform: none !important;
+    }
+
+    /* ===== ТАБЛИЦЯ ===== */
+    .inv-table-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: visible;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.07);
+        margin-bottom: 22px;
+    }
+
+    .inv-table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .inv-table {
+        width: 100%;
+        min-width: 800px;
+        border-collapse: collapse;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .inv-table thead tr {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+    }
+
+    .inv-table thead th {
+        padding: 13px 14px;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        white-space: nowrap;
+        text-align: left;
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+    }
+
+    /* Фіксований хедер-клон */
+    #inv-table-header-fixed {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        overflow: hidden;
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+        box-shadow: 0 2px 8px rgba(26,122,175,0.12);
+    }
+
+    #inv-table-header-fixed table {
+        border-collapse: collapse;
+        font-size: 11px;
+        font-family: 'Montserrat', sans-serif;
+        width: 100%;
+    }
+
+    #inv-table-header-fixed th {
+        padding: 13px 14px;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        white-space: nowrap;
+        text-align: left;
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+    }
+
+    .inv-table tbody tr {
+        border-bottom: 1px solid rgba(186,224,245,0.4);
+        transition: background 0.18s;
+    }
+
+    .inv-table tbody tr:last-child { border-bottom: none; }
+
+    /* Чергування груп по даті */
+    .inv-table tbody tr.row-group-a { background: #F5F5DC; } /* beige */
+    .inv-table tbody tr.row-group-b { background: #CCFFE5; } /* світло-зелений */
+
+    .inv-table tbody tr.row-group-a:hover { background: #E8E8C8 !important; }
+    .inv-table tbody tr.row-group-b:hover { background: #A8F0CC !important; }
+
+    .inv-table td {
+        padding: 11px 14px;
+        color: var(--text);
+        vertical-align: middle;
+    }
+
+    /* Сума — виділена */
+    .inv-sum {
+        font-weight: 700;
+        color: var(--azure);
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    /* Статус-бейдж */
+    .inv-badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+    }
+
+    .inv-badge-open    { background: rgba(30,120,60,0.1);  color: #1a7840; border: 1px solid rgba(30,120,60,0.2); }
+    .inv-badge-closed  { background: rgba(192,57,43,0.09); color: var(--red); border: 1px solid rgba(192,57,43,0.18); }
+    .inv-badge-default { background: rgba(26,122,175,0.10);  color: var(--azure); border: 1px solid rgba(26,122,175,0.18); }
+
+    /* Дії у таблиці */
+    .inv-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px; height: 32px;
+        border-radius: 8px;
+        font-size: 15px;
+        text-decoration: none;
+        transition: background 0.2s, transform 0.15s;
+    }
+
+    .inv-action-open {
+        color: var(--azure);
+        background: rgba(26,122,175,0.07);
+        border: 1px solid rgba(26,122,175,0.15);
+    }
+
+    .inv-action-open:hover {
+        background: rgba(26,122,175,0.14);
+        transform: scale(1.08);
+    }
+
+    .inv-action-delete {
+        color: var(--red);
+        background: rgba(192,57,43,0.07);
+        border: 1px solid rgba(192,57,43,0.15);
+    }
+
+    .inv-action-delete:hover {
+        background: rgba(192,57,43,0.14);
+        transform: scale(1.08);
+    }
+
+    /* Notice */
+    .inv-notice {
+        background: rgba(30,120,60,0.08);
+        border: 1px solid rgba(30,120,60,0.2);
+        border-radius: 10px;
+        padding: 10px 16px;
+        color: #1a7840;
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+
+    /* Порожня таблиця */
+    .inv-empty {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+    .inv-empty i { font-size: 32px; color: var(--border); display: block; margin-bottom: 10px; }
+</style>
+
+<%# ===== BREADCRUMB ===== %>
+<div class="inv-breadcrumb">
+  <%= link_to account_url do %>
+    <i class="fa fa-home"></i> На головну
+  <% end %>
+  <span>/</span>
+  <span>Інвентаризації</span>
+</div>
+
+<%# ===== NOTICE ===== %>
+<% if notice.present? %>
+  <div class="inv-notice"><%= notice %></div>
+<% end %>
+
+<%# ===== ЗАГОЛОВОК ===== %>
+<div class="inv-page-header">
+  <div class="inv-page-title">Інвентаризації</div>
+</div>
+
+<%# ===== ФІЛЬТРИ (тільки для admin) ===== %>
 <% if current_user.admin? %>
-  <%= form_tag inventories_url, :id => 'form_filter', method: :get do %>
-    <h4 style="color: royalblue">Встановити фільтр:</h4>
+  <%= form_tag inventories_url, id: 'form_filter', method: :get do %>
+    <div class="inv-filter-panel">
+      <div class="inv-filter-title">Фільтр</div>
+      <div class="inv-filter-grid" style="display:flex;flex-wrap:wrap;gap:10px;">
 
-    <div class="row">
-      <div class="col-md-3 mb-2">
-        <%= select_tag "storage_place", options_from_collection_for_select(StoragePlace.all, "id", "title", params['storage_place']), include_blank: 'Оберіть місце зберігання', :class => 'form-control', :id => 'storage_place', :onchange => 'this.form.submit()' %>
-      </div>
-      <div class="col-md-0 mb-1">
-        <a href="#" class="fa fa-times-circle" style="font-size: 20px; color: black; margin-top: 10px; z-index: 100;" onclick="ClearField('storage_place')"></a>
-      </div>
+        <div class="inv-filter-item" style="display:flex;align-items:center;gap:6px;width:240px;min-width:240px;max-width:240px;overflow:hidden;box-sizing:border-box;">
+          <%= select_tag "storage_place",
+                         options_from_collection_for_select(StoragePlace.all, "id", "title", params['storage_place']),
+                         include_blank: 'Місце зберігання',
+                         class: 'inv-select',
+                         id: 'storage_place',
+                         onchange: 'this.form.submit()' %>
+          <a href="#" class="inv-clear-btn" onclick="ClearField('storage_place')">
+            <i class="fa fa-times"></i>
+          </a>
+        </div>
 
-      <div class="col-md-3 mb-2">
-        <%= select_tag "user", options_from_collection_for_select(User.where(:role => 'retailer'), "id", "name", params['user']), include_blank: 'Оберіть відповідальну особу', :class => 'form-control', :id => 'user', :onchange => 'this.form.submit()' %>
-      </div>
-      <div class="col-md-0 mb-1">
-        <a href="#" class="fa fa-times-circle" style="font-size: 20px; color: black; margin-top: 10px; z-index: 100;" onclick="ClearField('user')"></a>
-      </div>
+        <div class="inv-filter-item" style="display:flex;align-items:center;gap:6px;width:240px;min-width:240px;max-width:240px;overflow:hidden;box-sizing:border-box;">
+          <%= select_tag "user",
+                         options_from_collection_for_select(User.where(role: 'retailer'), "id", "name", params['user']),
+                         include_blank: 'Відповідальна особа',
+                         class: 'inv-select',
+                         id: 'user',
+                         onchange: 'this.form.submit()' %>
+          <a href="#" class="inv-clear-btn" onclick="ClearField('user')">
+            <i class="fa fa-times"></i>
+          </a>
+        </div>
 
-      <div class="col-md-3 mb-2">
-        <%= date_field_tag "current_date", params['current_date'], :class => 'form-control', :id => 'current_date', :onchange => 'this.form.submit()' %>
-      </div>
-      <div class="col-md-0 mb-1">
-        <a href="#" class="fa fa-times-circle" style="font-size: 20px; color: black; margin-top: 10px; z-index: 100;" onclick="ClearField('current_date')"></a>
-      </div>
+        <div class="inv-filter-item" style="display:flex;align-items:center;gap:6px;width:240px;min-width:240px;max-width:240px;overflow:hidden;box-sizing:border-box;">
+          <%= date_field_tag "current_date",
+                             params['current_date'],
+                             class: 'inv-date',
+                             id: 'current_date',
+                             onchange: 'this.form.submit()' %>
+          <a href="#" class="inv-clear-btn" onclick="ClearField('current_date')">
+            <i class="fa fa-times"></i>
+          </a>
+        </div>
 
-      <div class="col-md-3 mb-2">
-        <%= select_tag "inv_types", options_for_select(Inventory.inv_types, params['inv_types']), include_blank: 'Оберіть тип інвентаризації', :class => 'form-control', :id => 'inv_types', :onchange => 'this.form.submit()' %>
-      </div>
-      <div class="col-md-0 mb-1">
-        <a href="#" class="fa fa-times-circle" style="font-size: 20px; color: black; margin-top: 10px; z-index: 100;" onclick="ClearField('inv_types')"></a>
-      </div>
+        <div class="inv-filter-item" style="display:flex;align-items:center;gap:6px;width:240px;min-width:240px;max-width:240px;overflow:hidden;box-sizing:border-box;">
+          <%= select_tag "inv_types",
+                         options_for_select(Inventory.inv_types, params['inv_types']),
+                         include_blank: 'Тип інвентаризації',
+                         class: 'inv-select',
+                         id: 'inv_types',
+                         onchange: 'this.form.submit()' %>
+          <a href="#" class="inv-clear-btn" onclick="ClearField('inv_types')">
+            <i class="fa fa-times"></i>
+          </a>
+        </div>
 
-      <div class="col-md-3 mb-2">
-        <%= select_tag "status", options_for_select(Inventory.statuses, params['status']), include_blank: 'Оберіть сатус інвентаризації', :class => 'form-control', :id => 'status', :onchange => 'this.form.submit()' %>
-      </div>
-      <div class="col-md-0 mb-1">
-        <a href="#" class="fa fa-times-circle" style="font-size: 20px; color: black; margin-top: 10px; z-index: 100;" onclick="ClearField('status')"></a>
-      </div>
+        <div class="inv-filter-item" style="display:flex;align-items:center;gap:6px;width:240px;min-width:240px;max-width:240px;overflow:hidden;box-sizing:border-box;">
+          <%= select_tag "status",
+                         options_for_select(Inventory.statuses, params['status']),
+                         include_blank: 'Статус',
+                         class: 'inv-select',
+                         id: 'status',
+                         onchange: 'this.form.submit()' %>
+          <a href="#" class="inv-clear-btn" onclick="ClearField('status')">
+            <i class="fa fa-times"></i>
+          </a>
+        </div>
 
+      </div>
     </div>
-
   <% end %>
 <% end %>
 
-<%= paginate @inventories %>
+<%# ===== ПАГІНАЦІЯ (зверху) ===== %>
+<div class="inv-pagination">
+  <%= paginate @inventories %>
+</div>
 
-<table class="table table-hover table table-bordered">
-  <thead class="sticky-top" style="background-color: aliceblue">
-  <tr>
-    <th scope="col"><label for="firstName">Торгівельна точка:</label>
-      Торгівельна точка
-    </th>
-    <th scope="col">Відповідальна особа</th>
-    <th scope="col">Дата</th>
-    <th scope="col">Номер</th>
-    <th scope="col">Тип</th>
-    <th scope="col" style="min-width: 100px">Сума</th>
-    <% if current_user.admin? %>
-      <th scope="col">Коментар</th>
-    <% end %>
-    <th scope="col">Статус</th>
-    <th scope="col"></th>
-    <% if current_user.admin? %>
-      <th scope="col"></th>
-    <% end %>
-    <th colspan="3"></th>
-  </tr>
-  </thead>
-  <tbody>
-  <% current_date = @inventories.count == 0 ? '' : @inventories[0].date.to_date %>
-  <% current_color = 'beige' %>
-  <% @inventories.each do |inventory| %>
-    <% if current_date != inventory.date.to_date %>
-      <% current_color = current_color == 'beige' ? '#CCFFE5' : 'beige' %>
-    <% end %>
-    <% current_date = inventory.date.to_date %>
-    <tr style="background-color: <%= current_color %>">
-      <td><%= inventory.storage_place.title %></td>
-      <% if inventory.user.nil? %>
-        <td>Не задано</td>
+<%# ===== ТАБЛИЦЯ ===== %>
+<div class="inv-table-wrap">
+  <div class="inv-table-scroll">
+    <table class="inv-table">
+      <thead>
+      <tr>
+        <th>Торговельна точка</th>
+        <th>Відповідальна особа</th>
+        <th>Дата</th>
+        <th>Номер</th>
+        <th>Тип</th>
+        <th>Сума</th>
+        <% if current_user.admin? %>
+          <th>Коментар</th>
+        <% end %>
+        <th>Статус</th>
+        <th colspan="<%= current_user.admin? ? 2 : 1 %>"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% if @inventories.empty? %>
+        <tr>
+          <td colspan="<%= current_user.admin? ? 10 : 8 %>">
+            <div class="inv-empty">
+              <i class="fa fa-inbox"></i>
+              Інвентаризацій не знайдено
+            </div>
+          </td>
+        </tr>
       <% else %>
-        <td><%= inventory.user.name %></td>
+        <% current_date = @inventories[0].date.to_date %>
+        <% group = 'a' %>
+        <% @inventories.each do |inventory| %>
+          <% if current_date != inventory.date.to_date %>
+            <% group = (group == 'a') ? 'b' : 'a' %>
+            <% current_date = inventory.date.to_date %>
+          <% end %>
+          <tr class="row-group-<%= group %>">
+            <td><%= inventory.storage_place.title %></td>
+            <td><%= inventory.user&.name || "Не задано" %></td>
+            <td><%= inventory.date.strftime("%d/%m/%Y") %></td>
+            <td><%= inventory.unf_number %></td>
+            <td><%= inventory.inv_type %></td>
+            <td>
+              <span class="inv-sum">
+                <%= sprintf('%.2f', inventory.sum || 0.0).gsub(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1 ") %> грн.
+              </span>
+            </td>
+            <% if current_user.admin? %>
+              <td><%= inventory.desc %></td>
+            <% end %>
+            <td>
+              <% status_class = case inventory.status
+                                when /відкрит/i then 'inv-badge-open'
+                                when /закрит/i  then 'inv-badge-closed'
+                                else 'inv-badge-default'
+                                end %>
+              <span class="inv-badge <%= status_class %>"><%= inventory.status %></span>
+            </td>
+            <td>
+              <%= link_to edit_inventory_path(inventory), class: "inv-action inv-action-open", title: "Відкрити" do %>
+                <i class="fa fa-file-text-o"></i>
+              <% end %>
+            </td>
+            <% if current_user.admin? %>
+              <td>
+                <%= link_to inventory,
+                            method: :delete,
+                            data: { confirm: 'Ви дійсно бажаєте видалити документ?' },
+                            class: "inv-action inv-action-delete",
+                            title: "Видалити" do %>
+                  <i class="fa fa-trash"></i>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
       <% end %>
-      <td><%= inventory.date.strftime("%d/%m/%Y") %></td>
-      <td><%= inventory.unf_number %></td>
-      <td><%= inventory.inv_type %></td>
-      <td style="font-weight: bold"><%= sprintf('%.2f', inventory.sum.nil? ? 0.0 : inventory.sum).gsub(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1 ") %></td>
-      <% if current_user.admin? %>
-        <td><%= inventory.desc %></td>
-      <% end %>
-      <td><%= inventory.status %></td>
-      <td><%= link_to 'Відкрити', edit_inventory_path(inventory), class: "fa fa-file-text-o", style: "color:  #007bff;" %></td>
-      <% if current_user.admin? %>
-        <td><%= link_to '', inventory, method: :delete, data: { confirm: 'Ви дійсно бажаєте видалити документ?' }, class: "fa fa-trash", style: "color:  #cc0000;" %></td>
-      <% end %>
-    </tr>
-  <% end %>
-  </tbody>
-</table>
-<br>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-<%= paginate @inventories %>
+<%# ===== ПАГІНАЦІЯ (знизу) ===== %>
+<div class="inv-pagination">
+  <%= paginate @inventories %>
+</div>
 
-<script type="text/javascript" charset="utf-8">
+<div id="inv-table-header-fixed"></div>
 
-    //onClick on clear input field
+<script>
     function ClearField(id) {
-
-        var InputField = document.getElementById(id);
-        var FormFilter = document.getElementById('form_filter');
-        InputField.value = "";
-        FormFilter.submit();
+        document.getElementById(id).value = "";
+        document.getElementById('form_filter').submit();
     }
 
+    // ============================================
+    //  ФІКСОВАНИЙ ХЕДЕР ТАБЛИЦІ
+    // ============================================
+    (function() {
+        var fixedHeader = document.getElementById('inv-table-header-fixed');
+        var table = document.querySelector('.inv-table');
+        if (!table || !fixedHeader) return;
+
+        var thead = table.querySelector('thead');
+
+        function syncHeader() {
+            var tableRect = table.getBoundingClientRect();
+            var theadRect = thead.getBoundingClientRect();
+
+            // Показуємо фіксований хедер коли оригінальний виходить за межі екрану
+            if (tableRect.top < 0 && tableRect.bottom > 50) {
+                // Синхронізуємо ширини колонок
+                var origThs = thead.querySelectorAll('th');
+                var fixedTable = fixedHeader.querySelector('table');
+
+                if (!fixedTable) {
+                    // Перший раз — створюємо клон
+                    fixedTable = document.createElement('table');
+                    fixedTable.className = 'inv-table';
+                    var fixedThead = thead.cloneNode(true);
+                    fixedTable.appendChild(fixedThead);
+                    fixedHeader.appendChild(fixedTable);
+                }
+
+                // Синхронізуємо ширини
+                var fixedThs = fixedHeader.querySelectorAll('th');
+                origThs.forEach(function(th, i) {
+                    if (fixedThs[i]) {
+                        fixedThs[i].style.width = th.offsetWidth + 'px';
+                        fixedThs[i].style.minWidth = th.offsetWidth + 'px';
+                    }
+                });
+
+                // Синхронізуємо горизонтальний скрол
+                var scrollEl = document.querySelector('.inv-table-scroll');
+                if (scrollEl) {
+                    fixedHeader.style.left = scrollEl.getBoundingClientRect().left + 'px';
+                    fixedHeader.style.right = (window.innerWidth - scrollEl.getBoundingClientRect().right) + 'px';
+                    fixedTable.style.marginLeft = -scrollEl.scrollLeft + 'px';
+                }
+
+                fixedHeader.style.display = 'block';
+            } else {
+                fixedHeader.style.display = 'none';
+            }
+        }
+
+        window.addEventListener('scroll', syncHeader);
+
+        // Синхронізуємо горизонтальний скрол
+        var scrollEl = document.querySelector('.inv-table-scroll');
+        if (scrollEl) {
+            scrollEl.addEventListener('scroll', syncHeader);
+        }
+
+        window.addEventListener('resize', syncHeader);
+    })();
 </script>
-
-

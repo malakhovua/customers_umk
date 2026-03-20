@@ -3,7 +3,7 @@ class AccessGroupsController < ApplicationController
 
   # GET /access_groups or /access_groups.json
   def index
-    @access_groups = AccessGroup.all
+    @access_groups = AccessGroup.all.page(params[:page])
   end
 
   # GET /access_groups/1 or /access_groups/1.json

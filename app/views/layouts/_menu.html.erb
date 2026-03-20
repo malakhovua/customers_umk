@@ -1,141 +1,546 @@
-<nav class="navbar fixed-top navbar-light" style="background-color: maroon;">
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --azure-dark:   #125A7F;
+        --azure-bright: #0EA5E9;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+        --green:        #0E7040;
+    }
 
-  <%= form_tag(customer_index_path, method: :get, class: 'form-inline', id: 'filter') do %>
-    <div class="dropdown">
-      <button class="btn btn-primary" type="button" data-toggle="dropdown" aria-expanded="false" style="margin-right: 5px">
-        Меню
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" data-offset="2">
-        <div class="inner-dropdown">
-          <%= link_to 'Продукция', customer_index_path, id: '00000000017', class: "dropdown-item", onmouseover: "getMenu('00000000017')" %>
-        </div>
-        <%= link_to 'К списку заказов', orders_url, class: "dropdown-item"%>
-        <%= link_to 'На главную', account_url, class: "dropdown-item" %>
-      </div>
-    </div>
-    <div style="display: flex;margin-right: -20px;">
-      <%= text_field_tag :Product_name, params[:Product_name], placeholder: 'Наименование', class: 'form-control mr-sm-2', tabindex: 1, id: 'search' %>
-      <%= link_to '', customer_index_path, class: 'fa fa-times-circle', style: 'font-size:20px;margin-right:5px;margin-top: 9px;position:relative;
-    left: -33px;color:dark;aria-hidden="true"' %>
-    </div>
-    <div class="row">
-      <!--
-       search product field
-      -->
-      <div class="col">
-        <div style="display: inherit;">
-          <%= submit_tag 'Поиск', name: nil, class: 'btn btn-outline-light' %>
-        </div>
-      </div>
-      <!--
-      end search
-      -->
-      <!--
-      set client block
-      -->
-      <% unless @client_id.nil? %>
-        <% client = Client.find(@client_id) %>
-        <% client_str = client.name + " {" + client.id.to_s + "}" %>
-      <% else %>
-        <% client_str = "" %>
-      <% end %>
-      <div class="col">
-        <div style="display: flex ">
-          <input name="client_id" class="form-control" list="datalistOptions" id="client_input" placeholder="Поиск клинта..." style="width: 500px" value="<%= client_str %>" onChange="updateListProducts()">
-          <a href="#" class="fa fa-times-circle" style="font-size: 20px; color: white; margin-top: 9px;position:relative; margin-left: 5px" onclick="ClearClient()"></a>
-        </div>
+    /* Navbar */
+    .top-navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 997;
+        background: linear-gradient(135deg, #FFFFFF 0%, #F0F8FF 100%);
+        border-bottom: 2px solid var(--border);
+        box-shadow: 0 4px 20px rgba(26,122,175,0.12);
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        height: 70px;
+    }
 
-        <datalist id="datalistOptions">
-          <% clients = current_user.access_group_id.nil? ? [] : Client.where(:access_group_id => current_user.access_group_id).order(:name) %>
-          <%#clients = Client.joins(:asighnclients).order(:name)%>
-          <% clients.each do |cl| %>
-            <option value="<%= cl.name + " {" + cl.id.to_s + "}" %>"></option>
-          <% end %>
-        </datalist>
+    /* Search Form */
+    .navbar-search-form {
+        flex: 1;
+        max-width: 500px;
+        position: relative;
+    }
+
+    .navbar-search-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .navbar-search-input {
+        width: 100%;
+        padding: 11px 45px 11px 16px;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 14px;
+        color: var(--text);
+        background: var(--surface);
+        transition: all 0.3s;
+        font-weight: 500;
+    }
+
+    .navbar-search-input:focus {
+        outline: none;
+        border-color: var(--azure);
+        box-shadow: 0 0 0 3px rgba(26,122,175,0.12);
+    }
+
+    .navbar-search-input::placeholder {
+        color: var(--muted);
+        font-weight: 400;
+    }
+
+    .navbar-search-clear {
+        position: absolute;
+        right: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        background: rgba(192,57,43,0.1);
+        border: 1px solid rgba(192,57,43,0.2);
+        border-radius: 6px;
+        color: #E74C3C;
+        font-size: 14px;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .navbar-search-clear:hover {
+        background: rgba(192,57,43,0.2);
+        transform: scale(1.08);
+        color: #C0392B;
+    }
+
+    /* Right Section */
+    .navbar-right {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-left: auto;
+        margin-right: 20px;
+    }
+
+    /* User Section */
+    .navbar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 12px;
+        background: var(--surface);
+        border: 2px solid var(--border);
+        border-radius: 50px;
+        text-decoration: none;
+        transition: all 0.3s;
+        box-shadow: 0 2px 8px rgba(26,122,175,0.08);
+    }
+
+    .navbar-user:hover {
+        background: rgba(26,122,175,0.06);
+        border-color: var(--azure-light);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(26,122,175,0.15);
+    }
+
+    .navbar-user-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 2px solid var(--azure-light);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg);
+        flex-shrink: 0;
+    }
+
+    .navbar-user-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .navbar-user-name {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        white-space: nowrap;
+        padding-right: 4px;
+    }
+
+    /* Cart Button */
+    .navbar-cart-wrapper {
+        position: relative;
+    }
+
+    .navbar-cart-btn {
+        position: relative !important;
+        background: var(--azure) !important;
+        border: none !important;
+        padding: 0 !important;
+        width: 56px !important;
+        height: 56px !important;
+        border-radius: 16px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 12px rgba(26,122,175,0.3) !important;
+    }
+
+    .navbar-cart-btn:hover {
+        background: var(--azure-light) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(26,122,175,0.45) !important;
+    }
+
+    .navbar-cart-btn:focus {
+        outline: none !important;
+        box-shadow: 0 6px 20px rgba(26,122,175,0.45) !important;
+    }
+
+    .navbar-cart-btn .navbar-cart-icon {
+        font-size: 26px !important;
+        color: #FFFFFF !important;
+        display: block !important;
+        line-height: 1 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .navbar-cart-btn .navbar-cart-badge {
+        position: absolute !important;
+        top: -10px !important;
+        right: -10px !important;
+        min-width: 44px !important;
+        height: 24px !important;
+        background: linear-gradient(135deg, #0E7040, #10B981) !important;
+        color: #FFFFFF !important;
+        font-family: 'Montserrat', sans-serif !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        padding: 0 8px !important;
+        margin: 0 !important;
+        border-radius: 12px !important;
+        border: 3px solid var(--surface) !important;
+        box-shadow: 0 2px 8px rgba(14,112,64,0.4) !important;
+        white-space: nowrap !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        line-height: 1 !important;
+    }
+
+    /* Modal Styles */
+    .modal-azure .modal-content {
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(26,122,175,0.2);
+    }
+
+    .modal-azure .modal-header {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+        padding: 18px 24px;
+    }
+
+    .modal-azure .modal-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Іконка візка тільки для кошика, не для modal qty */
+    #exampleModal .modal-title::before {
+        content: '\f07a';
+        font-family: 'FontAwesome';
+        color: var(--azure);
+        font-size: 22px;
+    }
+
+    .modal-azure .close {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: rgba(192,57,43,0.08);
+        border: 1px solid rgba(192,57,43,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: #E74C3C;
+        opacity: 1;
+        transition: all 0.2s;
+    }
+
+    .modal-azure .close:hover {
+        background: rgba(192,57,43,0.15);
+        transform: scale(1.08);
+    }
+
+    .modal-azure .modal-body {
+        padding: 20px 24px;
+    }
+
+    .modal-azure .modal-footer {
+        background: rgba(26,122,175,0.04);
+        border-top: 1px solid var(--border);
+        padding: 16px 24px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+
+    .modal-azure .btn-secondary {
+        background: rgba(74,122,150,0.12);
+        border: 1px solid rgba(74,122,150,0.25);
+        color: var(--muted);
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 10px;
+        transition: all 0.2s;
+    }
+
+    .modal-azure .btn-secondary:hover {
+        background: rgba(74,122,150,0.2);
+        border-color: rgba(74,122,150,0.35);
+        color: var(--text);
+    }
+
+    .modal-azure .btn-primary {
+        background: var(--azure);
+        border: 1px solid var(--azure-dark);
+        color: #FFFFFF;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        padding: 10px 24px;
+        border-radius: 10px;
+        transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(26,122,175,0.3);
+    }
+
+    .modal-azure .btn-primary:hover:not(:disabled) {
+        background: var(--azure-light);
+        border-color: var(--azure);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(26,122,175,0.4);
+    }
+
+    .modal-azure .btn-primary:disabled {
+        background: rgba(74,122,150,0.3);
+        border-color: rgba(74,122,150,0.4);
+        cursor: not-allowed;
+    }
+
+    .modal-azure .alert-danger {
+        background: rgba(192,57,43,0.1);
+        border: 1px solid rgba(192,57,43,0.3);
+        border-radius: 10px;
+        color: #C0392B;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        padding: 12px 16px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .top-navbar {
+            flex-wrap: wrap;
+            height: auto;
+            padding: 12px 15px;
+        }
+
+        .navbar-search-form {
+            order: 3;
+            width: 100%;
+            max-width: none;
+            margin-top: 10px;
+        }
+
+        .navbar-right {
+            margin-right: 0;
+            gap: 12px;
+        }
+
+        .navbar-user-name {
+            display: none;
+        }
+    }
+
+    /* Responsive — мобільний (≤ 600px) */
+    @media (max-width: 600px) {
+        .top-navbar {
+            padding: 7px 10px 7px 72px;
+            height: 64px;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar-search-form {
+            flex: 1;
+            max-width: none;
+            order: 0;
+            margin-top: 0;
+        }
+
+        .navbar-search-input {
+            font-size: 16px;
+            padding: 11px 42px 11px 13px;
+            border-radius: 12px;
+        }
+
+        .navbar-search-clear {
+            width: 32px;
+            height: 32px;
+            font-size: 16px;
+        }
+
+        .navbar-right {
+            gap: 8px;
+            margin-left: 0;
+            margin-right: 0;
+            flex-shrink: 0;
+        }
+
+        .navbar-user {
+            padding: 4px;
+            border-radius: 50%;
+        }
+
+        .navbar-user-avatar {
+            width: 46px;
+            height: 46px;
+        }
+
+        .navbar-user-name { display: none; }
+
+        .navbar-cart-btn {
+            width: 50px !important;
+            height: 50px !important;
+            border-radius: 14px !important;
+        }
+
+        .navbar-cart-btn .navbar-cart-icon {
+            font-size: 26px !important;
+        }
+
+        .navbar-cart-btn .navbar-cart-badge {
+            font-size: 11px !important;
+            min-width: 44px !important;
+            height: 24px !important;
+            top: -10px !important;
+            right: -10px !important;
+        }
+
+        .modal-dialog {
+            margin: 8px;
+            max-width: calc(100vw - 16px);
+        }
+
+        .modal-azure .modal-title { font-size: 18px; }
+
+        .modal-azure .modal-footer {
+            flex-wrap: wrap;
+        }
+
+        .modal-azure .btn-primary,
+        .modal-azure .btn-secondary {
+            font-size: 15px;
+            padding: 13px 20px;
+            border-radius: 12px;
+            flex: 1;
+            text-align: center;
+        }
+    }
+</style>
+
+<!-- Modal - Add Qty -->
+<div id="modal-window" class="modal fade modal-azure" tabindex="-1" role="dialog" aria-labelledby="modalQtyLabel">
+  <%= render partial: 'line_items/modal_qty' %>
+</div>
+
+<!-- Modal - Cart Popup -->
+<div class="modal fade modal-azure" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Кошик товарів</h5>
+        <button type="button" class="close" id="close-modal-x" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    </div>
-    <!--
-    end set client
-    -->
-  <% end %>
-  <% if logged_in? %>
-    <div id="user_cart">
-      <%= link_to edit_user_path(current_user), :action => 'go' do %>
-        <div id="user">
-          <div id="user_avatar">
-            <%= image_tag("user.png", class: "img-thumbnail", size: "40x40") %>
+
+      <div id="pop_cart_check_client_nill">
+        <% if @cart&.client_id.nil? %>
+          <div class="alert alert-danger m-3" role="alert">
+            <i class="fa fa-exclamation-triangle"></i> Оберіть замовника!
           </div>
-          <div id="user_name">
+        <% end %>
+      </div>
+
+      <div class="modal-body" id="pop_cart">
+        <%= render partial: 'carts/pop_cart' %>
+      </div>
+
+      <div class="modal-footer">
+
+        <div id="pop_cart_button">
+          <% if @cart&.line_items&.any? %>
+            <%= button_to cart_path(@cart || 0),
+                          method: :get,
+                          data: {
+                            confirm: @cart&.client_id.nil? ? 'Оберіть клієнта' : nil
+                          },
+                          class: "btn btn-primary",
+                          disabled: @cart&.client_id.nil? do %>
+              <i class="fa fa-check"></i> Оформити замовлення
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Top Navbar -->
+<nav class="top-navbar">
+
+  <!-- Search Form -->
+  <%= form_tag customer_index_url, remote: true, method: :get, class: 'navbar-search-form', id: 'filter' do %>
+    <div class="navbar-search-wrapper">
+      <%= text_field_tag :Product_name,
+                         params[:Product_name],
+                         placeholder: 'Пошук продукції...',
+                         class: 'navbar-search-input',
+                         tabindex: 1,
+                         id: 'search' %>
+      <%= link_to '', customer_index_path,
+                  remote: true,
+                  class: 'navbar-search-clear fa fa-times-circle',
+                  id: "clear-search",
+                  'aria-hidden': 'true' %>
+    </div>
+  <% end %>
+
+  <!-- Right Section -->
+  <div class="navbar-right">
+
+    <!-- User Info -->
+    <% if logged_in? %>
+      <div id="user_cart">
+        <%= link_to edit_user_path(current_user), class: 'navbar-user' do %>
+          <div class="navbar-user-avatar">
+            <%= image_tag("user.png", alt: current_user.name) %>
+          </div>
+          <div class="navbar-user-name">
             <%= current_user.name %>
           </div>
-        </div>
-      <% end %>
-  <% end %>
-
-  <div id="cart_qty">
-    <%= link_to '', @cart, class: 'fa fa-shopping-cart', style: 'font-size:40px;color:dark;hover:text_decoration:none, color:white; ' %>
-    <%= link_to @cart, :action => 'go' do %>
-      <div id="cart_total_quantity">
-        <%= sprintf("%0.02fкг", @cart.total_quantity) %>
+        <% end %>
       </div>
     <% end %>
-  </div>
-  </div>
-  <div id="pop_cart">
-    <%= render partial: ('carts/pop_cart') %>
-  </div>
 
+    <!-- Cart Button -->
+    <div class="navbar-cart-wrapper" id="cart_qty">
+      <button type="button"
+              class="navbar-cart-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal">
+        <i class="fa fa-shopping-cart navbar-cart-icon" aria-hidden="true"></i>
+        <span class="navbar-cart-badge" id="cart_total_quantity">
+          <%= @cart ? sprintf("%0.02f", @cart.total_quantity) : "0.00" %>
+        </span>
+      </button>
+    </div>
+
+  </div>
 </nav>
-
-<script type="text/javascript" charset="utf-8">
-
-    var clientInput = document.getElementById('client_input');
-
-    // set height for table-scroll element
-    $('#table-scroll').css("height", "<%= @cart.line_items.size()>10? 750 : (@cart.line_items.size() == 0? 35 : @cart.line_items.size()*80)%>");
-
-    //return product subdirectory
-    function getMenu(group_id) {
-        var parent = document.getElementById(group_id);
-        var element = document.getElementById("sub_" + group_id);
-        var top = parent.offsetTop - 8;
-        if (element == null) {
-            getSubDirectoryServer(group_id, top);
-        }
-    }
-
-    function getSubDirectoryServer(group_id, top) {
-        Rails.ajax({
-            type: "post",
-            url: '/products/return_subdirectory/' + group_id + '/' + top
-        })
-    }
-
-    //end return product subdirectory
-
-    //set focus on searching field
-    let search = document.querySelector('#search')
-
-    function ready() {
-        search.focus();
-    }
-
-    //send data on change form elements
-    function updateListProducts() {
-
-        if (clientInput.value != '') {
-            Rails.ajax({
-                type: "get",
-                url: '/',
-                data: $("form#filter").serialize()
-            })
-        }
-       // location.reload();
-    }
-
-    //onClick on clear client input field
-    function ClearClient() {
-        clientInput.value = "";
-    }
-
-</script>
