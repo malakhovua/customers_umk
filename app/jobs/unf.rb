@@ -8,11 +8,11 @@ class Unf
   def get_all_data
 
     get_access_groups
+    get_price_types
     get_clients
     get_addresses
     get_products
     get_packs
-    get_price_types
     get_prices
     get_product_exceptions_1c83
 
