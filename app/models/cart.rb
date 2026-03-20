@@ -56,14 +56,23 @@ class Cart < ApplicationRecord
   end
 
   def total_price
-    if self.client.nil? || self.client.pricetype.nil?
-      return 0
+    return 0 if self.client.nil? || self.client.pricetype.nil?
+
+    line_items.to_a.sum do |item|
+      next 0 if item.product.nil?
+      next 0 if item.pack.nil? && item.recount.nil?
+
+      price = Product.get_price(
+        item.product.id,
+        self.client.pricetype,
+        item.pack.nil? ? nil : item.pack.id
+      )
+      price * (item.recount || 0)
     end
-    line_items.to_a.sum { |item| Product.get_price(item.product.id,self.client.pricetype, item.pack.nil? ? nil : item.pack.id) * (item.recount)}
   end
 
   def total_quantity
-    line_items.to_a.sum { |item| item.total_quantity }
+    line_items.to_a.sum { |item| item.total_quantity rescue 0 }
   end
 
 end
