@@ -422,7 +422,7 @@
             <th style="width:115px;white-space:normal;">К-сть,<br>од.</th>
             <th style="width:110px;white-space:normal;">
               Сума<br>разом:
-              <div id="total_sum"><%= sprintf('%.2f', @inventory.sum.nil? ? 0.0 : @inventory.sum).gsub(/(\d)(?=(\d\d\d)+(?!\d))/, "\1 ") %></div>
+              <div id="total_sum"><%= sprintf('%.2f', @inventory.sum.nil? ? 0.0 : @inventory.sum).gsub(/(\d)(?=(\d\d\d)+(?!\d))/, '\1 ') %></div>
             </th>
             <th style="width:120px;white-space:normal;">
               Коментар
