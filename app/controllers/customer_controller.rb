@@ -42,6 +42,12 @@ class CustomerController < ApplicationController
   end
 
   def set_client_id
+
+    if @clients.size == 1
+      @client_id = @clients[0].id
+      return
+    end
+
     @client_id = params[:client_id] || session[:client_id]
     session[:client_id] = @client_id
   end
