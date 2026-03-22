@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
 
   def authorize
     unless User.find_by(id: session[:user_id])
-      redirect_to login_url, notice: "Введіть, будь ласка, логін та пароль"
+      redirect_to login_url
     else
     end
   end
