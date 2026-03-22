@@ -4,7 +4,7 @@ module CurrentCart
   def set_cart
     @cart = Cart.find_by(id: session[:cart_id]) ||
             Cart.where(session_id: session.id.to_s).order(created_at: :desc).first ||
-            Cart.create(session_id: session.id.to_s, user_id: @current_user.id)
+            Cart.create(session_id: session.id.to_s, user_id: helpers.current_user.id)
 
     session[:cart_id] = @cart.id
   end
