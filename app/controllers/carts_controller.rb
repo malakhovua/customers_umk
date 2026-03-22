@@ -8,8 +8,13 @@ class CartsController < ApplicationController
   # GET /carts
   # GET /carts.json
   def index
-    ensure_an_admin_role
-    @carts = Cart.all
+    @user = helpers.current_user.id
+    unless helpers.current_user_admin
+      @carts = Cart.all.order('id DESC').where("user_id = #{helpers.current_user.id}")
+    else
+      @carts = Cart.all.order('id DESC')
+    end
+
   end
 
   # GET /carts/1
@@ -30,6 +35,8 @@ class CartsController < ApplicationController
   # POST /carts.json
   def create
     @cart = Cart.new(cart_params)
+    @cart.user_id = helpers.current_user.id
+    @cart.session_id = session.id.to_s,
     session[:client_id] = nil
 
     respond_to do |format|

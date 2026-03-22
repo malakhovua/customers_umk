@@ -300,6 +300,7 @@
       <th>Вага</th>
       <th>Сума</th>
       <th>Покупець</th>
+      <th>Автор</th>
       <th></th>
     </tr>
     </thead>
@@ -312,6 +313,7 @@
         <td><span class="cart-qty"><%= sprintf("%0.02f кг", cart.total_quantity) %></span></td>
         <td><span class="cart-price"><%= sprintf("%0.02f грн.", cart.total_price) %></span></td>
         <td><%= cart.client&.name || "—" %></td>
+        <td><%= cart.user&.name %></td>
         <td>
           <div class="cart-actions-cell">
             <%= link_to cart, class: "cart-action cart-action-open", title: "Відкрити" do %>
@@ -324,7 +326,7 @@
             <% end %>
             <% if is_current %>
                 <span class="cart-current-badge">
-                  <i class="fa fa-hand-o-left"></i> Поточний
+                  <i class="fa fa-hand-o-left"></i> Поточний кошик
                 </span>
             <% end %>
           </div>
@@ -345,7 +347,7 @@
         <span class="cart-card-id">
           #<%= cart.id %>
           <% if is_current %>
-            &nbsp;<span class="cart-current-badge"><i class="fa fa-check"></i> Поточний</span>
+            &nbsp;<span class="cart-current-badge"><i class="fa fa-check"></i> Поточний кошик</span>
           <% end %>
         </span>
         <span class="cart-card-date"><%= cart.created_at.strftime("%d.%m.%Y %H:%M") %></span>

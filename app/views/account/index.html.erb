@@ -323,33 +323,32 @@
   </div>
 
   <%# ===== СЕКЦІЯ: ЗАМОВЛЕННЯ (тільки для не-retailer) ===== %>
-  <% unless current_user.retailer? %>
+
     <div class="section-label">Замовлення</div>
-    <div class="grid">
+  <div class="grid">
 
-      <%= link_to customer_index_url, class: "card card-featured" do %>
-        <div class="card-icon gold">🛒</div>
-        <div class="card-title">Оформити замовлення</div>
-        <div class="card-desc">Перегляд каталогу та оформлення нового замовлення</div>
-        <div class="card-arrow">→</div>
-      <% end %>
+    <%= link_to customer_index_url, class: "card card-featured" do %>
+      <div class="card-icon gold">🛒</div>
+      <div class="card-title">Оформити замовлення</div>
+      <div class="card-desc">Перегляд каталогу та оформлення нового замовлення</div>
+      <div class="card-arrow">→</div>
+    <% end %>
 
-      <%= link_to carts_url, class: "card" do %>
-        <div class="card-icon gold">🛍️</div>
-        <div class="card-title">Мої поточні покупки</div>
-        <div class="card-desc">Перегляд товарів у кошику</div>
-        <div class="card-arrow">→</div>
-      <% end %>
+    <%= link_to carts_url, class: "card" do %>
+      <div class="card-icon gold">🛍️</div>
+      <div class="card-title">Мої поточні покупки</div>
+      <div class="card-desc">Перегляд товарів у кошику</div>
+      <div class="card-arrow">→</div>
+    <% end %>
 
-      <%= link_to orders_url, class: "card" do %>
-        <div class="card-icon blue">📋</div>
-        <div class="card-title">Мої замовлення</div>
-        <div class="card-desc">Історія та статус замовлень</div>
-        <div class="card-arrow">→</div>
-      <% end %>
+    <%= link_to orders_url, class: "card" do %>
+      <div class="card-icon blue">📋</div>
+      <div class="card-title">Мої замовлення</div>
+      <div class="card-desc">Історія та статус замовлень</div>
+      <div class="card-arrow">→</div>
+    <% end %>
 
-    </div>
-  <% end %>
+  </div>
 
   <%# ===== СЕКЦІЯ: АДМІНІСТРУВАННЯ та ІНВЕНТАРИЗАЦІЯ ===== %>
   <% if current_user.admin? || !current_user.user? %>

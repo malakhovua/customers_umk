@@ -1,6 +1,7 @@
 class Cart < ApplicationRecord
   has_many :line_items, dependent: :destroy
   belongs_to :client, optional: true
+  belongs_to :user
 
   def add_product(product, pack, qty, unit_id, pack_type_id, comment)
 
