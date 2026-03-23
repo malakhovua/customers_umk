@@ -36,7 +36,7 @@ class CartsController < ApplicationController
   def create
     @cart = Cart.new(cart_params)
     @cart.user_id = helpers.current_user.id
-    @cart.session_id = session.id.to_s,
+    @cart.session_id = session.id.to_s
     session[:client_id] = nil
 
     respond_to do |format|
