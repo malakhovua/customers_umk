@@ -42,8 +42,7 @@ class LineItemsController < ApplicationController
     respond_to do |format|
       if @line_item.save
         format.html { redirect_to customer_index_url }
-        format.html { redirect_to request.referer, alert: 'Message sent!' }
-        flash.alert = "User not found."
+        format.html { redirect_to request.referer}
         format.js
         format.json { render :show, status: :created, location: @line_item }
       else

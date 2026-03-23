@@ -359,6 +359,10 @@
           <span class="cart-card-value"><%= cart.client&.name || "—" %></span>
         </div>
         <div class="cart-card-row">
+          <span class="cart-card-label">Автор</span>
+          <span class="cart-card-value"><%= cart.user&.name%></span>
+        </div>
+        <div class="cart-card-row">
           <span class="cart-card-label">Вага</span>
           <span class="cart-card-value azure"><%= sprintf("%0.02f кг", cart.total_quantity) %></span>
         </div>
