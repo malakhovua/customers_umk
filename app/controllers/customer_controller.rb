@@ -112,6 +112,10 @@ class CustomerController < ApplicationController
     scope.where('CONCAT(title, full_name) ILIKE ?', "%#{params[:Product_name]}%")
   end
 
+  def filter_by_empty_pryce(scope)
+    scope.where('CONCAT(title, full_name) ILIKE ?', "%#{params[:Product_name]}%")
+  end
+
   def products_tree(parent_id)
     children = Product.where(is_folder: true, not_active: false)
                       .where(unf_parent_id: parent_id)
