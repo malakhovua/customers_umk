@@ -124,7 +124,7 @@ class CustomerController < ApplicationController
                                   .select("DISTINCT ON (prices.product_id) prices.product_id")
                                   .order("prices.product_id, prices.period DESC")
 
-    scope.where(id: latest_prices_subquery).where(title:"ВҐ ковбаса напівкопчена Прима")
+    scope.where(id: latest_prices_subquery)
   end
   def products_tree(parent_id)
     children = Product.where(is_folder: true, not_active: false)
