@@ -494,7 +494,7 @@
             <span class="cart-line-label">К-сть, кг</span>
             <span class="cart-line-value">
               <% if item.quantity.to_f > 0 %>
-                <%= number_field_tag 'qty' + item.id.to_s, item.quantity, step: 0.01, class: "cart-mob-input", onchange: "lineItemFieldOnChange()" %>
+                <%= number_field_tag 'qty' + item.id.to_s, item.quantity, step: 0.001, class: "cart-mob-input", onchange: "lineItemFieldOnChange()" %>
               <% else %>
                 <span style="color:var(--muted)">—</span>
               <% end %>
@@ -558,7 +558,7 @@
       <div class="cart-summary-row">
         <span>Загальна вага:</span>
         <div class="cart-summary-val-qty" id="footer_cart_qty">
-          <%= sprintf("%0.02f кг.", @cart.total_quantity) %>
+          <%= sprintf("%0.03f кг.", @cart.total_quantity) %>
         </div>
       </div>
       <div class="cart-summary-row">

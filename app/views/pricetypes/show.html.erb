@@ -1,9 +1,137 @@
-<p id="notice"><%= notice %></p>
+<style>
+    :root {
+        --azure:       #1A7AAF;
+        --azure-light: #3AA0D8;
+        --bg:          #F0F8FF;
+        --surface:     #FFFFFF;
+        --border:      #BAE0F5;
+        --border-soft: #D4EDF9;
+        --text:        #0B2A3D;
+        --muted:       #4A7A96;
+        --red:         #C0392B;
+    }
+    .pt-breadcrumb { display: flex; align-items: center; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
+    .pt-breadcrumb a {
+        display: inline-flex; align-items: center; gap: 5px; color: var(--azure);
+        text-decoration: none; font-weight: 600; padding: 6px 14px; border-radius: 20px;
+        font-size: 13px; background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        font-family: 'Montserrat', sans-serif; transition: background 0.2s;
+    }
+    .pt-breadcrumb a:hover { background: rgba(26,122,175,0.14); text-decoration: none; color: var(--azure); }
+    .pt-breadcrumb span { color: var(--muted); font-size: 13px; font-family: 'Montserrat', sans-serif; }
+    .pt-notice {
+        background: rgba(14,112,64,0.08); border: 1px solid rgba(14,112,64,0.2);
+        border-radius: 10px; padding: 10px 16px; color: #0E7040;
+        font-size: 13px; margin-bottom: 16px; font-family: 'Montserrat', sans-serif;
+    }
+    .pt-page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .pt-page-title {
+        font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 800;
+        color: var(--text); display: flex; align-items: center; gap: 10px;
+    }
+    .pt-page-title::before {
+        content: ''; display: inline-block; width: 5px; height: 24px;
+        background: linear-gradient(180deg, var(--azure-light), var(--azure)); border-radius: 3px;
+    }
+    .pt-show-card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; padding: 28px 32px;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.07); max-width: 540px;
+        margin-bottom: 20px;
+    }
+    .pt-show-row {
+        display: flex; align-items: flex-start; gap: 12px;
+        padding: 12px 0; border-bottom: 1px solid var(--border-soft);
+        font-family: 'Montserrat', sans-serif;
+    }
+    .pt-show-row:last-child { border-bottom: none; }
+    .pt-show-key {
+        font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+        text-transform: uppercase; color: var(--azure); min-width: 200px;
+    }
+    .pt-show-val { font-size: 13px; color: var(--text); font-weight: 600; }
+    .pt-muted { color: var(--muted); font-size: 13px; }
+    .pt-flag-yes {
+        display: inline-flex; align-items: center; gap: 5px;
+        background: rgba(14,112,64,0.08); border: 1px solid rgba(14,112,64,0.2);
+        color: #0E7040; border-radius: 20px; padding: 3px 12px; font-size: 12px; font-weight: 700;
+    }
+    .pt-flag-no {
+        display: inline-flex; align-items: center; gap: 5px;
+        background: rgba(74,122,150,0.08); border: 1px solid rgba(74,122,150,0.2);
+        color: var(--muted); border-radius: 20px; padding: 3px 12px; font-size: 12px; font-weight: 700;
+    }
+    .pt-btn-edit {
+        display: inline-flex; align-items: center; gap: 7px; padding: 9px 20px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border: none; border-radius: 10px; color: #fff; font-size: 13px; font-weight: 700;
+        font-family: 'Montserrat', sans-serif; text-decoration: none;
+        transition: opacity 0.2s, transform 0.15s; box-shadow: 0 3px 12px rgba(26,122,175,0.25);
+    }
+    .pt-btn-edit:hover { opacity: 0.92; transform: translateY(-1px); color: #fff; text-decoration: none; }
+    .pt-btn-back {
+        display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px;
+        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.2);
+        border-radius: 10px; color: var(--azure); font-size: 13px; font-weight: 600;
+        font-family: 'Montserrat', sans-serif; text-decoration: none; transition: background 0.2s;
+    }
+    .pt-btn-back:hover { background: rgba(26,122,175,0.14); text-decoration: none; color: var(--azure); }
+</style>
 
-<p>
-  <strong>Name:</strong>
-  <%= @pricetype.name %>
-</p>
+<div class="pt-breadcrumb">
+  <%= link_to account_url do %><i class="fa fa-home"></i> На головну<% end %>
+  <span>/</span>
+  <%= link_to admin_url do %><i class="fa fa-cogs"></i> Адміністрування<% end %>
+  <span>/</span>
+  <%= link_to pricetypes_path do %><i class="fa fa-tags"></i> Види цін<% end %>
+  <span>/</span>
+  <span><%= @pricetype.name %></span>
+</div>
 
-<%= link_to 'Edit', edit_pricetype_path(@pricetype) %> |
-<%= link_to 'Back', pricetypes_path %>
+<% if notice.present? %>
+  <div class="pt-notice"><%= notice %></div>
+<% end %>
+
+<div class="pt-page-header">
+  <div class="pt-page-title"><%= @pricetype.name %></div>
+</div>
+
+<div class="pt-show-card">
+  <div class="pt-show-row">
+    <div class="pt-show-key">Назва</div>
+    <div class="pt-show-val"><%= @pricetype.name %></div>
+  </div>
+  <div class="pt-show-row">
+    <div class="pt-show-key">UNF ID</div>
+    <div class="pt-show-val pt-muted"><%= @pricetype.unf_id.presence || "—" %></div>
+  </div>
+  <div class="pt-show-row">
+    <div class="pt-show-key">Не враховувати порожні ціни</div>
+    <div class="pt-show-val">
+      <% if @pricetype.ignore_empty_prices? %>
+        <span class="pt-flag-yes"><i class="fa fa-check"></i> Так</span>
+      <% else %>
+        <span class="pt-flag-no"><i class="fa fa-minus"></i> Ні</span>
+      <% end %>
+    </div>
+  </div>
+  <div class="pt-show-row">
+    <div class="pt-show-key">Ігнорувати неактивні упаковки</div>
+    <div class="pt-show-val">
+      <% if @pricetype.ignore_not_active_packs? %>
+        <span class="pt-flag-yes"><i class="fa fa-check"></i> Так</span>
+      <% else %>
+        <span class="pt-flag-no"><i class="fa fa-minus"></i> Ні</span>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div style="display: flex; gap: 10px;">
+  <%= link_to edit_pricetype_path(@pricetype), class: 'pt-btn-edit' do %>
+    <i class="fa fa-pencil"></i> Редагувати
+  <% end %>
+  <%= link_to pricetypes_path, class: 'pt-btn-back' do %>
+    <i class="fa fa-arrow-left"></i> Назад
+  <% end %>
+</div>

@@ -1,110 +1,297 @@
 <style>
     :root {
-        --azure:        #1A7AAF;
-        --azure-light:  #3AA0D8;
-        --bg:           #F0F8FF;
-        --surface:      #FFFFFF;
-        --border:       #BAE0F5;
-        --border-soft:  #D4EDF9;
-        --text:         #0B2A3D;
-        --muted:        #4A7A96;
-        --red:          #C0392B;
+        --azure: #1A7AAF;
+        --azure-light: #3AA0D8;
+        --bg: #F0F8FF;
+        --surface: #FFFFFF;
+        --border: #BAE0F5;
+        --border-soft: #D4EDF9;
+        --text: #0B2A3D;
+        --muted: #4A7A96;
+        --red: #C0392B;
     }
+
     .pt-breadcrumb {
-        display: flex; align-items: center; gap: 6px; margin-bottom: 24px; flex-wrap: wrap;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
     }
+
     .pt-breadcrumb a {
-        display: inline-flex; align-items: center; gap: 5px; color: var(--azure);
-        text-decoration: none; font-weight: 600; padding: 6px 14px; border-radius: 20px;
-        font-size: 13px; background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
-        font-family: 'Montserrat', sans-serif; transition: background 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--azure);
+        text-decoration: none;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        background: rgba(26, 122, 175, 0.07);
+        border: 1px solid rgba(26, 122, 175, 0.18);
+        font-family: 'Montserrat', sans-serif;
+        transition: background 0.2s;
     }
-    .pt-breadcrumb a:hover { background: rgba(26,122,175,0.14); text-decoration: none; color: var(--azure); }
-    .pt-breadcrumb span { color: var(--muted); font-size: 13px; font-family: 'Montserrat', sans-serif; }
+
+    .pt-breadcrumb a:hover {
+        background: rgba(26, 122, 175, 0.14);
+        text-decoration: none;
+        color: var(--azure);
+    }
+
+    .pt-breadcrumb span {
+        color: var(--muted);
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
     .pt-notice {
-        background: rgba(14,112,64,0.08); border: 1px solid rgba(14,112,64,0.2);
-        border-radius: 10px; padding: 10px 16px; color: #0E7040;
-        font-size: 13px; margin-bottom: 16px; font-family: 'Montserrat', sans-serif;
+        background: rgba(14, 112, 64, 0.08);
+        border: 1px solid rgba(14, 112, 64, 0.2);
+        border-radius: 10px;
+        padding: 10px 16px;
+        color: #0E7040;
+        font-size: 13px;
+        margin-bottom: 16px;
+        font-family: 'Montserrat', sans-serif;
     }
+
     .pt-page-header {
-        display: flex; align-items: center; justify-content: space-between;
-        margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 12px;
     }
+
     .pt-page-title {
-        font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 800;
-        color: var(--text); display: flex; align-items: center; gap: 10px;
+        font-family: 'Playfair Display', serif;
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
+
     .pt-page-title::before {
-        content: ''; display: inline-block; width: 5px; height: 24px;
-        background: linear-gradient(180deg, var(--azure-light), var(--azure)); border-radius: 3px;
+        content: '';
+        display: inline-block;
+        width: 5px;
+        height: 24px;
+        background: linear-gradient(180deg, var(--azure-light), var(--azure));
+        border-radius: 3px;
     }
+
     .pt-btn-new {
-        display: inline-flex; align-items: center; gap: 7px; padding: 9px 20px;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 20px;
         background: linear-gradient(135deg, var(--azure-light), var(--azure));
-        border: none; border-radius: 10px; color: #fff; font-size: 13px; font-weight: 700;
-        font-family: 'Montserrat', sans-serif; text-decoration: none;
+        border: none;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        text-decoration: none;
         transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
-        box-shadow: 0 3px 12px rgba(26,122,175,0.25);
+        box-shadow: 0 3px 12px rgba(26, 122, 175, 0.25);
     }
-    .pt-btn-new:hover { opacity: 0.92; transform: translateY(-1px); color: #fff; text-decoration: none; }
+
+    .pt-btn-new:hover {
+        opacity: 0.92;
+        transform: translateY(-1px);
+        color: #fff;
+        text-decoration: none;
+    }
+
     .pt-pagination {
-        display: flex; justify-content: center; padding: 16px 0 8px;
+        display: flex;
+        justify-content: center;
+        padding: 16px 0 8px;
     }
-    .pt-pagination a, .pt-pagination a:visited, .pt-pagination a:link { color: var(--azure-light); text-decoration: none; }
-    .pt-pagination .pagination { display: flex; flex-wrap: wrap; align-items: center; list-style: none; padding-left: 0; margin: 0; gap: 4px; }
-    .pt-pagination .pagination .page-item { display: inline-flex; list-style: none; }
+
+    .pt-pagination a, .pt-pagination a:visited, .pt-pagination a:link {
+        color: var(--azure-light);
+        text-decoration: none;
+    }
+
+    .pt-pagination .pagination {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+        gap: 4px;
+    }
+
+    .pt-pagination .pagination .page-item {
+        display: inline-flex;
+        list-style: none;
+    }
+
     .pt-pagination .pagination .page-item .page-link {
-        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
-        color: var(--azure-light); border-radius: 10px; font-family: 'Montserrat', sans-serif;
-        font-size: 13px; font-weight: 600; padding: 7px 13px; text-decoration: none;
+        background: rgba(26, 122, 175, 0.07);
+        border: 1px solid rgba(26, 122, 175, 0.18);
+        color: var(--azure-light);
+        border-radius: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 7px 13px;
+        text-decoration: none;
         transition: background 0.2s, transform 0.15s;
-        display: inline-flex; align-items: center; min-width: 36px; justify-content: center;
+        display: inline-flex;
+        align-items: center;
+        min-width: 36px;
+        justify-content: center;
     }
-    .pt-pagination .pagination .page-item .page-link:hover { background: rgba(26,122,175,0.15); transform: scale(1.06); }
+
+    .pt-pagination .pagination .page-item .page-link:hover {
+        background: rgba(26, 122, 175, 0.15);
+        transform: scale(1.06);
+    }
+
     .pt-pagination .pagination .page-item.active .page-link {
         background: linear-gradient(135deg, var(--azure-light), var(--azure));
-        border-color: var(--azure); color: #fff; box-shadow: 0 4px 12px rgba(26,122,175,0.28); cursor: default;
+        border-color: var(--azure);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(26, 122, 175, 0.28);
+        cursor: default;
     }
-    .pt-pagination .pagination .page-item.disabled .page-link { opacity: 0.5; cursor: not-allowed; }
+
+    .pt-pagination .pagination .page-item.disabled .page-link {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
     .pt-table-wrap {
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: 16px; overflow-x: auto;
-        box-shadow: 0 2px 12px rgba(26,122,175,0.07);
-        margin-bottom: 8px; -webkit-overflow-scrolling: touch;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow-x: auto;
+        box-shadow: 0 2px 12px rgba(26, 122, 175, 0.07);
+        margin-bottom: 8px;
+        -webkit-overflow-scrolling: touch;
     }
+
     .pt-table {
-        width: 100%; min-width: 400px; border-collapse: collapse;
-        font-size: 13px; font-family: 'Montserrat', sans-serif;
+        width: 100%;
+        min-width: 400px;
+        border-collapse: collapse;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
     }
-    .pt-table thead tr { background: linear-gradient(135deg, #E0F2FF, #C8E8FA); border-bottom: 2px solid var(--border); }
+
+    .pt-table thead tr {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+    }
+
     .pt-table thead th {
-        padding: 11px 16px; font-size: 10px; letter-spacing: 0.12em;
-        text-transform: uppercase; color: var(--azure); font-weight: 700; white-space: nowrap;
-        position: sticky; top: 0; background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
-        z-index: 2; box-shadow: 0 2px 0 var(--border); text-align: left;
+        padding: 11px 16px;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        z-index: 2;
+        box-shadow: 0 2px 0 var(--border);
+        text-align: left;
     }
-    .pt-table tbody tr { border-bottom: 1px solid rgba(186,224,245,0.4); transition: background 0.15s; }
-    .pt-table tbody tr:last-child { border-bottom: none; }
-    .pt-table tbody tr:hover { background: rgba(26,122,175,0.04); }
-    .pt-table td { padding: 10px 16px; color: var(--text); vertical-align: middle; }
-    .pt-muted { color: var(--muted); font-size: 12px; }
+
+    .pt-table tbody tr {
+        border-bottom: 1px solid rgba(186, 224, 245, 0.4);
+        transition: background 0.15s;
+    }
+
+    .pt-table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .pt-table tbody tr:hover {
+        background: rgba(26, 122, 175, 0.04);
+    }
+
+    .pt-table td {
+        padding: 10px 16px;
+        color: var(--text);
+        vertical-align: middle;
+    }
+
+    .pt-muted {
+        color: var(--muted);
+        font-size: 12px;
+    }
+
     .pt-action {
-        display: inline-flex; align-items: center; justify-content: center;
-        width: 30px; height: 30px; border-radius: 8px; font-size: 13px;
-        text-decoration: none; transition: background 0.2s, transform 0.15s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        font-size: 13px;
+        text-decoration: none;
+        transition: background 0.2s, transform 0.15s;
     }
-    .pt-action-show   { color: var(--azure); background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.15); }
-    .pt-action-show:hover   { background: rgba(26,122,175,0.14); transform: scale(1.08); color: var(--azure); text-decoration: none; }
-    .pt-action-edit   { color: #0E7490; background: rgba(14,116,144,0.07); border: 1px solid rgba(14,116,144,0.15); }
-    .pt-action-edit:hover   { background: rgba(14,116,144,0.14); transform: scale(1.08); color: #0E7490; text-decoration: none; }
-    .pt-action-delete { color: var(--red); background: rgba(192,57,43,0.07); border: 1px solid rgba(192,57,43,0.15); }
-    .pt-action-delete:hover { background: rgba(192,57,43,0.14); transform: scale(1.08); color: var(--red); text-decoration: none; }
+
+    .pt-action-show {
+        color: var(--azure);
+        background: rgba(26, 122, 175, 0.07);
+        border: 1px solid rgba(26, 122, 175, 0.15);
+    }
+
+    .pt-action-show:hover {
+        background: rgba(26, 122, 175, 0.14);
+        transform: scale(1.08);
+        color: var(--azure);
+        text-decoration: none;
+    }
+
+    .pt-action-edit {
+        color: #0E7490;
+        background: rgba(14, 116, 144, 0.07);
+        border: 1px solid rgba(14, 116, 144, 0.15);
+    }
+
+    .pt-action-edit:hover {
+        background: rgba(14, 116, 144, 0.14);
+        transform: scale(1.08);
+        color: #0E7490;
+        text-decoration: none;
+    }
+
+    .pt-action-delete {
+        color: var(--red);
+        background: rgba(192, 57, 43, 0.07);
+        border: 1px solid rgba(192, 57, 43, 0.15);
+    }
+
+    .pt-action-delete:hover {
+        background: rgba(192, 57, 43, 0.14);
+        transform: scale(1.08);
+        color: var(--red);
+        text-decoration: none;
+    }
 </style>
 
 <div class="pt-breadcrumb">
-  <%= link_to account_url do %><i class="fa fa-home"></i> На головну<% end %>
+  <%= link_to account_url do %><i class="fa fa-home"></i> На головну
+  <% end %>
   <span>/</span>
-  <%= link_to admin_url do %><i class="fa fa-cogs"></i> Адміністрування<% end %>
+  <%= link_to admin_url do %><i class="fa fa-cogs"></i> Адміністрування
+  <% end %>
   <span>/</span>
   <span>Види цін</span>
 </div>
@@ -130,6 +317,7 @@
     <tr>
       <th>Назва</th>
       <th>Не враховувати порожні ціни</th>
+      <th>Ігнорувати неактивні упаковки</th>
       <th>UNF ID</th>
       <th colspan="3"></th>
     </tr>
@@ -138,7 +326,16 @@
     <% @pricetypes.each do |pricetype| %>
       <tr>
         <td><strong><%= pricetype.name %></strong></td>
-        <td><strong><%= pricetype.ignore_empty_prices ? "так" : "" %></strong></td>
+        <% if pricetype.ignore_empty_prices %>
+          <td><span class="pt-flag-yes"><i class="fa fa-check"></i> Так</span></td>
+        <% else %>
+          <td><strong></strong></td>
+        <% end %>
+        <% if pricetype.ignore_not_active_packs %>
+          <td><span class="pt-flag-yes"><i class="fa fa-check"></i> Так</span></td>
+        <% else %>
+          <td><strong></strong></td>
+        <% end %>
         <td class="pt-muted"><%= pricetype.unf_id %></td>
         <td>
           <%= link_to pricetype, class: 'pt-action pt-action-show', title: 'Показати' do %>

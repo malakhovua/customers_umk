@@ -70,6 +70,6 @@ class PricetypesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def pricetype_params
-      params.require(:pricetype).permit(:name, :ignore_empty_prices)
+      params.require(:pricetype).permit(:name, :ignore_empty_prices, :ignore_not_active_packs)
     end
 end

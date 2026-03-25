@@ -1,6 +1,98 @@
-<h1>Editing Pricetype</h1>
+<style>
+    :root {
+        --azure:       #1A7AAF;
+        --azure-light: #3AA0D8;
+        --bg:          #F0F8FF;
+        --surface:     #FFFFFF;
+        --border:      #BAE0F5;
+        --border-soft: #D4EDF9;
+        --text:        #0B2A3D;
+        --muted:       #4A7A96;
+        --red:         #C0392B;
+    }
+    .pt-breadcrumb { display: flex; align-items: center; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
+    .pt-breadcrumb a {
+        display: inline-flex; align-items: center; gap: 5px; color: var(--azure);
+        text-decoration: none; font-weight: 600; padding: 6px 14px; border-radius: 20px;
+        font-size: 13px; background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        font-family: 'Montserrat', sans-serif; transition: background 0.2s;
+    }
+    .pt-breadcrumb a:hover { background: rgba(26,122,175,0.14); text-decoration: none; color: var(--azure); }
+    .pt-breadcrumb span { color: var(--muted); font-size: 13px; font-family: 'Montserrat', sans-serif; }
+    .pt-page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .pt-page-title {
+        font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 800;
+        color: var(--text); display: flex; align-items: center; gap: 10px;
+    }
+    .pt-page-title::before {
+        content: ''; display: inline-block; width: 5px; height: 24px;
+        background: linear-gradient(180deg, var(--azure-light), var(--azure)); border-radius: 3px;
+    }
+    .pt-btn-new {
+        display: inline-flex; align-items: center; gap: 7px; padding: 9px 20px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border: none; border-radius: 10px; color: #fff; font-size: 13px; font-weight: 700;
+        font-family: 'Montserrat', sans-serif; text-decoration: none;
+        transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 3px 12px rgba(26,122,175,0.25); cursor: pointer;
+    }
+    .pt-btn-new:hover { opacity: 0.92; transform: translateY(-1px); color: #fff; text-decoration: none; }
+    .pt-btn-back {
+        display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px;
+        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.2);
+        border-radius: 10px; color: var(--azure); font-size: 13px; font-weight: 600;
+        font-family: 'Montserrat', sans-serif; text-decoration: none; transition: background 0.2s;
+    }
+    .pt-btn-back:hover { background: rgba(26,122,175,0.14); text-decoration: none; color: var(--azure); }
+    .pt-form-card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; padding: 28px 32px;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.07); max-width: 540px;
+    }
+    .pt-form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+    .pt-label { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--azure); }
+    .pt-input {
+        padding: 9px 14px; border: 1px solid var(--border); border-radius: 10px;
+        font-family: 'Montserrat', sans-serif; font-size: 13px; color: var(--text);
+        background: var(--bg); transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+    }
+    .pt-input:focus { border-color: var(--azure-light); box-shadow: 0 0 0 3px rgba(58,160,216,0.15); }
+    .pt-form-checks { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .pt-check-label {
+        display: inline-flex; align-items: center; gap: 10px; cursor: pointer;
+        font-family: 'Montserrat', sans-serif; font-size: 13px; color: var(--text);
+    }
+    .pt-check { width: 16px; height: 16px; accent-color: var(--azure); cursor: pointer; }
+    .pt-form-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .pt-errors {
+        background: rgba(192,57,43,0.06); border: 1px solid rgba(192,57,43,0.2);
+        border-radius: 10px; padding: 14px 18px; margin-bottom: 20px;
+    }
+    .pt-errors-title { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: var(--red); margin-bottom: 8px; }
+    .pt-errors-list { margin: 0; padding-left: 18px; font-family: 'Montserrat', sans-serif; font-size: 13px; color: var(--red); }
+</style>
+
+<div class="pt-breadcrumb">
+  <%= link_to account_url do %><i class="fa fa-home"></i> На головну<% end %>
+  <span>/</span>
+  <%= link_to admin_url do %><i class="fa fa-cogs"></i> Адміністрування<% end %>
+  <span>/</span>
+  <%= link_to pricetypes_path do %><i class="fa fa-tags"></i> Види цін<% end %>
+  <span>/</span>
+  <span>Редагування</span>
+</div>
+
+<div class="pt-page-header">
+  <div class="pt-page-title">Редагування виду цін</div>
+</div>
 
 <%= render 'form', pricetype: @pricetype %>
 
-<%= link_to 'Show', @pricetype %> |
-<%= link_to 'Back', pricetypes_path %>
+<div style="margin-top: 16px; display: flex; gap: 10px;">
+  <%= link_to @pricetype, class: 'pt-btn-back' do %>
+    <i class="fa fa-eye"></i> Переглянути
+  <% end %>
+  <%= link_to pricetypes_path, class: 'pt-btn-back' do %>
+    <i class="fa fa-arrow-left"></i> Назад
+  <% end %>
+</div>

@@ -458,6 +458,7 @@
       <th>#</th>
       <th>Найменування</th>
       <th>Упаковка</th>
+      <th>Примітки</th>
       <th>Стік.</th>
       <th>К-сть, перерахунок</th>
       <th>К-сть, кг</th>
@@ -488,12 +489,16 @@
       </div>
       <div class="order-item-card-body">
         <div class="order-item-row">
+          <span class="order-item-label">Примітки</span>
+          <span class="order-item-value"><%= item.comment%></span>
+        </div>
+        <div class="order-item-row">
           <span class="order-item-label">Стікерувати</span>
           <span class="order-item-value"><%= item.stick ? '✓ Так' : '— Ні' %></span>
         </div>
         <div class="order-item-row">
           <span class="order-item-label">К-сть, кг</span>
-          <span class="order-item-value azure"><%= sprintf("%.2f кг", item.recount) %></span>
+          <span class="order-item-value azure"><%= sprintf("%.3f кг", item.recount) %></span>
         </div>
         <div class="order-item-row">
           <span class="order-item-label">К-сть, вага</span>
@@ -528,7 +533,7 @@
     <div class="order-summary-row">
       <span>Загальна кількість товару:</span>
       <div class="order-summary-val-qty">
-        <%= sprintf("%0.02f кг", @order.total_quantity) %>
+        <%= sprintf("%0.03f кг", @order.total_quantity) %>
       </div>
     </div>
     <div class="order-summary-row">

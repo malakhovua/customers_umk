@@ -1,24 +1,46 @@
 <%= form_with(model: pricetype, local: true) do |form| %>
-  <% if pricetype.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(pricetype.errors.count, "error") %> prohibited this pricetype from being saved:</h2>
 
-      <ul>
-      <% pricetype.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+  <% if pricetype.errors.any? %>
+    <div class="pt-errors">
+      <div class="pt-errors-title">
+        <i class="fa fa-exclamation-circle"></i>
+        <%= pluralize(pricetype.errors.count, "помилка") %> не дозволяє зберегти запис:
+      </div>
+      <ul class="pt-errors-list">
+        <% pricetype.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-    <%= form.check_box :ignore_empty_prices %>
-    <%= form.text_field :unf_id %>
+  <div class="pt-form-card">
+
+    <div class="pt-form-group">
+      <%= form.label :name, "Назва", class: "pt-label" %>
+      <%= form.text_field :name, class: "pt-input" %>
+    </div>
+
+    <div class="pt-form-group">
+      <%= form.label :unf_id, "UNF ID", class: "pt-label" %>
+      <%= form.text_field :unf_id, class: "pt-input" %>
+    </div>
+
+    <div class="pt-form-checks">
+      <label class="pt-check-label">
+        <%= form.check_box :ignore_empty_prices, class: "pt-check" %>
+        <span>Не враховувати порожні ціни</span>
+      </label>
+      <label class="pt-check-label">
+        <%= form.check_box :ignore_not_active_packs, class: "pt-check" %>
+        <span>Ігнорувати неактивні упаковки</span>
+      </label>
+    </div>
+
+    <div class="pt-form-actions">
+      <%= form.submit class: "pt-btn-new" %>
+    </div>
+
   </div>
 
-  <div class="actions">
-    <%= form.submit %>
-  </div>
 <% end %>
