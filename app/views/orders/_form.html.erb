@@ -218,7 +218,7 @@
           <label class="order-label">Дата</label>
           <%= form.date_field :date,
                               class: "order-input",
-                              value: DateTime.now.strftime("%Y-%m-%d") %>
+                              value: (DateTime.now + 1).strftime("%Y-%m-%d") %>
         </div>
         <div>
           <label class="order-label">Замовник</label>
