@@ -299,7 +299,8 @@
 
       <%# Зображення %>
       <div class="product-card__img-wrap">
-        <%= image_tag(product['image_url'], width: 170, height: 170) %>
+        <% img = product['image_url'].presence || 'placeholder.jpg' %>
+        <%= image_tag img, width: 170, height: 170 rescue '' %>
       </div>
 
       <%# Тіло %>

@@ -129,6 +129,7 @@
     <thead>
     <tr>
       <th>Назва</th>
+      <th>Не враховувати порожні ціни</th>
       <th>UNF ID</th>
       <th colspan="3"></th>
     </tr>
@@ -137,6 +138,7 @@
     <% @pricetypes.each do |pricetype| %>
       <tr>
         <td><strong><%= pricetype.name %></strong></td>
+        <td><strong><%= pricetype.ignore_empty_prices ? "так" : "" %></strong></td>
         <td class="pt-muted"><%= pricetype.unf_id %></td>
         <td>
           <%= link_to pricetype, class: 'pt-action pt-action-show', title: 'Показати' do %>

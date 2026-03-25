@@ -85,6 +85,7 @@ class CustomerController < ApplicationController
     scope = filter_by_favorite(scope) if params[:favorite] == "1"
     scope = filter_by_categories(scope) if params[:categories].present? || session[:selected_categories].present?
     scope = filter_by_name(scope) if params[:Product_name].present?
+    scope = filter_by_empty_pryce(scope)
     scope
   end
 
@@ -113,9 +114,18 @@ class CustomerController < ApplicationController
   end
 
   def filter_by_empty_pryce(scope)
-    scope.where('CONCAT(title, full_name) ILIKE ?', "%#{params[:Product_name]}%")
-  end
+    return scope unless @price_type&.ignore_empty_prices?
 
+    latest_prices_subquery = Price.joins(:unit_product)
+                                  .where(pricetype_id: @price_type.id)
+                                  .where("prices.period <= ?", Date.today)
+                                  .where.not(value: [nil, 0])
+                                  .where(unit_products: { default: true })
+                                  .select("DISTINCT ON (prices.product_id) prices.product_id")
+                                  .order("prices.product_id, prices.period DESC")
+
+    scope.where(id: latest_prices_subquery).where(title:"ВҐ ковбаса напівкопчена Прима")
+  end
   def products_tree(parent_id)
     children = Product.where(is_folder: true, not_active: false)
                       .where(unf_parent_id: parent_id)

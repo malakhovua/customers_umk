@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_21_165813) do
+ActiveRecord::Schema.define(version: 2026_03_23_153528) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -210,6 +210,7 @@ ActiveRecord::Schema.define(version: 2026_03_21_165813) do
     t.datetime "updated_at", null: false
     t.boolean "deletion_mark", default: false
     t.string "unf_id"
+    t.boolean "ignore_empty_prices"
   end
 
   create_table "product_exeptions", force: :cascade do |t|
