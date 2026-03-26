@@ -118,6 +118,8 @@ class LineItemsController < ApplicationController
     @pack_id = params[:pack_id]
     @product_name = params[:product_name]
     @has_line_item = false
+    @kg = Unit.where("LOWER(name) LIKE ?", "%#{'кг'.downcase}%").first
+    @piece = Unit.where("LOWER(name) LIKE ?", "%#{'шт'.downcase}%").first
 
     if session[:user_id]
         @current_user ||= User.find_by(id: session[:user_id])

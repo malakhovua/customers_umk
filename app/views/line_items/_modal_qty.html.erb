@@ -106,9 +106,12 @@
 </style>
 
 <%= form_tag line_items_path({id: @product_id, pack_id: @pack_id}), method: :post, remote: true do %>
+
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
 
+      <%= kg = @kg&.id.to_s%>
+      <%= piece = @piece&.id.to_s%>
       <div class="modal-header">
         <h5 class="modal-title">
           <%= @product_name %>
@@ -134,7 +137,7 @@
           <%= select_tag "units",
                          options_from_collection_for_select(
                            Unit.all, "id", "name",
-                           current_user.unit_id.nil? ? "1" : current_user.unit_id
+                           @pack_id.nil? ? kg : piece
                          ),
                          class: 'mqty-select',
                          id: 'units' %>

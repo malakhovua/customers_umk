@@ -361,6 +361,15 @@
         box-sizing: border-box;
     }
     .orders-filter-select:focus { border-color: var(--azure-light); box-shadow: 0 0 0 3px rgba(26,122,175,0.10); }
+    .orders-filter-input {
+        width: 100%; padding: 8px 10px; font-size: 13px;
+        font-family: 'Montserrat', sans-serif; color: var(--text);
+        background: var(--bg); border: 1.5px solid var(--border);
+        border-radius: 10px; outline: none; cursor: pointer;
+        transition: border-color .2s, box-shadow .2s;
+        box-sizing: border-box;
+    }
+    .orders-filter-input:focus { border-color: var(--azure-light); box-shadow: 0 0 0 3px rgba(26,122,175,0.10); }
     .orders-filter-btn {
         display: inline-flex; align-items: center; gap: 6px;
         padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer;
@@ -379,6 +388,7 @@
     .orders-filter-btn-reset:hover { background: rgba(26,122,175,0.14); }
     @media (max-width: 600px) {
         .orders-filter-item { width: 100%; min-width: 100%; }
+        .orders-filter-input { font-size: 14px; min-height: 44px; }
         .orders-filter-toggle { padding: 16px 16px; min-height: 52px; }
         .orders-filter-body { padding: 14px 16px; }
         .orders-filter-btn { padding: 12px 18px; min-height: 44px; font-size: 14px; }
@@ -473,13 +483,13 @@
 <%# ===== ФІЛЬТР ===== %>
 <%
     # Фільтр відкритий якщо є активні параметри фільтру
-    filter_open = params[:client_id].present? || params[:return].present?
+    filter_open = params[:client_id].present? || params[:return].present? || params[:date_from].present? || params[:date_to].present?
 %>
 <div class="orders-filter-wrap">
   <div class="orders-filter-toggle <%= filter_open ? 'open' : '' %>" onclick="toggleOrdersFilter(this)">
     <div class="orders-filter-toggle-left">
       <i class="fa fa-filter"></i> Фільтр
-      <% if params[:client_id].present? || params[:return].present? %>
+      <% if params[:client_id].present? || params[:return].present? || params[:date_from].present? || params[:date_to].present? %>
         &nbsp;<span style="background:rgba(26,122,175,0.15);padding:2px 8px;border-radius:20px;font-size:10px;">активний</span>
       <% end %>
     </div>
@@ -501,6 +511,14 @@
                          options_for_select([['Так', 'true'], ['Ні', 'false']], params[:return]),
                          include_blank: 'Всі',
                          class: 'orders-filter-select' %>
+        </div>
+        <div class="orders-filter-item">
+          <label>Дата з</label>
+          <%= date_field_tag :date_from, params[:date_from], class: 'orders-filter-input' %>
+        </div>
+        <div class="orders-filter-item">
+          <label>Дата по</label>
+          <%= date_field_tag :date_to, params[:date_to], class: 'orders-filter-input' %>
         </div>
         <button type="submit" class="orders-filter-btn orders-filter-btn-apply">
           <i class="fa fa-search"></i> Застосувати

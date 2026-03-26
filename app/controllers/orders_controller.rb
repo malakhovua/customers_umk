@@ -20,6 +20,8 @@ class OrdersController < ApplicationController
     end
     @orders = @orders.where(client_id: params[:client_id]) if params[:client_id].present?
     @orders = @orders.where(return: params[:return] == 'true') if params[:return].present?
+    @orders = @orders.where('date >= ?', params[:date_from]) if params[:date_from].present?
+    @orders = @orders.where('date <= ?', params[:date_to]) if params[:date_to].present?
     @orders = @orders.page params[:page]
   end
 
