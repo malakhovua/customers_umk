@@ -466,7 +466,7 @@
     <% @cart.line_items.order(:id).each do |item| %>
       <% product_catalog = Product.find_by(unf_id: item.product.unf_parent_id) %>
       <% weight = item.pack.nil? ? item.product[:weight] : item.pack[:weight] %>
-      <% price = Product.get_price(item.product.id, @cart.client&.pricetype, item.pack.nil? ? nil : item.pack.id) %>
+      <% price = Product.get_price(item.product.id,@price_type, item.pack.nil? ? nil : item.pack.id) %>
       <% unit = Unit.find(item.unit_id) %>
       <div class="cart-line-card">
         <div class="cart-line-card-title">

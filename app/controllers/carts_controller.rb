@@ -1,5 +1,7 @@
 class CartsController < ApplicationController
   before_action :set_cart, only: [:show, :edit, :update, :destroy]
+  before_action :set_user_price_type
+
   rescue_from ActiveRecord::RecordNotFound, with: :invalid_cart
 
   layout 'cart'
@@ -24,7 +26,6 @@ class CartsController < ApplicationController
 
   # GET /carts/new
   def new
-
   end
 
   # GET /carts/1/edit
@@ -118,6 +119,13 @@ class CartsController < ApplicationController
     logger.error "Attemp to access invalid cart #{params[:id]}"
     redirect_to customer_index_url, notice: 'Помилка доступу до кошика'
 
+  end
+
+  private
+
+  def set_user_price_type
+    @user = helpers.current_user
+    @price_type = @user&.pricetype || @cart&.client&.pricetype
   end
 
 end
