@@ -298,10 +298,12 @@
     <div class="product-card">
 
       <%# Зображення %>
+      <%unless @current_user.ignore_pics_products?%>
       <div class="product-card__img-wrap">
         <% img = product['image_url'].presence || 'placeholder.jpg' %>
         <%= image_tag img, width: 170, height: 170 rescue '' %>
       </div>
+      <% end%>
 
       <%# Тіло %>
       <div class="product-card__body">
@@ -343,7 +345,7 @@
         <ul class="product-card__packs">
           <% packs.each do |pack| %>
             <li class="product-card__pack-item">
-              <span class="pack-name"><%= pack.name %></span>
+              <span class="pack-name"><strong><%= pack.name %></strong></span>
               <div class="pack-price-row">
                 <span class="pack-price">
                   <%= sprintf("%0.02f грн.", Product.get_price(product.id, @price_type, pack.id)) %>
