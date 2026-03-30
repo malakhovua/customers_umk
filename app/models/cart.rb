@@ -58,8 +58,6 @@ class Cart < ApplicationRecord
 
   def total_price
 
-
-
     price_type =  self.user&.pricetype ||  self.client&.pricetype
 
     return  0 if price_type.nil?
