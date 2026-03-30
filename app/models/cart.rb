@@ -57,7 +57,12 @@ class Cart < ApplicationRecord
   end
 
   def total_price
-    return 0 if self.client.nil? || self.client.pricetype.nil?
+
+
+
+    price_type =  self.user&.pricetype ||  self.client&.pricetype
+
+    return  0 if price_type.nil?
 
     line_items.to_a.sum do |item|
       next 0 if item.product.nil?
@@ -65,7 +70,7 @@ class Cart < ApplicationRecord
 
       price = Product.get_price(
         item.product.id,
-        self.client.pricetype,
+        price_type,
         item.pack.nil? ? nil : item.pack.id
       )
       price * (item.recount || 0)

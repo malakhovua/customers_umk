@@ -16,9 +16,6 @@ class Order < ApplicationRecord
   end
 
   def total_price
-    if self.client.pricetype.nil?
-      return 0
-    end
     line_items.to_a.sum { |item| item.price * (item.recount)}
   end
 

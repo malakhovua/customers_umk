@@ -125,7 +125,7 @@ class CartsController < ApplicationController
 
   def set_user_price_type
     @user = helpers.current_user
-    @price_type = @user&.pricetype || @cart&.client&.pricetype
+    @price_type = @cart&.user&.pricetype || @user&.pricetype || @cart&.client&.pricetype
   end
 
 end
