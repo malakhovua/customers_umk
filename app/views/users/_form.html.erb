@@ -204,7 +204,7 @@
         <% unit_array = Unit.all.map { |u| [u.name, u.id] } %>
         <div class="usr-select-wrap"><%= form.select :unit_id, options_for_select(unit_array, selected: @user.unit_id), {}, class: 'form-control' %></div>
       </div>
-      
+
       <% if current_user.admin? %>
         <div class="usr-form-field">
           <label>Роль</label>

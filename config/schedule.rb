@@ -18,3 +18,7 @@ end
 every 30.minutes do
   runner "Unf.new.get_all_data"
 end
+
+every 30.minutes do
+  runner "ApplicationJob.new.delete_old_empty_carts"
+end
