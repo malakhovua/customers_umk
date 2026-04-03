@@ -555,6 +555,7 @@
     <thead>
     <tr>
       <th>#</th>
+      <th></th>
       <th>Замовник</th>
       <th>Дата</th>
       <th>Вага</th>
@@ -577,6 +578,9 @@
       <% @orders.each do |order| %>
         <tr>
           <td><span class="orders-num">#<%= order.id %></span></td>
+          <td><%= link_to order, class: "orders-action orders-action-view", title: "Переглянути" do %>
+              <i class="fa fa-search"></i>
+            <% end %></td>
           <td><span class="orders-client"><%= order.client.name %></span></td>
           <td><%= order.date.strftime("%d.%m.%Y") rescue order.date %></td>
           <td><span class="orders-qty"><%= sprintf("%0.02f кг", order.total_quantity) %></span></td>
@@ -607,9 +611,6 @@
           </td>
           <td>
             <div class="orders-actions-cell">
-              <%= link_to order, class: "orders-action orders-action-view", title: "Переглянути" do %>
-                <i class="fa fa-search"></i>
-              <% end %>
               <% if order.server_unf.present? %>
                 <span class="orders-action orders-action-delete-disabled" title="Документ відправлено в 1С — видалення неможливе">
                   <i class="fa fa-trash"></i>
