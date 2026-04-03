@@ -296,6 +296,7 @@
     <thead>
     <tr>
       <th>№</th>
+      <th></th>
       <th>Дата</th>
       <th>Вага</th>
       <th>Сума</th>
@@ -309,6 +310,9 @@
       <% is_current = cart.id == session[:cart_id] %>
       <tr class="<%= is_current ? 'is-current' : '' %>">
         <td><span class="cart-num">#<%= cart.id %></span></td>
+        <td><%= link_to cart, class: "cart-action cart-action-open", title: "Відкрити" do %>
+            <i class="fa fa-search"></i>
+          <% end %></td>
         <td><%= cart.created_at.strftime("%d.%m.%Y %H:%M") %></td>
         <td><span class="cart-qty"><%= sprintf("%0.02f кг", cart.total_quantity) %></span></td>
         <td><span class="cart-price"><%= sprintf("%0.02f грн.", cart.total_price) %></span></td>
@@ -316,9 +320,6 @@
         <td><%= cart.user&.name %></td>
         <td>
           <div class="cart-actions-cell">
-            <%= link_to cart, class: "cart-action cart-action-open", title: "Відкрити" do %>
-              <i class="fa fa-search"></i>
-            <% end %>
             <%= link_to cart, method: :delete,
                         data: { confirm: 'Ви впевнені?' },
                         class: "cart-action cart-action-delete", title: "Видалити" do %>
