@@ -14,7 +14,9 @@ class OrdersController < ApplicationController
   # GET /orders.json
   def index
     unless helpers.current_user_admin
-      @orders = Order.all.order('id DESC').where("user_id = #{helpers.current_user.id}")
+      @orders = Order.joins(:user)
+                     .where(users: { access_group: helpers.current_user.access_group })
+                     .order(id: :desc)
     else
       @orders = Order.all.order('id DESC')
     end

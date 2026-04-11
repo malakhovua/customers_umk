@@ -12,7 +12,9 @@ class CartsController < ApplicationController
   def index
     @user = helpers.current_user.id
     unless helpers.current_user_admin
-      @carts = Cart.all.order('id DESC').where("user_id = #{helpers.current_user.id}")
+      @carts = Cart.joins(:user)
+                     .where(users: { access_group: helpers.current_user.access_group })
+                     .order(id: :desc)
     else
       @carts = Cart.all.order('id DESC')
     end
