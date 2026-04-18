@@ -318,6 +318,7 @@
       <th>Назва</th>
       <th>Не враховувати порожні ціни</th>
       <th>Ігнорувати неактивні упаковки</th>
+      <th>Регулярно оновлювати ціни</th>
       <th>UNF ID</th>
       <th colspan="3"></th>
     </tr>
@@ -332,6 +333,11 @@
           <td><strong></strong></td>
         <% end %>
         <% if pricetype.ignore_not_active_packs %>
+          <td><span class="pt-flag-yes"><i class="fa fa-check"></i> Так</span></td>
+        <% else %>
+          <td><strong></strong></td>
+        <% end %>
+        <% if pricetype.update_regularly %>
           <td><span class="pt-flag-yes"><i class="fa fa-check"></i> Так</span></td>
         <% else %>
           <td><strong></strong></td>

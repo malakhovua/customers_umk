@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_28_085302) do
+ActiveRecord::Schema.define(version: 2026_04_02_132822) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -212,6 +212,7 @@ ActiveRecord::Schema.define(version: 2026_03_28_085302) do
     t.string "unf_id"
     t.boolean "ignore_empty_prices"
     t.boolean "ignore_not_active_packs"
+    t.boolean "update_regularly"
   end
 
   create_table "product_exeptions", force: :cascade do |t|

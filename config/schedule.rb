@@ -20,5 +20,9 @@ every 30.minutes do
 end
 
 every 30.minutes do
+  runner "Unf.new.get_regular_prices"
+end
+
+every 30.minutes do
   runner "ApplicationJob.new.delete_old_empty_carts"
 end

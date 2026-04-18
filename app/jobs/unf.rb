@@ -153,8 +153,26 @@ class Unf
 
   end
 
+  def get_regular_prices
+    regular_update_price_types =  Pricetype.where(update_regularly: true)
+
+    regular_update_price_types.each do |rt|
+      get_prices_common(rt.id.to_s.rjust(9,'0'))
+    end
+
+  end
+
   def get_prices
-    res = connect_1c.get(get_unf_path('price'))
+    get_prices_common
+  end
+
+  def get_prices_common (price_type_id = '')
+
+    if price_type_id.empty?
+      res = connect_1c.get(get_unf_path('price'))
+    else
+      res = connect_1c.get(get_unf_path('regular_price', price_type_id))
+    end
 
     data = JSON.parse res.body
 
