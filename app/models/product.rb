@@ -80,7 +80,7 @@ class Product < ApplicationRecord
     res.many?
   end
 
-  def self.get_price(prod_id, price_type, pack_id = nil, product_unit_id = nil, period = nil)
+  def self.get_price(prod_id, price_type, pack_id = nil, product_unit_id = nil, period = nil, calculate_weight = false)
     return 0 if price_type.blank?
 
     period ||= Time.current
@@ -93,6 +93,11 @@ class Product < ApplicationRecord
                                  .order(period: :desc)
                                  .limit(1)
                                  .first&.value || 0
+
+    if calculate_weight
+      k = product_unit.weight == 0 ? 1.0 : product_unit.weight
+      product_price  = product_price / k
+    end
 
     # Ціна упаковки
     pack_price = if pack_id

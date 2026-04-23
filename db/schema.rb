@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_02_132822) do
+ActiveRecord::Schema.define(version: 2026_04_23_155053) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -146,6 +146,7 @@ ActiveRecord::Schema.define(version: 2026_04_02_132822) do
     t.string "comment"
     t.float "recount"
     t.float "price", default: 0.0, null: false
+    t.float "weight_price", default: 0.0, null: false
     t.index ["cart_id"], name: "index_line_items_on_cart_id"
     t.index ["order_id"], name: "index_line_items_on_order_id"
     t.index ["pack_id"], name: "index_line_items_on_pack_id"
@@ -260,6 +261,7 @@ ActiveRecord::Schema.define(version: 2026_04_02_132822) do
     t.boolean "deletion_mark", default: false
     t.float "ratio", default: 1.0
     t.string "unf_id"
+    t.float "weight", default: 1.0, null: false
     t.index ["product_id"], name: "index_unit_products_on_product_id"
   end
 

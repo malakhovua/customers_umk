@@ -66,10 +66,15 @@ class Cart < ApplicationRecord
       next 0 if item.product.nil?
       next 0 if item.pack.nil? && item.recount.nil?
 
+      unit_mame = Unit.find_by(id:item.unit_id).name
+
+      unit_product_id = UnitProduct.find_by(product_id: item.product.id, name:unit_mame)&.id
+
       price = Product.get_price(
         item.product.id,
         price_type,
-        item.pack.nil? ? nil : item.pack.id
+        item.pack,
+        unit_product_id,nil, true
       )
       price * (item.recount || 0)
     end

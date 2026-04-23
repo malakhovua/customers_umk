@@ -12,12 +12,16 @@ class Order < ApplicationRecord
        item.cart_id  = nil
        price_type =  cart.user&.pricetype ||  cart.client&.pricetype
        item.price     = Product.get_price(item.product.id, price_type, item.pack.nil? ? nil : item.pack.id,nil, self.date)
+       item.weight_price     = Product.get_price(item.product.id, price_type, item.pack.nil? ? nil : item.pack.id,nil, self.date,true)
       line_items  <<  item
     end
   end
 
   def total_price
-    line_items.to_a.sum { |item| item.price * (item.recount)}
+    line_items.to_a.sum do |item|
+      price = item.weight_price == 0 ? item.price : item.weight_price
+      price * item.recount
+    end
   end
 
   def total_quantity

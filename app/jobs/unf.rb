@@ -82,6 +82,7 @@ class Unf
         unit['name'] = dt_unit['name']
         unit['deletion_mark'] = dt_unit['deletion_mark']
         unit['ratio'] = dt_unit['ratio']
+        unit['weight']= dt_unit['weight']
         unit['default'] = dt_unit['default']
         unit['product_id'] = prod.id
         unit.save
