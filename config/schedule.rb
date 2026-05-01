@@ -24,7 +24,7 @@ every 60.minutes do
 end
 
 every 10.minutes do
-  runner "ApplicationJob.new.get_expense_invoices"
+  runner "Unf.new.get_expense_invoices"
 end
 
 every 120.minutes do
