@@ -346,7 +346,20 @@ class Unf
         end
 
       expense_invoice['access_group_id'] = dt['access_group_id'].to_i if dt['access_group_id'].present?
-      expense_invoice['client_id'] = Client.find_by(:unf_id => dt['client_id'])&.id
+
+      client = Client.find_by(:unf_id => dt['client_id'])
+
+      unless client.present?
+
+        client =   Client.new
+        client.name = dt['client_name']
+        client.id = dt['id']
+        client.unf_id = dt['unf_id']
+        client.save!
+
+      end
+
+      expense_invoice['client_id'] = client&.id
       expense_invoice['order_id'] = dt['order_id'].to_i if dt['order_id'].present?
       expense_invoice['doc_type'] = dt['doc_type'].to_i
       expense_invoice['sum'] = dt['sum'].to_f
