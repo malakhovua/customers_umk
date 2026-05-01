@@ -1,0 +1,68 @@
+<%= form_with(model: line_item_expense_invoice, local: true) do |form| %>
+  <% if line_item_expense_invoice.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(line_item_expense_invoice.errors.count, "error") %> prohibited this line_item_expense_invoice from being saved:</h2>
+
+      <ul>
+      <% line_item_expense_invoice.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :product_id %>
+    <%= form.collection_select :product_id, Product.all, :id, :title, {}, class: "form-control" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :pack_id %>
+    <%= form.collection_select :pack_id, Pack.all, :id, :name, {}, class: "form-control" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :unit_product_id %>
+    <%= form.collection_select :unit_product_id, UnitProduct.all, :id, :name, {}, class: "form-control" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :qty %>
+    <%= form.text_field :qty %>
+  </div>
+
+  <div class="field">
+    <%= form.label :price %>
+    <%= form.text_field :price %>
+  </div>
+
+  <div class="field">
+    <%= form.label :retail_price %>
+    <%= form.text_field :retail_price %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sum %>
+    <%= form.text_field :sum %>
+  </div>
+
+  <div class="field">
+    <%= form.label :retail_sum %>
+    <%= form.text_field :retail_sum %>
+  </div>
+
+  <div class="field">
+    <%= form.label :comment %>
+    <%= form.text_field :comment %>
+  </div>
+
+  <div class="field">
+    <%= form.label :expense_invoice_id %>
+    <%= form.collection_select :expense_invoice_id, ExpenseInvoice.all, :id, ->(o) { "№#{o.id} від #{o.doc_date}" }, {}, class: "form-control" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+
+<% end %>

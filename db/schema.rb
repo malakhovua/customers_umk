@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_23_155053) do
+ActiveRecord::Schema.define(version: 2026_04_25_081708) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,6 +83,23 @@ ActiveRecord::Schema.define(version: 2026_04_23_155053) do
     t.string "code_unf"
   end
 
+  create_table "expense_invoices", force: :cascade do |t|
+    t.bigint "access_group_id"
+    t.bigint "client_id"
+    t.bigint "order_id"
+    t.integer "doc_type"
+    t.float "sum"
+    t.float "retail_sum"
+    t.string "number"
+    t.datetime "doc_date"
+    t.string "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["access_group_id"], name: "index_expense_invoices_on_access_group_id"
+    t.index ["client_id"], name: "index_expense_invoices_on_client_id"
+    t.index ["order_id"], name: "index_expense_invoices_on_order_id"
+  end
+
   create_table "favorite_products", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "product_id"
@@ -128,6 +145,25 @@ ActiveRecord::Schema.define(version: 2026_04_23_155053) do
     t.index ["inventory_id"], name: "index_inventory_line_items_on_inventory_id"
     t.index ["product_id"], name: "index_inventory_line_items_on_product_id"
     t.index ["unit_product_id"], name: "index_inventory_line_items_on_unit_product_id"
+  end
+
+  create_table "line_item_expense_invoices", force: :cascade do |t|
+    t.bigint "product_id"
+    t.bigint "pack_id"
+    t.bigint "unit_product_id"
+    t.bigint "expense_invoice_id"
+    t.float "qty"
+    t.float "price"
+    t.float "retail_price"
+    t.float "sum"
+    t.float "retail_sum"
+    t.string "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expense_invoice_id"], name: "index_line_item_expense_invoices_on_expense_invoice_id"
+    t.index ["pack_id"], name: "index_line_item_expense_invoices_on_pack_id"
+    t.index ["product_id"], name: "index_line_item_expense_invoices_on_product_id"
+    t.index ["unit_product_id"], name: "index_line_item_expense_invoices_on_unit_product_id"
   end
 
   create_table "line_items", force: :cascade do |t|
@@ -297,6 +333,9 @@ ActiveRecord::Schema.define(version: 2026_04_23_155053) do
   add_foreign_key "carts", "clients"
   add_foreign_key "clients", "access_groups"
   add_foreign_key "clients", "pricetypes"
+  add_foreign_key "expense_invoices", "access_groups"
+  add_foreign_key "expense_invoices", "clients"
+  add_foreign_key "expense_invoices", "orders"
   add_foreign_key "favorite_products", "clients"
   add_foreign_key "favorite_products", "packs"
   add_foreign_key "favorite_products", "products"
@@ -306,6 +345,10 @@ ActiveRecord::Schema.define(version: 2026_04_23_155053) do
   add_foreign_key "inventory_line_items", "inventories"
   add_foreign_key "inventory_line_items", "products"
   add_foreign_key "inventory_line_items", "unit_products"
+  add_foreign_key "line_item_expense_invoices", "expense_invoices"
+  add_foreign_key "line_item_expense_invoices", "packs"
+  add_foreign_key "line_item_expense_invoices", "products"
+  add_foreign_key "line_item_expense_invoices", "unit_products"
   add_foreign_key "line_items", "carts"
   add_foreign_key "line_items", "orders"
   add_foreign_key "line_items", "packs"

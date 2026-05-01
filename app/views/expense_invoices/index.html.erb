@@ -1,0 +1,614 @@
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --azure-bright: #0EA5E9;
+        --teal:         #0E7490;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+        --green:        #0E7040;
+    }
+
+    /* Breadcrumb */
+    .ei-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 24px;
+        font-size: 13px;
+        flex-wrap: wrap;
+    }
+
+    .ei-breadcrumb a {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--azure);
+        text-decoration: none;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 20px;
+        background: rgba(26,122,175,0.07);
+        border: 1px solid rgba(26,122,175,0.18);
+        transition: background 0.2s, color 0.2s;
+        white-space: nowrap;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .ei-breadcrumb a:hover {
+        background: rgba(26,122,175,0.14);
+        color: var(--azure-light);
+    }
+
+    /* Заголовок */
+    .ei-page-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .ei-page-title::before {
+        content: '';
+        display: inline-block;
+        width: 5px; height: 26px;
+        background: linear-gradient(180deg, var(--azure-light), var(--azure));
+        border-radius: 3px;
+    }
+
+    /* Alert / Notice */
+    .ei-alert {
+        display: flex; align-items: center; gap: 12px;
+        background: rgba(192,57,43,0.08); border: 1.5px solid rgba(192,57,43,0.25);
+        border-radius: 12px; padding: 14px 18px; margin-bottom: 20px;
+        font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600;
+        color: var(--red); animation: ei-alert-in 0.3s ease;
+    }
+    .ei-notice {
+        display: flex; align-items: center; gap: 12px;
+        background: rgba(14,112,64,0.08); border: 1.5px solid rgba(14,112,64,0.22);
+        border-radius: 12px; padding: 14px 18px; margin-bottom: 20px;
+        font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600;
+        color: var(--green); animation: ei-alert-in 0.3s ease;
+    }
+    .ei-alert i, .ei-notice i { font-size: 18px; flex-shrink: 0; }
+    .ei-alert-close {
+        margin-left: auto; background: none; border: none; cursor: pointer;
+        color: var(--red); font-size: 16px; padding: 0 4px; line-height: 1;
+        opacity: 0.7; transition: opacity 0.2s;
+    }
+    .ei-alert-close:hover { opacity: 1; }
+    @keyframes ei-alert-in {
+        from { opacity: 0; transform: translateY(-8px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Фільтр */
+    .ei-filter-wrap {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; box-shadow: 0 2px 8px rgba(26,122,175,0.06); margin-bottom: 20px;
+        overflow: hidden;
+    }
+    .ei-filter-toggle {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 14px 20px; cursor: pointer; user-select: none;
+        background: linear-gradient(135deg, #E8F5FF, #D4EDF9);
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.2s;
+    }
+    .ei-filter-toggle.open { border-bottom-color: var(--border); }
+    .ei-filter-toggle-left {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+        color: var(--azure); font-weight: 700; font-family: 'Montserrat', sans-serif;
+    }
+    .ei-filter-toggle-arrow {
+        color: var(--azure); font-size: 12px;
+        transition: transform 0.25s ease;
+    }
+    .ei-filter-toggle.open .ei-filter-toggle-arrow { transform: rotate(180deg); }
+    .ei-filter-body { padding: 16px 20px; display: none; }
+    .ei-filter-body.open { display: block; }
+    .ei-filter-grid { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+    .ei-filter-item { display: flex; flex-direction: column; gap: 5px; width: 240px; min-width: 240px; }
+    .ei-filter-item label {
+        font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--azure); font-weight: 700; font-family: 'Montserrat', sans-serif;
+    }
+    .ei-filter-select, .ei-filter-input {
+        width: 100%; padding: 8px 10px; font-size: 13px;
+        font-family: 'Montserrat', sans-serif; color: var(--text);
+        background: var(--bg); border: 1.5px solid var(--border);
+        border-radius: 10px; outline: none; cursor: pointer;
+        transition: border-color .2s, box-shadow .2s;
+        box-sizing: border-box;
+    }
+    .ei-filter-select {
+        -webkit-appearance: none; -moz-appearance: none; appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231A7AAF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat; background-position: right 10px center;
+        padding-right: 32px;
+    }
+    .ei-filter-select:focus, .ei-filter-input:focus {
+        border-color: var(--azure-light); box-shadow: 0 0 0 3px rgba(26,122,175,0.10);
+    }
+    .ei-filter-btn {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer;
+        font-size: 13px; font-weight: 600; font-family: 'Montserrat', sans-serif;
+        transition: opacity 0.2s, transform 0.15s;
+    }
+    .ei-filter-btn-apply {
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        color: #fff; box-shadow: 0 3px 10px rgba(26,122,175,0.25);
+    }
+    .ei-filter-btn-apply:hover { opacity: 0.9; transform: translateY(-1px); }
+    .ei-filter-btn-reset {
+        background: rgba(26,122,175,0.07); border: 1px solid rgba(26,122,175,0.18);
+        color: var(--azure); text-decoration: none;
+    }
+    .ei-filter-btn-reset:hover { background: rgba(26,122,175,0.14); }
+
+    /* Таблиця */
+    .ei-table-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+        overflow-x: auto;
+    }
+
+    .ei-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .ei-table thead tr {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+    }
+
+    .ei-table thead th {
+        padding: 13px 16px;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .ei-table tbody tr {
+        border-bottom: 1px solid rgba(186,224,245,0.4);
+        transition: background 0.18s;
+    }
+
+    .ei-table tbody tr:last-child { border-bottom: none; }
+    .ei-table tbody tr:hover { background: rgba(26,122,175,0.04); }
+
+    .ei-table td {
+        padding: 12px 16px;
+        color: var(--text);
+        vertical-align: middle;
+    }
+
+    .ei-num     { font-weight: 700; color: var(--azure); }
+    .ei-client  { font-weight: 600; color: var(--text); }
+    .ei-price   { font-weight: 700; color: var(--text); }
+    .ei-muted   { color: var(--muted); font-size: 12px; }
+
+    /* Тип документу — бейдж */
+    .ei-type-badge {
+        display: inline-flex; align-items: center;
+        padding: 3px 10px; border-radius: 20px;
+        font-size: 11px; font-weight: 600; white-space: nowrap;
+        background: rgba(26,122,175,0.09);
+        border: 1px solid rgba(26,122,175,0.2);
+        color: var(--azure);
+    }
+
+    /* Група доступу — бейдж */
+    .ei-group-badge {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 3px 10px; border-radius: 20px;
+        font-size: 11px; font-weight: 600; white-space: nowrap;
+        background: rgba(14,116,144,0.08);
+        border: 1px solid rgba(14,116,144,0.18);
+        color: var(--teal);
+    }
+
+    /* Дії */
+    .ei-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px; height: 32px;
+        border-radius: 8px;
+        font-size: 15px;
+        text-decoration: none;
+        transition: background 0.2s, transform 0.15s;
+    }
+
+    .ei-action-view {
+        color: var(--azure);
+        background: rgba(26,122,175,0.08);
+        border: 1px solid rgba(26,122,175,0.18);
+    }
+    .ei-action-view:hover { background: rgba(26,122,175,0.16); transform: scale(1.08); color: var(--azure); }
+
+    .ei-action-edit {
+        color: var(--teal);
+        background: rgba(14,116,144,0.07);
+        border: 1px solid rgba(14,116,144,0.18);
+    }
+    .ei-action-edit:hover { background: rgba(14,116,144,0.14); transform: scale(1.08); color: var(--teal); }
+
+    .ei-action-delete {
+        color: var(--red);
+        background: rgba(192,57,43,0.07);
+        border: 1px solid rgba(192,57,43,0.18);
+    }
+    .ei-action-delete:hover { background: rgba(192,57,43,0.14); transform: scale(1.08); color: var(--red); }
+
+    .ei-actions-cell { display: flex; align-items: center; gap: 6px; }
+
+    /* ===== ПАГІНАЦІЯ ===== */
+    .inv-pagination {
+        display: flex;
+        justify-content: center;
+        padding: 28px 0 8px;
+    }
+
+    .inv-pagination a,
+    .inv-pagination a:visited,
+    .inv-pagination a:link {
+        color: var(--azure-light) !important;
+        text-decoration: none !important;
+    }
+
+    .inv-pagination .pagination {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        list-style: none !important;
+        padding-left: 0 !important;
+        margin: 0 !important;
+        gap: 4px !important;
+    }
+
+    .inv-pagination .pagination .page-item {
+        display: inline-flex !important;
+        list-style: none !important;
+    }
+
+    .inv-pagination .pagination .page-item .page-link {
+        background: rgba(26,122,175,0.07) !important;
+        border: 1px solid rgba(26,122,175,0.18) !important;
+        color: var(--azure-light) !important;
+        border-radius: 10px !important;
+        margin: 0 !important;
+        font-family: 'Montserrat', sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        padding: 7px 13px !important;
+        text-decoration: none !important;
+        transition: background 0.2s, transform 0.15s, box-shadow 0.2s !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-width: 36px !important;
+    }
+
+    .inv-pagination .pagination .page-item .page-link:hover {
+        background: rgba(26,122,175,0.15) !important;
+        border-color: var(--azure-light) !important;
+        color: var(--azure-light) !important;
+        transform: scale(1.06) !important;
+        box-shadow: 0 3px 10px rgba(26,122,175,0.15) !important;
+    }
+
+    .inv-pagination .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, var(--azure-light), var(--azure)) !important;
+        border-color: var(--azure) !important;
+        color: #fff !important;
+        box-shadow: 0 4px 12px rgba(26,122,175,0.28) !important;
+        transform: none !important;
+        cursor: default !important;
+    }
+
+    .inv-pagination .pagination .page-item.disabled .page-link {
+        background: rgba(26,122,175,0.03) !important;
+        border-color: rgba(26,122,175,0.10) !important;
+        color: var(--muted) !important;
+        opacity: 0.5 !important;
+        cursor: not-allowed !important;
+        transform: none !important;
+    }
+
+    /* ===== MOBILE: картки замість таблиці ===== */
+    .ei-cards { display: none !important; }
+
+    @media (max-width: 600px) {
+        .ei-table-wrap { display: none !important; }
+        .ei-cards { display: flex !important; flex-direction: column; gap: 12px; }
+
+        .ei-page-title { font-size: 20px !important; margin-bottom: 16px !important; }
+        .ei-breadcrumb a { font-size: 14px; padding: 8px 14px; min-height: 44px; }
+
+        .ei-filter-item { width: 100%; min-width: 100%; }
+        .ei-filter-input, .ei-filter-select { font-size: 14px; min-height: 44px; }
+        .ei-filter-toggle { padding: 16px; min-height: 52px; }
+        .ei-filter-body { padding: 14px 16px; }
+        .ei-filter-btn { padding: 12px 18px; min-height: 44px; font-size: 14px; }
+
+        .inv-pagination { padding: 20px 0 4px; }
+        .inv-pagination .pagination .page-item .page-link {
+            font-size: 15px !important; padding: 10px 14px !important;
+            min-width: 44px !important; min-height: 44px !important;
+            border-radius: 12px !important;
+        }
+
+        .ei-card {
+            background: #FFFFFF;
+            border: 1px solid #BAE0F5;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(26,122,175,0.07);
+            font-family: 'Montserrat', sans-serif;
+        }
+        .ei-card-header {
+            background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #BAE0F5;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .ei-card-num { font-size: 15px; font-weight: 800; color: #1A7AAF; }
+        .ei-card-date { font-size: 12px; color: #4A7A96; }
+        .ei-card-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+        .ei-card-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+        .ei-card-label { font-size: 12px; color: #4A7A96; font-weight: 500; flex-shrink: 0; padding-top: 1px; }
+        .ei-card-value { font-size: 13px; font-weight: 600; color: #0B2A3D; text-align: right; }
+        .ei-card-value.azure { color: #1A7AAF; }
+        .ei-card-footer {
+            padding: 10px 16px;
+            border-top: 1px solid #D4EDF9;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        .ei-action { width: 44px; height: 44px; border-radius: 10px; font-size: 18px; }
+    }
+</style>
+
+<%# FLASH MESSAGES %>
+<% if flash[:alert] %>
+  <div class="ei-alert" id="ei-alert-banner">
+    <i class="fa fa-exclamation-triangle"></i>
+    <%= flash[:alert] %>
+    <button class="ei-alert-close" onclick="document.getElementById('ei-alert-banner').style.display='none'">&times;</button>
+  </div>
+<% end %>
+
+<% if flash[:notice] %>
+  <div class="ei-notice">
+    <i class="fa fa-check-circle"></i>
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+
+<%# BREADCRUMB %>
+<div class="ei-breadcrumb">
+  <%= link_to account_url do %>
+    <i class="fa fa-home"></i> На головну
+  <% end %>
+</div>
+
+<%# ЗАГОЛОВОК %>
+<div class="ei-page-title">Видаткові накладні</div>
+
+<%# ФІЛЬТР %>
+<%
+    filter_open = params[:access_group_id].present? || params[:client_id].present? ||
+                  params[:doc_type].present? || params[:date_from].present? || params[:date_to].present?
+%>
+<div class="ei-filter-wrap">
+  <div class="ei-filter-toggle <%= filter_open ? 'open' : '' %>" onclick="toggleEiFilter(this)">
+    <div class="ei-filter-toggle-left">
+      <i class="fa fa-filter"></i> Фільтр
+      <% if filter_open %>
+        &nbsp;<span style="background:rgba(26,122,175,0.15);padding:2px 8px;border-radius:20px;font-size:10px;">активний</span>
+      <% end %>
+    </div>
+    <i class="fa fa-chevron-down ei-filter-toggle-arrow"></i>
+  </div>
+  <div class="ei-filter-body <%= filter_open ? 'open' : '' %>">
+    <%= form_tag expense_invoices_path, method: :get do %>
+      <div class="ei-filter-grid">
+        <% if current_user.admin? %>
+          <div class="ei-filter-item">
+            <label>Група доступу</label>
+            <%= select_tag :access_group_id,
+                           options_from_collection_for_select(AccessGroup.order(:name), :id, :name, params[:access_group_id]),
+                           include_blank: 'Всі групи',
+                           class: 'ei-filter-select' %>
+          </div>
+        <% end %>
+        <div class="ei-filter-item">
+          <label>Контрагент</label>
+          <%= select_tag :client_id,
+                         options_from_collection_for_select(Client.order(:name), :id, :name, params[:client_id]),
+                         include_blank: 'Всі контрагенти',
+                         class: 'ei-filter-select' %>
+        </div>
+        <div class="ei-filter-item">
+          <label>Тип документу</label>
+          <%= select_tag :doc_type,
+                         options_for_select(ExpenseInvoice.doc_types.map { |k, v| [k, v] }, params[:doc_type]),
+                         include_blank: 'Всі типи',
+                         class: 'ei-filter-select' %>
+        </div>
+        <div class="ei-filter-item">
+          <label>Дата з</label>
+          <%= date_field_tag :date_from, params[:date_from], class: 'ei-filter-input' %>
+        </div>
+        <div class="ei-filter-item">
+          <label>Дата по</label>
+          <%= date_field_tag :date_to, params[:date_to], class: 'ei-filter-input' %>
+        </div>
+        <button type="submit" class="ei-filter-btn ei-filter-btn-apply">
+          <i class="fa fa-search"></i> Застосувати
+        </button>
+        <%= link_to expense_invoices_path, class: 'ei-filter-btn ei-filter-btn-reset' do %>
+          <i class="fa fa-times"></i> Скинути
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+<script>
+    function toggleEiFilter(toggleEl) {
+        toggleEl.classList.toggle('open');
+        var body = toggleEl.nextElementSibling;
+        body.classList.toggle('open');
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.innerWidth > 600) {
+            var toggle = document.querySelector('.ei-filter-toggle');
+            var body   = document.querySelector('.ei-filter-body');
+            if (toggle && body) { toggle.classList.add('open'); body.classList.add('open'); }
+        }
+    });
+</script>
+
+<%# ТАБЛИЦЯ (desktop) %>
+<div class="ei-table-wrap">
+  <table class="ei-table">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th></th>
+      <th>Номер</th>
+      <th>Дата</th>
+      <th>Контрагент</th>
+      <th>Група доступу</th>
+      <th>Тип</th>
+      <th>Замовлення</th>
+      <th>Сума</th>
+      <th>Сума роздріб</th>
+      <th>Коментар</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @expense_invoices.each_with_index do |ei, i| %>
+      <tr>
+        <td><span class="ei-num"><%= i + 1 %></span></td>
+        <td>
+          <%= link_to ei, class: "ei-action ei-action-view", title: "Переглянути" do %>
+            <i class="fa fa-search"></i>
+          <% end %>
+        </td>
+        <td><span class="ei-num"><%= ei.number %></span></td>
+        <td><%= ei.doc_date&.strftime("%d.%m.%Y") %></td>
+        <td><span class="ei-client"><%= ei.client&.name %></span></td>
+        <td>
+          <% if ei.access_group.present? %>
+              <span class="ei-group-badge">
+                <i class="fa fa-users"></i>
+                <%= ei.access_group.name %>
+              </span>
+          <% else %>
+            <span class="ei-muted">—</span>
+          <% end %>
+        </td>
+        <td>
+          <span class="ei-type-badge"><%= ExpenseInvoice.doc_types.key(ei.doc_type.to_i) || ei.doc_type %></span>
+        </td>
+        <td class="ei-muted">
+          <% if ei.order.present? %>
+            №<%= ei.order.id %> від <%= ei.order.date&.strftime("%d.%m.%Y") %>
+          <% else %>
+            —
+          <% end %>
+        </td>
+        <td><span class="ei-price"><%= sprintf("%.2f грн.", ei.sum.to_f) %></span></td>
+        <td class="ei-muted"><%= sprintf("%.2f грн.", ei.retail_sum.to_f) %></td>
+        <td class="ei-muted"><%= ei.comment.presence || "—" %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%# MOBILE: КАРТКИ %>
+<div class="ei-cards">
+  <% @expense_invoices.each do |ei| %>
+    <div class="ei-card">
+      <div class="ei-card-header">
+        <span class="ei-card-num"><%= ei.number.presence || "##{ei.id}" %></span>
+        <span class="ei-card-date"><%= ei.doc_date&.strftime("%d.%m.%Y") %></span>
+        <span class="ei-type-badge"><%= ExpenseInvoice.doc_types.key(ei.doc_type.to_i) || ei.doc_type %></span>
+      </div>
+      <div class="ei-card-body">
+        <div class="ei-card-row">
+          <span class="ei-card-label">Контрагент</span>
+          <span class="ei-card-value"><%= ei.client&.name || "—" %></span>
+        </div>
+        <% if ei.access_group.present? %>
+          <div class="ei-card-row">
+            <span class="ei-card-label">Група доступу</span>
+            <span class="ei-card-value azure"><%= ei.access_group.name %></span>
+          </div>
+        <% end %>
+        <div class="ei-card-row">
+          <span class="ei-card-label">Сума</span>
+          <span class="ei-card-value"><%= sprintf("%.2f грн.", ei.sum.to_f) %></span>
+        </div>
+        <div class="ei-card-row">
+          <span class="ei-card-label">Сума роздріб</span>
+          <span class="ei-card-value"><%= sprintf("%.2f грн.", ei.retail_sum.to_f) %></span>
+        </div>
+        <% if ei.order.present? %>
+          <div class="ei-card-row">
+            <span class="ei-card-label">Замовлення</span>
+            <span class="ei-card-value ei-muted">№<%= ei.order.id %> від <%= ei.order.date&.strftime("%d.%m.%Y") %></span>
+          </div>
+        <% end %>
+        <% if ei.comment.present? %>
+          <div class="ei-card-row">
+            <span class="ei-card-label">Коментар</span>
+            <span class="ei-card-value"><%= ei.comment %></span>
+          </div>
+        <% end %>
+      </div>
+      <div class="ei-card-footer">
+        <%= link_to ei, class: "ei-action ei-action-view", title: "Переглянути" do %>
+          <i class="fa fa-search"></i>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<%# ПАГІНАЦІЯ %>
+<div class="inv-pagination">
+  <%= paginate @expense_invoices %>
+</div>

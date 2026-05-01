@@ -1,0 +1,341 @@
+<style>
+    :root {
+        --azure:        #1A7AAF;
+        --azure-light:  #3AA0D8;
+        --bg:           #F0F8FF;
+        --surface:      #FFFFFF;
+        --border:       #BAE0F5;
+        --border-soft:  #D4EDF9;
+        --text:         #0B2A3D;
+        --muted:        #4A7A96;
+        --red:          #C0392B;
+    }
+
+    .ei-form-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+        font-family: 'Montserrat', sans-serif;
+        margin-bottom: 20px;
+    }
+
+    .ei-form-section {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border-soft);
+    }
+    .ei-form-section:last-child { border-bottom: none; }
+
+    .ei-form-section-title {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        margin-bottom: 14px;
+    }
+
+    .ei-label {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .ei-input,
+    .ei-select,
+    .ei-textarea {
+        width: 100%;
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        color: var(--text);
+        padding: 10px 14px;
+        font-size: 14px;
+        font-family: 'Montserrat', sans-serif;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        -webkit-appearance: none;
+        box-sizing: border-box;
+    }
+
+    .ei-select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231A7AAF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 34px;
+        cursor: pointer;
+    }
+
+    .ei-textarea { resize: vertical; min-height: 80px; }
+
+    .ei-input:focus,
+    .ei-select:focus,
+    .ei-textarea:focus {
+        border-color: var(--azure-light);
+        box-shadow: 0 0 0 3px rgba(26,122,175,0.10);
+        background: var(--surface);
+    }
+
+    .ei-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    .ei-grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 16px;
+    }
+
+    /* Помилки */
+    .ei-errors {
+        background: rgba(192,57,43,0.07);
+        border: 1px solid rgba(192,57,43,0.22);
+        border-radius: 10px;
+        padding: 14px 18px;
+    }
+    .ei-errors-title {
+        font-size: 13px; font-weight: 700; color: var(--red); margin-bottom: 8px;
+    }
+    .ei-errors ul { padding-left: 18px; color: var(--red); font-size: 13px; }
+    .ei-errors li { margin-bottom: 4px; }
+
+    /* Таблиця позицій */
+    .ei-items-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(26,122,175,0.08);
+        margin-bottom: 20px;
+        overflow-x: auto;
+    }
+
+    .ei-items-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .ei-items-table thead tr {
+        background: linear-gradient(135deg, #E0F2FF, #C8E8FA);
+        border-bottom: 2px solid var(--border);
+    }
+
+    .ei-items-table thead th {
+        padding: 11px 14px;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--azure);
+        font-weight: 700;
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .ei-items-table tbody tr {
+        border-bottom: 1px solid rgba(186,224,245,0.4);
+        transition: background 0.15s;
+    }
+    .ei-items-table tbody tr:last-child { border-bottom: none; }
+    .ei-items-table tbody tr:hover { background: rgba(26,122,175,0.03); }
+    .ei-items-table td {
+        padding: 10px 14px;
+        color: var(--text);
+        vertical-align: middle;
+    }
+
+    /* Кнопка */
+    .ei-submit-wrap {
+        padding: 20px 24px;
+        background: linear-gradient(135deg, #EBF6FF, #E0F2FF);
+        border-top: 2px solid var(--border);
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .ei-submit-btn {
+        padding: 12px 36px;
+        background: linear-gradient(135deg, var(--azure-light), var(--azure));
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 16px rgba(26,122,175,0.28);
+        -webkit-appearance: none;
+    }
+    .ei-submit-btn:hover {
+        opacity: 0.92;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 22px rgba(26,122,175,0.35);
+    }
+    .ei-submit-btn:active { transform: translateY(0); }
+
+    .ei-cancel-btn {
+        padding: 12px 24px;
+        background: rgba(26,122,175,0.07);
+        border: 1px solid rgba(26,122,175,0.2);
+        border-radius: 12px;
+        color: var(--azure);
+        font-size: 14px;
+        font-weight: 600;
+        font-family: 'Montserrat', sans-serif;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background 0.2s;
+        display: inline-flex; align-items: center;
+    }
+    .ei-cancel-btn:hover { background: rgba(26,122,175,0.13); color: var(--azure); }
+
+    @media (max-width: 600px) {
+        .ei-grid-2,
+        .ei-grid-3 { grid-template-columns: 1fr; }
+        .ei-form-section { padding: 16px; }
+        .ei-input, .ei-select, .ei-textarea { font-size: 16px; padding: 12px 14px; }
+        .ei-submit-btn { width: 100%; padding: 15px; font-size: 15px; }
+        .ei-cancel-btn { width: 100%; padding: 14px; font-size: 15px; justify-content: center; }
+        .ei-submit-wrap { flex-direction: column-reverse; padding: 16px; }
+    }
+</style>
+
+<%= form_with(model: expense_invoice, local: true) do |form| %>
+  <div class="ei-form-wrap">
+
+    <%# ПОМИЛКИ %>
+    <% if expense_invoice.errors.any? %>
+      <div class="ei-form-section">
+        <div class="ei-errors">
+          <div class="ei-errors-title">
+            <%= pluralize(expense_invoice.errors.count, "помилка") %> не дозволяє зберегти документ:
+          </div>
+          <ul>
+            <% expense_invoice.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
+
+    <%# ОСНОВНІ РЕКВІЗИТИ %>
+    <div class="ei-form-section">
+      <label class="ei-form-section-title">Основні реквізити</label>
+      <div class="ei-grid-3">
+        <div>
+          <label class="ei-label">Дата</label>
+          <%= form.date_field :doc_date,
+                              class: "ei-input",
+                              value: @expense_invoice.doc_date&.strftime("%Y-%m-%d") %>
+        </div>
+        <div>
+          <label class="ei-label">Номер</label>
+          <%= form.text_field :number, class: "ei-input", placeholder: "Номер документу" %>
+        </div>
+        <div>
+          <label class="ei-label">Тип документу</label>
+          <%= form.select :doc_type,
+                          options_for_select(ExpenseInvoice.doc_types, selected: ExpenseInvoice.doc_types[@expense_invoice.doc_type]),
+                          {}, class: 'ei-select' %>
+        </div>
+      </div>
+    </div>
+
+    <%# КОНТРАГЕНТ ТА ГРУПА %>
+    <div class="ei-form-section">
+      <label class="ei-form-section-title">Контрагент та доступ</label>
+      <div class="ei-grid-2">
+        <div>
+          <label class="ei-label">Контрагент</label>
+          <% list_clients = Client.order(:name) %>
+          <%= form.collection_select :client_id, list_clients, :id, :name,
+                                     { prompt: 'Оберіть контрагента' },
+                                     class: "ei-select" %>
+        </div>
+        <div>
+          <label class="ei-label">Група доступу</label>
+          <% list_groups = AccessGroup.order(:name) %>
+          <%= form.collection_select :access_group_id, list_groups, :id, :name,
+                                     { prompt: 'Оберіть групу доступу' },
+                                     class: "ei-select" %>
+        </div>
+      </div>
+    </div>
+
+    <%# ЗАМОВЛЕННЯ %>
+    <div class="ei-form-section">
+      <label class="ei-form-section-title">Пов'язане замовлення</label>
+      <% list_orders = Order.order(id: :desc) %>
+      <%= form.collection_select :order_id, list_orders, :id,
+                                 ->(o) { "№#{o.id} від #{o.date&.strftime('%d.%m.%Y')}" },
+                                 { include_blank: '— Без замовлення' },
+                                 class: "ei-select" %>
+    </div>
+
+    <%# КОМЕНТАР %>
+    <div class="ei-form-section">
+      <label class="ei-label">Коментар</label>
+      <%= form.text_area :comment, class: "ei-textarea", rows: 3,
+                         placeholder: "Додаткова інформація..." %>
+    </div>
+
+  </div>
+
+  <%# ТАБЛИЦЯ ПОЗИЦІЙ %>
+  <div class="ei-items-wrap">
+    <table class="ei-items-table">
+      <thead>
+      <tr>
+        <th>Продукція</th>
+        <th>Упаковка</th>
+        <th>Од.</th>
+        <th>Кількість</th>
+        <th>Ціна</th>
+        <th>Ціна, роздріб</th>
+        <th>Сума</th>
+        <th>Сума роздріб</th>
+        <th>Коментар</th>
+      </tr>
+      </thead>
+      <tbody id="line_items_body">
+      <%= render(@expense_invoice.line_item_expense_invoices.order(:id)) %>
+      </tbody>
+    </table>
+  </div>
+
+  <%# ПІДСУМКИ ТА КНОПКИ %>
+  <div class="ei-form-wrap">
+    <div class="ei-form-section">
+      <label class="ei-form-section-title">Підсумки</label>
+      <div class="ei-grid-2">
+        <div>
+          <label class="ei-label">Сума</label>
+          <%= form.text_field :sum, class: "ei-input", placeholder: "0.00" %>
+        </div>
+        <div>
+          <label class="ei-label">Сума роздріб</label>
+          <%= form.text_field :retail_sum, class: "ei-input", placeholder: "0.00" %>
+        </div>
+      </div>
+    </div>
+    <div class="ei-submit-wrap">
+      <%= link_to expense_invoices_path, class: "ei-cancel-btn" do %>
+        <i class="fa fa-arrow-left" style="margin-right:6px;"></i> Скасувати
+      <% end %>
+      <%= form.submit "Зберегти →", class: "ei-submit-btn" %>
+    </div>
+  </div>
+
+<% end %>

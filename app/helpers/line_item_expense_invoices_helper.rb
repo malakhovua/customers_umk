@@ -1,0 +1,2 @@
+module LineItemExpenseInvoicesHelper
+end

@@ -1,0 +1,1 @@
+json.partial! "line_item_expense_invoices/line_item_expense_invoice", line_item_expense_invoice: @line_item_expense_invoice

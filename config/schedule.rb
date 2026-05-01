@@ -19,10 +19,14 @@ every 30.minutes do
   runner "Unf.new.get_all_data"
 end
 
-every 30.minutes do
+every 60.minutes do
   runner "Unf.new.get_regular_prices"
 end
 
-every 30.minutes do
+every 10.minutes do
+  runner "ApplicationJob.new.get_expense_invoices"
+end
+
+every 120.minutes do
   runner "ApplicationJob.new.delete_old_empty_carts"
 end

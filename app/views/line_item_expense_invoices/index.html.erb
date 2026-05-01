@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Line Item Expense Invoices</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Pack</th>
+      <th>Unit product</th>
+      <th>Expense invoice</th>
+      <th>Qty</th>
+      <th>Price</th>
+      <th>Retail price</th>
+      <th>Sum</th>
+      <th>Retail sum</th>
+      <th>Comment</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @line_item_expense_invoices.each do |line_item_expense_invoice| %>
+      <tr>
+        <td><%= line_item_expense_invoice.product %></td>
+        <td><%= line_item_expense_invoice.pack %></td>
+        <td><%= line_item_expense_invoice.unit_product %></td>
+        <td><%= line_item_expense_invoice.expense_invoice %></td>
+        <td><%= line_item_expense_invoice.qty %></td>
+        <td><%= line_item_expense_invoice.price %></td>
+        <td><%= line_item_expense_invoice.retail_price %></td>
+        <td><%= line_item_expense_invoice.sum %></td>
+        <td><%= line_item_expense_invoice.retail_sum %></td>
+        <td><%= line_item_expense_invoice.comment %></td>
+        <td><%= link_to 'Show', line_item_expense_invoice %></td>
+        <td><%= link_to 'Edit', edit_line_item_expense_invoice_path(line_item_expense_invoice) %></td>
+        <td><%= link_to 'Destroy', line_item_expense_invoice, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Line Item Expense Invoice', new_line_item_expense_invoice_path %>

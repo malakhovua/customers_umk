@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  access_groups: one
+  client: one
+  order: one
+  type: 1
+  sum: 1.5
+
+two:
+  access_groups: two
+  client: two
+  order: two
+  type: 1
+  sum: 1.5

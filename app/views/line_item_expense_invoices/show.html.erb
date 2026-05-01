@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Product:</strong>
+  <%= @line_item_expense_invoice.product %>
+</p>
+
+<p>
+  <strong>Pack:</strong>
+  <%= @line_item_expense_invoice.pack %>
+</p>
+
+<p>
+  <strong>Unit product:</strong>
+  <%= @line_item_expense_invoice.unit_product %>
+</p>
+
+<p>
+  <strong>Expense invoice:</strong>
+  <%= @line_item_expense_invoice.expense_invoice %>
+</p>
+
+<p>
+  <strong>Qty:</strong>
+  <%= @line_item_expense_invoice.qty %>
+</p>
+
+<p>
+  <strong>Price:</strong>
+  <%= @line_item_expense_invoice.price %>
+</p>
+
+<p>
+  <strong>Retail price:</strong>
+  <%= @line_item_expense_invoice.retail_price %>
+</p>
+
+<p>
+  <strong>Sum:</strong>
+  <%= @line_item_expense_invoice.sum %>
+</p>
+
+<p>
+  <strong>Retail sum:</strong>
+  <%= @line_item_expense_invoice.retail_sum %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @line_item_expense_invoice.comment %>
+</p>
+
+<%= link_to 'Edit', edit_line_item_expense_invoice_path(@line_item_expense_invoice) %> |
+<%= link_to 'Back', line_item_expense_invoices_path %>

@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :line_item_expense_invoices
+  resources :expense_invoices
   resources :inventory_line_items
   resources :inventories
   resources :storage_places

@@ -1,0 +1,2 @@
+module ExpenseInvoicesHelper
+end
