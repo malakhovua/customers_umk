@@ -318,7 +318,7 @@
       Видаткова накладна №<%= @expense_invoice.number.presence || @expense_invoice.id %>
     </div>
     <span class="ei-doc-type-badge">
-      <%= ExpenseInvoice.doc_types.key(@expense_invoice.doc_type.to_i) || @expense_invoice.doc_type %>
+      <%= @expense_invoice.doc_type %>
     </span>
     <span class="ei-show-date">
       <i class="fa fa-calendar" style="margin-right:4px;"></i>

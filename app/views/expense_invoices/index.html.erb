@@ -540,7 +540,7 @@
           <% end %>
         </td>
         <td>
-          <span class="ei-type-badge"><%= ExpenseInvoice.doc_types.key(ei.doc_type.to_i) || ei.doc_type %></span>
+          <span class="ei-type-badge"><%= ei.doc_type %></span>
         </td>
         <td class="ei-muted">
           <% if ei.order.present? %>
@@ -565,7 +565,7 @@
       <div class="ei-card-header">
         <span class="ei-card-num"><%= ei.number.presence || "##{ei.id}" %></span>
         <span class="ei-card-date"><%= ei.doc_date&.strftime("%d.%m.%Y") %></span>
-        <span class="ei-type-badge"><%= ExpenseInvoice.doc_types.key(ei.doc_type.to_i) || ei.doc_type %></span>
+        <span class="ei-type-badge"><%= ei.doc_type %></span>
       </div>
       <div class="ei-card-body">
         <div class="ei-card-row">
