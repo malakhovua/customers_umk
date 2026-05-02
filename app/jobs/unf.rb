@@ -366,6 +366,8 @@ class Unf
       expense_invoice['retail_sum'] = dt['retail_sum'].to_f
       expense_invoice['number'] = dt['number']
       expense_invoice['doc_date'] = dt['doc_date']
+      expense_invoice['posted'] = dt['posted']
+      expense_invoice['deletion_mark'] = dt['deletion_mark']
       expense_invoice['comment'] = dt['comment']
       expense_invoice.save!
 

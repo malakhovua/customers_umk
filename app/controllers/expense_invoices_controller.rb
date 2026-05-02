@@ -4,7 +4,6 @@ class ExpenseInvoicesController < ApplicationController
   # GET /expense_invoices or /expense_invoices.json
   def index
 
-
     unless helpers.current_user_admin
       @expense_invoices = ExpenseInvoice.joins(:access_group)
                      .where(access_group: helpers.current_user.access_group)
@@ -12,6 +11,8 @@ class ExpenseInvoicesController < ApplicationController
     else
       @expense_invoices = ExpenseInvoice.all.order('doc_date DESC')
     end
+
+    @expense_invoices = @expense_invoices.where(:posted => true)
     
     # Фільтр по групі доступу
     @expense_invoices = @expense_invoices.where(access_group_id: params[:access_group_id]) if params[:access_group_id].present?

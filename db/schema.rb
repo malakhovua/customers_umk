@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_25_081708) do
+ActiveRecord::Schema.define(version: 2026_05_02_090021) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,6 +95,8 @@ ActiveRecord::Schema.define(version: 2026_04_25_081708) do
     t.string "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "posted"
+    t.string "deletion_mark"
     t.index ["access_group_id"], name: "index_expense_invoices_on_access_group_id"
     t.index ["client_id"], name: "index_expense_invoices_on_client_id"
     t.index ["order_id"], name: "index_expense_invoices_on_order_id"
