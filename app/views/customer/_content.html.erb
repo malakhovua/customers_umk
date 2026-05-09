@@ -291,6 +291,10 @@
     }
 </style>
 
+<% if !@show_as_cards %>
+  <%= render partial: 'customer/content_list' %>
+<% else %>
+
 <div class="products-grid">
   <% @products.each do |product| %>
     <% next if product.belong_another_client(@client_id) %>
@@ -386,3 +390,5 @@
 <div class="products-footer">
   <span><%= paginate @products, remote: true %></span>
 </div>
+
+<% end %>

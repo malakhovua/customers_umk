@@ -147,47 +147,117 @@ function bindResetBtn() {
 }
 
 // ============================================
-//  CLIENT SELECTOR
+//  CLIENT PICKER MODAL
 // ============================================
-function initClientSelector() {
-    var clientInput = document.getElementById('client_input');
-    var clientIdField = document.getElementById('client_id');
+function initClientPicker() {
+    var modal = document.getElementById('clientPickerModal');
+    if (!modal) return;
 
-    if (!clientInput || !clientIdField) return;
+    // Collapse all nested lists on init
+    modal.querySelectorAll('.cpicker-folder > ul.cpicker-list').forEach(function(ul) {
+        ul.style.display = 'none';
+    });
 
-    // Прибираємо старий listener
-    var newInput = clientInput.cloneNode(true);
-    clientInput.parentNode.replaceChild(newInput, clientInput);
+    // Folder toggle — clone to clear stale listeners
+    modal.querySelectorAll('.cpicker-folder-row').forEach(function(row) {
+        var newRow = row.cloneNode(true);
+        row.parentNode.replaceChild(newRow, row);
+        newRow.addEventListener('click', function() {
+            var li = newRow.closest('li.cpicker-folder');
+            var sublist = li ? li.querySelector(':scope > ul.cpicker-list') : null;
+            var caret = newRow.querySelector('.cpicker-caret');
+            if (!sublist) return;
+            var open = sublist.style.display === 'block';
+            sublist.style.display = open ? 'none' : 'block';
+            if (caret) caret.classList.toggle('cpicker-caret-open', !open);
+        });
+    });
 
-    newInput.addEventListener('input', function (e) {
-        var datalist = document.getElementById('clients');
-        var inputValue = e.target.value;
-        var options = datalist.querySelectorAll('option');
-        var selectedOption = null;
-
-        for (var i = 0; i < options.length; i++) {
-            if (options[i].value === inputValue) {
-                selectedOption = options[i];
-                break;
-            }
-        }
-
-        if (selectedOption) {
-            clientIdField.value = selectedOption.dataset.id;
+    // Item selection — clone to clear stale listeners
+    modal.querySelectorAll('.cpicker-item').forEach(function(item) {
+        var newItem = item.cloneNode(true);
+        item.parentNode.replaceChild(newItem, item);
+        newItem.addEventListener('click', function() {
+            var id   = newItem.dataset.id;
+            var name = newItem.dataset.name;
+            var idField = document.getElementById('client_id');
+            var label   = document.getElementById('clientBtnLabel');
+            if (idField) idField.value = id;
+            if (label)  { label.textContent = name; label.classList.remove('is-placeholder'); }
+            updateCartInfoClient(name);
+            $(modal).modal('hide');
             sendDataServer();
-        } else {
-            clientIdField.value = '';
+        });
+    });
+
+    // Search
+    var searchInput = document.getElementById('clientPickerSearch');
+    if (searchInput) {
+        var newSearch = searchInput.cloneNode(true);
+        searchInput.parentNode.replaceChild(newSearch, searchInput);
+        newSearch.addEventListener('input', function() {
+            filterClientTree(this.value.trim().toLowerCase());
+        });
+    }
+
+    // On open: clear search, highlight current selection
+    $(modal).off('show.bs.modal.cpicker').on('show.bs.modal.cpicker', function() {
+        var search = document.getElementById('clientPickerSearch');
+        if (search) { search.value = ''; filterClientTree(''); }
+        var currentId = (document.getElementById('client_id') || {}).value;
+        modal.querySelectorAll('.cpicker-item').forEach(function(item) {
+            item.classList.toggle('cpicker-item-selected', !!currentId && item.dataset.id == currentId);
+        });
+    });
+}
+
+function filterClientTree(query) {
+    var container = document.getElementById('clientTreeContainer');
+    if (!container) return;
+
+    if (!query) {
+        container.querySelectorAll('.cpicker-item, .cpicker-folder').forEach(function(el) { el.style.display = ''; });
+        container.querySelectorAll('.cpicker-folder > ul.cpicker-list').forEach(function(ul) { ul.style.display = 'none'; });
+        container.querySelectorAll('.cpicker-caret').forEach(function(c) { c.classList.remove('cpicker-caret-open'); });
+        return;
+    }
+
+    container.querySelectorAll('.cpicker-item, .cpicker-folder').forEach(function(el) { el.style.display = 'none'; });
+    container.querySelectorAll('ul.cpicker-list').forEach(function(ul) { ul.style.display = 'none'; });
+
+    container.querySelectorAll('.cpicker-item').forEach(function(item) {
+        if ((item.dataset.name || '').toLowerCase().indexOf(query) === -1) return;
+        item.style.display = '';
+        var node = item.parentElement;
+        while (node && node !== container) {
+            if (node.tagName === 'LI' && node.classList.contains('cpicker-folder')) node.style.display = '';
+            if (node.tagName === 'UL') node.style.display = 'block';
+            node = node.parentElement;
         }
     });
 }
 
 function ClearClient() {
-    var clientInput = document.getElementById('client_input');
-    var clientIdField = document.getElementById('client_id');
-    if (clientInput) clientInput.value = '';
-    if (clientIdField) clientIdField.value = '';
+    var idField = document.getElementById('client_id');
+    var label   = document.getElementById('clientBtnLabel');
+    if (idField) idField.value = '';
+    if (label)   { label.textContent = 'Оберіть замовника...'; label.classList.add('is-placeholder'); }
+    updateCartInfoClient(null);
     sendDataServer();
     return false;
+}
+
+function updateCartInfoClient(name) {
+    var row  = document.getElementById('cart_info_client');
+    var span = document.getElementById('cart_info_client_name');
+    if (!row || !span) return;
+    if (name) {
+        span.textContent = name;
+        row.style.display = '';
+    } else {
+        span.textContent = '';
+        row.style.display = 'none';
+    }
 }
 
 // ============================================
@@ -197,7 +267,7 @@ function initAll() {
     initTree();
     initCheckboxTree();
     initFormListeners();
-    initClientSelector();
+    initClientPicker();
     bindResetBtn();
 }
 

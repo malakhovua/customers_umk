@@ -257,23 +257,51 @@
           Це повернення
         </label>
         <label class="order-check-label">
-          <%= check_box_tag 'order[return_item]', "1", @order.return_item %>
-          Забрати повернення
+          <%= check_box_tag 'order[displacement]', "1", @order.displacement,
+                            id: 'order_displacement',
+                            onchange: 'toggleRecipientStoragePlace()' %>
+          Переміщення
         </label>
-        <label class="order-check-label">
-          <%= check_box_tag 'order[postponement]', "1", @order.postponement %>
-          Відстрочка
-        </label>
-        <label class="order-check-label">
-          <%= check_box_tag 'order[certificate]', "1", @order.certificate %>
-          Сертифікат
-        </label>
-        <label class="order-check-label">
-          <%= check_box_tag 'order[pickup]', "1", @order.pickup %>
-          Самовивіз
-        </label>
+        <% unless current_user.retailer? %>
+          <label class="order-check-label">
+            <%= check_box_tag 'order[return_item]', "1", @order.return_item %>
+            Забрати повернення
+          </label>
+          <label class="order-check-label">
+            <%= check_box_tag 'order[postponement]', "1", @order.postponement %>
+            Відстрочка
+          </label>
+          <label class="order-check-label">
+            <%= check_box_tag 'order[certificate]', "1", @order.certificate %>
+            Сертифікат
+          </label>
+          <label class="order-check-label">
+            <%= check_box_tag 'order[pickup]', "1", @order.pickup %>
+            Самовивіз
+          </label>
+        <% end %>
       </div>
     </div>
+
+    <%# СКЛАД ОТРИМУВАЧ (видимий лише при Переміщенні) %>
+    <div class="order-section" id="recipient-storage-place-section"
+         style="<%= @order.displacement ? '' : 'display:none;' %>">
+      <label class="order-label">Склад отримувач</label>
+      <%= form.select :recipient_storage_place_id,
+                      options_for_select(
+                        StoragePlace.order(:title).map { |sp| [sp.title, sp.id] },
+                        selected: @order.recipient_storage_place_id
+                      ),
+                      { include_blank: '— Оберіть склад —' },
+                      class: "order-select" %>
+    </div>
+
+    <script>
+      function toggleRecipientStoragePlace() {
+        var checked = document.getElementById('order_displacement').checked;
+        document.getElementById('recipient-storage-place-section').style.display = checked ? 'block' : 'none';
+      }
+    </script>
 
     <%# КОМЕНТАР + СТВОРИВ %>
     <div class="order-section">

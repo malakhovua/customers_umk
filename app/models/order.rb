@@ -1,6 +1,7 @@
 class Order < ApplicationRecord
   belongs_to :client
   belongs_to :address, optional: true
+  belongs_to :recipient_storage_place, class_name: 'StoragePlace', optional: true
   belongs_to :user
   has_many :line_items, dependent: :destroy
 

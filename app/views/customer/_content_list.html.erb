@@ -1,0 +1,206 @@
+<style>
+  .plist-wrap { padding: 4px 0; }
+
+  /* ── Папка ─────────────────────────────────────── */
+  .plist-folder { border-bottom: 1px solid #EAF5FC; }
+
+  .plist-folder-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    cursor: pointer;
+    user-select: none;
+    background: #F5FBFF;
+    transition: background 0.15s;
+  }
+
+  .plist-folder-row:hover { background: #EBF6FF; }
+
+  .plist-caret {
+    font-size: 12px;
+    color: #3AA0D8;
+    width: 12px;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+
+  .plist-caret.open { transform: rotate(90deg); }
+
+  .plist-folder-icon {
+    font-size: 14px;
+    color: #F0A500;
+    flex-shrink: 0;
+  }
+
+  .plist-folder-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #0B2A3D;
+    flex: 1;
+  }
+
+  .plist-folder-children { display: none; }
+
+  /* Відступ вкладених папок */
+  .plist-folder-children .plist-folder-row { padding-left: 28px; }
+  .plist-folder-children .plist-folder-children .plist-folder-row { padding-left: 44px; }
+  .plist-folder-children .plist-folder-children .plist-folder-children .plist-folder-row { padding-left: 60px; }
+
+  .plist-folder-children .plist-product { padding-left: 28px; }
+  .plist-folder-children .plist-folder-children .plist-product { padding-left: 44px; }
+  .plist-folder-children .plist-folder-children .plist-folder-children .plist-product { padding-left: 60px; }
+
+  .plist-folder-children .plist-pack { padding-left: 44px; }
+  .plist-folder-children .plist-folder-children .plist-pack { padding-left: 60px; }
+  .plist-folder-children .plist-folder-children .plist-folder-children .plist-pack { padding-left: 76px; }
+
+  /* ── Товар ─────────────────────────────────────── */
+  .plist-product {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #F0F8FF;
+    background: #fff;
+    transition: background 0.15s;
+  }
+
+  .plist-product:hover { background: #F8FCFF; }
+
+  .plist-product__name {
+    flex: 1;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0B2A3D;
+    min-width: 0;
+    line-height: 1.3;
+  }
+
+  .plist-product__price {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1A7AAF;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── Пакування ─────────────────────────────────── */
+  .plist-pack {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 12px 5px 28px;
+    border-bottom: 1px solid #F5FBFF;
+    background: #FAFEFF;
+    transition: background 0.15s;
+  }
+
+  .plist-pack:hover { background: #EEF8FF; }
+
+  .plist-pack__arrow {
+    font-size: 11px;
+    color: #BAE0F5;
+    flex-shrink: 0;
+  }
+
+  .plist-pack__name {
+    flex: 1;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #4A7A96;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .plist-pack__price {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #0E7040;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── Кнопка кошика ─────────────────────────────── */
+  .plist-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: rgba(26,122,175,0.08);
+    border: 1px solid rgba(26,122,175,0.18);
+    color: #1A7AAF;
+    font-size: 14px;
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .plist-btn:hover {
+    background: rgba(26,122,175,0.18);
+    transform: scale(1.08);
+    color: #1A7AAF;
+  }
+
+  .plist-btn.green {
+    background: rgba(14,112,64,0.08);
+    border-color: rgba(14,112,64,0.18);
+    color: #0E7040;
+  }
+
+  .plist-btn.green:hover {
+    background: rgba(14,112,64,0.18);
+    color: #0E7040;
+  }
+</style>
+
+<div class="plist-wrap">
+  <% if params[:Product_name].present? %>
+    <%= list_flat_html(@list_products) %>
+  <% else %>
+    <%
+      folders_by_parent  = @list_folders.group_by(&:unf_parent_id)
+      products_by_parent = @list_products.group_by(&:unf_parent_id)
+    %>
+    <%= list_tree_html('00000000017', folders_by_parent, products_by_parent) %>
+  <% end %>
+</div>
+
+<script>
+  (function() {
+    function initPlist() {
+      document.querySelectorAll('.plist-folder-row').forEach(function(row) {
+        var newRow = row.cloneNode(true);
+        row.parentNode.replaceChild(newRow, row);
+        newRow.addEventListener('click', function() {
+          var folder   = newRow.closest('.plist-folder');
+          var children = folder ? folder.querySelector(':scope > .plist-folder-children') : null;
+          var caret    = newRow.querySelector('.plist-caret');
+          if (!children) return;
+          var open = children.style.display === 'block';
+          children.style.display = open ? 'none' : 'block';
+          if (caret) caret.classList.toggle('open', !open);
+          var folderIcon = newRow.querySelector('.plist-folder-icon');
+          if (folderIcon) {
+            folderIcon.classList.toggle('fa-folder-o', open);
+            folderIcon.classList.toggle('fa-folder-open-o', !open);
+          }
+        });
+      });
+    }
+
+    // Одразу при вставці через AJAX (.html())
+    initPlist();
+
+    document.addEventListener('DOMContentLoaded', initPlist);
+    document.addEventListener('turbo:render', initPlist);
+  })();
+</script>

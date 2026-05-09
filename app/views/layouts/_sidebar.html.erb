@@ -16,29 +16,45 @@
       <div class="sidebar-client-wrap">
         <%= hidden_field_tag :client_id, @client_id %>
         <div class="sidebar-client-row">
-          <%= text_field_tag :client_search,
-                             @client_id.present? ? Client.find_by(id: @client_id)&.name : "",
-                             class: 'sidebar-client-input',
-                             list: 'clients',
-                             id: 'client_input',
-                             placeholder: 'Оберіть замовника...' %>
-          <a href="#"
-             class="sidebar-client-clear fa fa-times-circle"
-             id="clearBtn"
-             onclick="ClearClient()"></a>
-        </div>
-
-        <datalist id="clients">
-          <% @clients.each do |client| %>
-            <option data-id="<%= client.id %>" value="<%= client.name %>">
+          <% if @clients.size > 1 %>
+            <%
+              selected_name = @client_id.present? ? Client.find_by(id: @client_id)&.name : nil
+              is_placeholder = selected_name.blank?
+            %>
+            <button type="button"
+                    class="sidebar-client-btn"
+                    id="openClientPicker"
+                    data-toggle="modal"
+                    data-target="#clientPickerModal">
+              <i class="fa fa-building-o sidebar-client-btn-icon"></i>
+              <span id="clientBtnLabel"
+                    class="sidebar-client-btn-label <%= 'is-placeholder' if is_placeholder %>">
+                <%= selected_name.presence || 'Оберіть замовника...' %>
+              </span>
+              <i class="fa fa-chevron-down sidebar-client-btn-arrow"></i>
+            </button>
+            <a href="#"
+               class="sidebar-client-clear fa fa-times-circle"
+               id="clearBtn"
+               onclick="ClearClient()"></a>
+          <% elsif @clients.size == 1 %>
+            <div class="sidebar-client-static">
+              <i class="fa fa-building-o"></i>
+              <span><%= @clients.first&.name %></span>
+            </div>
           <% end %>
-        </datalist>
+        </div>
 
         <div class="sidebar-price-type" id="price_type">
           <i class="fa fa-money"></i>
           Тип прайсу: <strong><%= @price_type ? @price_type.name : '' %></strong>
         </div>
-
+        <% if @cart %>
+          <div class="sidebar-cart-info">
+            <i class="fa fa-shopping-basket"></i>
+            Поточний кошик <strong>#<%= @cart.id %></strong>
+          </div>
+        <% end %>
       </div>
 
       <%# Навігація %>
@@ -60,7 +76,8 @@
         </li>
       </ul>
 
-      <%# Дерево товарів %>
+      <%# Дерево товарів — тільки в режимі карток %>
+      <% if @current_user&.show_as_cards? %>
       <div class="sidebar-tree-wrap">
         <div class="sidebar-tree-label">
           Каталог продукції
@@ -82,6 +99,7 @@
           </li>
         </ul>
       </div>
+      <% end %>
 
     <% end %>
   </div>
@@ -114,5 +132,33 @@
     </div>
   </div>
 </div>
+
+<% if @clients.size > 1 %>
+<div class="modal fade" id="clientPickerModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog client-picker-dialog" role="document">
+    <div class="modal-content client-picker-content">
+      <div class="client-picker-header">
+        <span class="client-picker-title">
+          <i class="fa fa-building-o"></i>&nbsp; Вибір контрагента
+        </span>
+        <button type="button" class="client-picker-close" data-dismiss="modal">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+      <div class="client-picker-search-wrap">
+        <i class="fa fa-search client-picker-search-icon"></i>
+        <input type="text"
+               id="clientPickerSearch"
+               class="client-picker-search"
+               placeholder="Пошук контрагента..."
+               autocomplete="off">
+      </div>
+      <div class="client-picker-body" id="clientTreeContainer">
+        <%= clients_tree_html %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
 
 <%= javascript_include_tag "sidebar.js" %>

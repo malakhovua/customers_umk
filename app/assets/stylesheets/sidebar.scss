@@ -60,8 +60,20 @@ $text-bright: #ffffff;
 #page-content-wrapper {
   width: 100%;
   position: absolute;
-  padding: 15px;
+  padding: 85px 15px 15px;
   transition: padding-left .4s cubic-bezier(.4, 0, .2, 1);
+}
+
+@media (max-width: 768px) {
+  #page-content-wrapper {
+    padding-top: 150px;
+  }
+}
+
+@media (max-width: 600px) {
+  #page-content-wrapper {
+    padding-top: 80px;
+  }
 }
 
 /* ============================================
@@ -101,9 +113,13 @@ $text-bright: #ffffff;
   gap: 6px;
 }
 
-.sidebar-client-input {
+/* Button variant (multiple clients) */
+.sidebar-client-btn {
   flex: 1;
   min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background: rgba(255, 255, 255, 0.06);
   border: 1.5px solid rgba(186, 224, 245, 0.18);
   border-radius: 9px;
@@ -111,14 +127,51 @@ $text-bright: #ffffff;
   padding: 8px 12px;
   font-size: 13px;
   font-family: 'Montserrat', sans-serif;
-  outline: none;
+  cursor: pointer;
+  text-align: left;
   transition: border-color .2s, background .2s;
 
-  &::placeholder { color: rgba(186, 224, 245, 0.35); }
-  &:focus {
+  &:hover, &:focus {
     border-color: $azure-light;
     background: rgba(255, 255, 255, 0.1);
+    outline: none;
   }
+}
+
+.sidebar-client-btn-icon {
+  color: rgba(186, 224, 245, 0.4);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.sidebar-client-btn-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &.is-placeholder { color: rgba(186, 224, 245, 0.35); }
+}
+
+.sidebar-client-btn-arrow {
+  color: rgba(186, 224, 245, 0.3);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+/* Static variant (single client) */
+.sidebar-client-static {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 2px;
+  font-size: 13px;
+  font-family: 'Montserrat', sans-serif;
+  color: $text-bright;
+  overflow: hidden;
+
+  i { color: rgba(186, 224, 245, 0.4); flex-shrink: 0; }
+  span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
 
 .sidebar-client-clear {
@@ -151,6 +204,23 @@ $text-bright: #ffffff;
 
   strong { color: $azure-light; font-weight: 600; }
   i { font-size: 12px; }
+}
+
+.sidebar-cart-info {
+  display: none;
+  margin-top: 5px;
+  font-size: 11px;
+  font-family: 'Montserrat', sans-serif;
+  color: rgba(186, 224, 245, 0.4);
+  align-items: center;
+  gap: 5px;
+
+  strong { color: $azure-light; font-weight: 600; }
+  i { font-size: 12px; }
+}
+
+@media (max-width: 600px) {
+  .sidebar-cart-info { display: flex; }
 }
 
 /* ============================================
@@ -353,6 +423,10 @@ $text-bright: #ffffff;
 /* ============================================
    HAMBURGER
    ============================================ */
+.hamburger.modal-open-hide {
+  z-index: 1040;
+}
+
 .hamburger {
   position: fixed;
   top: 70px;
@@ -465,6 +539,193 @@ $text-bright: #ffffff;
 
 
 /* ============================================
+   CLIENT PICKER MODAL
+   ============================================ */
+.client-picker-dialog {
+  max-width: 520px;
+  margin: 60px auto;
+}
+
+.client-picker-content {
+  background: #0F2D42;
+  border: 1px solid rgba(186, 224, 245, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.client-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  border-bottom: 1px solid rgba(186, 224, 245, 0.12);
+  background: linear-gradient(135deg, #0B2A3D, #0F3350);
+}
+
+.client-picker-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  i { color: $azure-light; }
+}
+
+.client-picker-close {
+  background: none;
+  border: none;
+  color: rgba(186, 224, 245, 0.45);
+  font-size: 15px;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  padding: 0;
+  transition: color .2s, background .2s;
+
+  &:hover { color: #fff; background: rgba(186, 224, 245, 0.1); }
+}
+
+.client-picker-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-bottom: 1px solid rgba(186, 224, 245, 0.08);
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.client-picker-search-icon {
+  color: rgba(186, 224, 245, 0.3);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.client-picker-search {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 13px;
+  font-family: 'Montserrat', sans-serif;
+
+  &::placeholder { color: rgba(186, 224, 245, 0.28); }
+}
+
+.client-picker-body {
+  max-height: 420px;
+  overflow-y: auto;
+  padding: 4px 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(58, 160, 216, 0.25) transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-thumb { background: rgba(58, 160, 216, 0.25); border-radius: 2px; }
+}
+
+/* --- Tree --- */
+.cpicker-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Folder row */
+.cpicker-folder-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px 7px 14px;
+  cursor: pointer;
+  user-select: none;
+  transition: background .15s;
+
+  &:hover { background: rgba(26, 122, 175, 0.1); }
+}
+
+.cpicker-caret {
+  color: rgba(186, 224, 245, 0.4);
+  font-size: 12px;
+  width: 12px;
+  flex-shrink: 0;
+  transition: transform .2s;
+  transform: rotate(0deg);
+
+  &.cpicker-caret-open { transform: rotate(90deg); }
+}
+
+.cpicker-folder-icon {
+  color: #F0A500;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.cpicker-folder-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(186, 224, 245, 0.9);
+}
+
+/* Selectable item */
+.cpicker-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px 7px 38px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: rgba(186, 224, 245, 0.75);
+  border-left: 2px solid transparent;
+  transition: background .15s, color .15s, border-color .15s;
+
+  i {
+    color: rgba(186, 224, 245, 0.3);
+    font-size: 13px;
+    flex-shrink: 0;
+    width: 15px;
+    text-align: center;
+    transition: color .15s;
+  }
+
+  &:hover {
+    background: rgba(26, 122, 175, 0.12);
+    color: #fff;
+    border-left-color: rgba(58, 160, 216, 0.4);
+    i { color: $azure-light; }
+  }
+
+  &.cpicker-item-selected {
+    background: rgba(26, 122, 175, 0.18);
+    color: $azure-light;
+    border-left-color: $azure-light;
+    font-weight: 600;
+    i { color: $azure-light; }
+  }
+}
+
+/* Nested indentation — each level adds 18px */
+.cpicker-list .cpicker-list {
+  .cpicker-folder-row { padding-left: 32px; }
+  .cpicker-item       { padding-left: 56px; }
+
+  .cpicker-list {
+    .cpicker-folder-row { padding-left: 50px; }
+    .cpicker-item       { padding-left: 74px; }
+  }
+}
+
+/* ============================================
    MOBILE — OnePlus 12 та інші (≤ 600px)
    ============================================ */
 @media (max-width: 600px) {
@@ -482,37 +743,39 @@ $text-bright: #ffffff;
   .hamburger {
     top: 8px;
     left: 8px;
-    width: 50px;
-    height: 50px;
-    border-radius: 14px;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
   }
 
   #wrapper.menuDisplayed .hamburger {
-    left: calc(88vw + 8px);
+    left: calc(88vw - 16px);
   }
 
   .hamb-top,
   .hamb-middle,
   .hamb-bottom {
-    width: 24px;
-    height: 3px;
+    width: 20px;
+    height: 2.5px;
   }
 
-  .hamburger.is-closed .hamb-top    { top: 12px; }
-  .hamburger.is-closed .hamb-middle { top: 50%; margin-top: -1.5px; }
-  .hamburger.is-closed .hamb-bottom { top: auto; bottom: 12px; }
+  .hamburger.is-closed .hamb-top    { top: 11px; }
+  .hamburger.is-closed .hamb-middle { top: 50%; margin-top: -1.25px; }
+  .hamburger.is-closed .hamb-bottom { top: auto; bottom: 11px; }
 
-  .hamburger.is-open .hamb-top    { top: 50%; margin-top: -1.5px; }
-  .hamburger.is-open .hamb-bottom { top: 50%; margin-top: -1.5px; bottom: auto; }
+  .hamburger.is-open .hamb-top    { top: 50%; margin-top: -1.25px; }
+  .hamburger.is-open .hamb-bottom { top: 50%; margin-top: -1.25px; bottom: auto; }
 
   /* Логотип */
   .sidebar-brand { font-size: 13px; }
 
   /* Замовник */
-  .sidebar-client-input {
+  .sidebar-client-btn {
     font-size: 16px;
     padding: 11px 14px;
   }
+
+  .sidebar-client-btn-icon { font-size: 17px; }
 
   .sidebar-client-clear {
     width: 42px;
@@ -521,6 +784,19 @@ $text-bright: #ffffff;
   }
 
   .sidebar-price-type { font-size: 13px; }
+
+  /* Client picker modal */
+  .client-picker-dialog {
+    margin: 20px 10px;
+    max-width: calc(100vw - 20px);
+  }
+
+  .client-picker-body { max-height: 55vh; }
+
+  .cpicker-folder-row, .cpicker-item {
+    min-height: 46px;
+    font-size: 15px;
+  }
 
   /* Навігаційні посилання */
   .sidebar-nav > li > a {
@@ -582,8 +858,4 @@ $text-bright: #ffffff;
     margin: 0 6px 0 16px;
   }
 
-  /* Hamburger під modal */
-  .hamburger.modal-open-hide {
-    z-index: 0;
-  }
 }

@@ -153,6 +153,73 @@
         position: relative;
     }
 
+    /* Cart Info Block */
+    .navbar-cart-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 3px;
+        padding: 6px 14px;
+        background: rgba(26,122,175,0.06);
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        min-width: 0;
+        max-width: 260px;
+    }
+
+    .cart-info-row {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+    }
+
+    .cart-info-icon {
+        font-size: 11px;
+        color: var(--azure);
+        flex-shrink: 0;
+    }
+
+    .cart-info-number {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--azure);
+    }
+
+    .cart-info-sep {
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+    .cart-info-date {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--muted);
+    }
+
+    .cart-info-client {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        min-width: 0;
+    }
+
+    .cart-info-client-name {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+        .navbar-cart-info { display: none; }
+    }
+
     .navbar-cart-btn {
         position: relative !important;
         background: var(--azure) !important;
@@ -509,6 +576,23 @@
                   class: 'navbar-search-clear fa fa-times-circle',
                   id: "clear-search",
                   'aria-hidden': 'true' %>
+    </div>
+  <% end %>
+
+  <!-- Cart Info -->
+  <% if @cart %>
+    <div class="navbar-cart-info" id="cart_meta">
+      <div class="cart-info-row">
+        <i class="fa fa-shopping-basket cart-info-icon"></i>
+        <span class="cart-info-number">Кошик #<%= @cart.id %></span>
+        <span class="cart-info-sep">·</span>
+        <span class="cart-info-date"><%= @cart.created_at.strftime("%d.%m.%Y") %></span>
+      </div>
+      <% client_name = @client&.name || @cart.client&.name %>
+      <div class="cart-info-client" id="cart_info_client"<%= ' style="display:none"' unless client_name.present? %>>
+        <i class="fa fa-building-o cart-info-icon"></i>
+        <span class="cart-info-client-name" id="cart_info_client_name"><%= client_name %></span>
+      </div>
     </div>
   <% end %>
 

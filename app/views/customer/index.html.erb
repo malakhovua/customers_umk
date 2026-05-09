@@ -35,6 +35,23 @@
       }
   </style>
 
+  <script>
+  (function() {
+    var isMobile = window.innerWidth <= 768;
+    document.cookie = 'mv=' + (isMobile ? '1' : '0') + '; path=/; SameSite=Lax';
+    var hasOverride = <%= (@current_user&.show_as_cards? || @current_user&.show_as_list_on_desktop?).to_json %>;
+    if (!hasOverride) {
+      var serverShowsCards = <%= @show_as_cards.to_json %>;
+      var mismatch = (isMobile && serverShowsCards) || (!isMobile && !serverShowsCards);
+      if (mismatch) {
+        document.addEventListener('DOMContentLoaded', function() {
+          if (typeof sendDataServer === 'function') sendDataServer();
+        });
+      }
+    }
+  })();
+  </script>
+
   <script type="text/javascript" charset="utf-8">
 
       var e = document.getElementById('cart_qty');

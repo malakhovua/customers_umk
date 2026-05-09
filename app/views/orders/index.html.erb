@@ -568,6 +568,7 @@
       <th>Відстрочка</th>
       <th>Повернення</th>
       <th>Поверн. товар</th>
+      <th>Переміщення</th>
       <th>Відпр. 1С</th>
       <th>Час відпр.</th>
       <th></th>
@@ -595,6 +596,16 @@
           <td><%= order.postponement ? '<span class="orders-bool-yes"><i class="fa fa-check"></i> Так</span>'.html_safe : '<span class="orders-bool-no">—</span>'.html_safe %></td>
           <td><%= order.return ? '<span class="orders-bool-yes"><i class="fa fa-check"></i> Так</span>'.html_safe : '<span class="orders-bool-no">—</span>'.html_safe %></td>
           <td><%= order.return_item ? '<span class="orders-bool-yes"><i class="fa fa-check"></i> Так</span>'.html_safe : '<span class="orders-bool-no">—</span>'.html_safe %></td>
+          <td>
+            <% if order.displacement %>
+              <span class="orders-bool-yes"><i class="fa fa-check"></i> Так</span>
+              <% if order.recipient_storage_place.present? %>
+                <div class="orders-muted" style="margin-top:3px;"><%= order.recipient_storage_place.title %></div>
+              <% end %>
+            <% else %>
+              <span class="orders-bool-no">—</span>
+            <% end %>
+          </td>
           <td>
             <% if order.server_unf.present? %>
               <span class="orders-status-badge orders-status-sent">
@@ -672,7 +683,13 @@
               <span class="order-card-value"><%= order.comments %></span>
             </div>
           <% end %>
-          <% bools = { 'Самовивіз' => order.pickup, 'Сертифікат' => order.certificate, 'Відстрочка' => order.postponement, 'Повернення' => order.return, 'Поверн. товар' => order.return_item } %>
+          <% if order.displacement && order.recipient_storage_place.present? %>
+            <div class="order-card-row">
+              <span class="order-card-label">Склад отримувач</span>
+              <span class="order-card-value"><%= order.recipient_storage_place.title %></span>
+            </div>
+          <% end %>
+          <% bools = { 'Самовивіз' => order.pickup, 'Сертифікат' => order.certificate, 'Відстрочка' => order.postponement, 'Повернення' => order.return, 'Поверн. товар' => order.return_item, 'Переміщення' => order.displacement } %>
           <% active_bools = bools.select { |_, v| v } %>
           <% if active_bools.any? %>
             <div class="order-card-row" style="flex-wrap:wrap; gap:4px;">

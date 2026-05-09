@@ -331,82 +331,64 @@ class Unf
 
 
   def get_expense_invoices
-
     res = connect_1c.get(get_unf_path('expense_invoices'))
-
     data = JSON.parse res.body
 
-    data.each { |dt|
-
-      expense_invoice =
-        if ExpenseInvoice.find_by(:number => dt['number'], :doc_date => dt['doc_date']).present?
-          ExpenseInvoice.find_by(:number => dt['number'], :doc_date => dt['doc_date'])
-        else
-          ExpenseInvoice.new
-        end
+    data.each do |dt|
+      expense_invoice = ExpenseInvoice.find_or_initialize_by(
+        number: dt['number'],
+        doc_date: dt['doc_date']
+      )
 
       expense_invoice['access_group_id'] = dt['access_group_id'].to_i if dt['access_group_id'].present?
 
-      client = Client.find_by(:unf_id => dt['client_id'])
-
+      client = Client.find_by(unf_id: dt['client_id'])
       unless client.present?
-
-        client =   Client.new
-        client.name = dt['client_name']
-        client.id = dt['id']
-        client.unf_id = dt['unf_id']
+        client = Client.new
+        client.name   = dt['client_name']
+        client.unf_id = dt['client_id']
         client.save!
-
       end
 
-      expense_invoice['client_id'] = client&.id
-      expense_invoice['order_id'] = dt['order_id'].to_i if dt['order_id'].present?
-      expense_invoice['doc_type'] = dt['doc_type'].to_i
-      expense_invoice['sum'] = dt['sum'].to_f
-      expense_invoice['retail_sum'] = dt['retail_sum'].to_f
-      expense_invoice['number'] = dt['number']
-      expense_invoice['doc_date'] = dt['doc_date']
-      expense_invoice['posted'] = dt['posted']
+      expense_invoice['client_id']    = client.id
+      expense_invoice['doc_type']     = dt['doc_type'].to_i
+      expense_invoice['sum']          = dt['sum'].to_f
+      expense_invoice['retail_sum']   = dt['retail_sum'].to_f
+      expense_invoice['number']       = dt['number']
+      expense_invoice['doc_date']     = dt['doc_date']
+      expense_invoice['posted']       = dt['posted']
       expense_invoice['deletion_mark'] = dt['deletion_mark']
-      expense_invoice['comment'] = dt['comment']
+      expense_invoice['comment']      = dt['comment']
+
+      # Перевіряємо існування order перед присвоєнням FK
+      if dt['order_id'].present?
+        order_id = dt['order_id'].to_i
+        expense_invoice['order_id'] = Order.exists?(order_id) ? order_id : nil
+      end
+
       expense_invoice.save!
 
       expense_invoice.line_item_expense_invoices.destroy_all
 
-      dt['line_items'].each { |itm|
-
+      dt['line_items'].each do |itm|
         line_item = LineItemExpenseInvoice.new
 
-        line_item['product_id'] =  Product.find_by(:unf_id => itm['product_id'])&.id
-        line_item['pack_id'] = itm['puck_id'].to_i if itm['puck_id'].present?
+        product = Product.find_by(unf_id: itm['product_id'])
 
-        prod = Product.find_by(unf_id: dt['unf_id'])
-
-        unless Product.where(unf_id: itm['unf_id']).present?
-          prod = Product.new
-          prod.params_json_to_object(itm)
-          prod.save!
-        end
-
-        line_item['unit_product_id'] = prod&.id
-        line_item['qty'] = itm['qty'].to_f
-        line_item['price'] = itm['price'].to_f
-        line_item['retail_price'] = itm['retail_price'].to_f
-        line_item['sum'] = itm['sum_itm'].to_f
-        line_item['retail_sum'] = itm['retail_sum_itm'].to_f
-        line_item['comment'] = itm['comment_itm']
+        line_item['product_id']         = product&.id
+        line_item['pack_id']            = itm['puck_id'].to_i if itm['puck_id'].present?
+        line_item['qty']                = itm['qty'].to_f
+        line_item['price']              = itm['price'].to_f
+        line_item['retail_price']       = itm['retail_price'].to_f
+        line_item['sum']                = itm['sum_itm'].to_f
+        line_item['retail_sum']         = itm['retail_sum_itm'].to_f
+        line_item['comment']            = itm['comment_itm']
         line_item['expense_invoice_id'] = expense_invoice.id
         line_item.save!
+      end
+    end
 
-      }
-
-
-    }
-
-    connect_1c.get(get_unf_path('delete_registration','10'))
-
-
-
+    connect_1c.get(get_unf_path('delete_registration', '10'))
   end
 
   def post_orders(date1="", date2="", user_id="",all_orders = false)
@@ -422,6 +404,7 @@ class Unf
       {
         header: order,
         clien_unf_id: order.client['unf_id'].to_s,
+        storage_place_unf_id: order.recipient_storage_place&.unf_id,
         address_id: order.address&.unf_id || '',
         line_items: order.line_items
       }

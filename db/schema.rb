@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_05_02_090021) do
+ActiveRecord::Schema.define(version: 2026_05_08_150000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -211,6 +211,8 @@ ActiveRecord::Schema.define(version: 2026_05_02_090021) do
     t.boolean "postponement", default: false
     t.boolean "return", default: false
     t.boolean "return_item", default: false
+    t.boolean "displacement"
+    t.integer "recipient_storage_place_id"
     t.index ["address_id"], name: "index_orders_on_address_id"
     t.index ["client_id"], name: "index_orders_on_client_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
@@ -324,6 +326,8 @@ ActiveRecord::Schema.define(version: 2026_05_02_090021) do
     t.bigint "storage_place_id"
     t.integer "pricetype_id"
     t.boolean "ignore_pics_products"
+    t.boolean "show_as_cards", default: false, null: false
+    t.boolean "show_as_list_on_desktop", default: false, null: false
     t.index ["access_group_id"], name: "index_users_on_access_group_id"
     t.index ["storage_place_id"], name: "index_users_on_storage_place_id"
     t.index ["unit_id"], name: "index_users_on_unit_id"

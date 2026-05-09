@@ -417,6 +417,18 @@
       <span class="order-detail-dots"></span>
       <span class="order-detail-value"><%= @order.stick_pack ? '✓ Так' : '— Ні' %></span>
     </div>
+    <div class="order-detail-item">
+      <span class="order-detail-label">Переміщення:</span>
+      <span class="order-detail-dots"></span>
+      <span class="order-detail-value"><%= @order.displacement ? '✓ Так' : '— Ні' %></span>
+    </div>
+    <% if @order.displacement %>
+      <div class="order-detail-item">
+        <span class="order-detail-label">Склад отримувач:</span>
+        <span class="order-detail-dots"></span>
+        <span class="order-detail-value"><%= @order.recipient_storage_place&.title || '—' %></span>
+      </div>
+    <% end %>
   </div>
 
 
@@ -432,21 +444,27 @@
       Це повернення
     </label>
     <label class="order-check-label">
-      <%= check_box_tag 'order[return_item]', "1", @order.return_item, disabled: true %>
-      Забрати повернення
+      <%= check_box_tag 'order[displacement]', "1", @order.displacement, disabled: true %>
+      Переміщення
     </label>
-    <label class="order-check-label">
-      <%= check_box_tag 'order[postponement]', "1", @order.postponement, disabled: true %>
-      Відстрочка
-    </label>
-    <label class="order-check-label">
-      <%= check_box_tag 'order[certificate]', "1", @order.certificate, disabled: true %>
-      Сертифікат
-    </label>
-    <label class="order-check-label">
-      <%= check_box_tag 'order[pickup]', "1", @order.pickup, disabled: true %>
-      Самовивіз
-    </label>
+    <% unless current_user.retailer? %>
+      <label class="order-check-label">
+        <%= check_box_tag 'order[return_item]', "1", @order.return_item, disabled: true %>
+        Забрати повернення
+      </label>
+      <label class="order-check-label">
+        <%= check_box_tag 'order[postponement]', "1", @order.postponement, disabled: true %>
+        Відстрочка
+      </label>
+      <label class="order-check-label">
+        <%= check_box_tag 'order[certificate]', "1", @order.certificate, disabled: true %>
+        Сертифікат
+      </label>
+      <label class="order-check-label">
+        <%= check_box_tag 'order[pickup]', "1", @order.pickup, disabled: true %>
+        Самовивіз
+      </label>
+    <% end %>
   </div>
 </div>
 

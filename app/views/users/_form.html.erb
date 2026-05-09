@@ -118,6 +118,41 @@
         color: var(--muted);
     }
 
+    /* Чекбокси */
+    .pt-form-checks {
+        grid-column: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 14px 18px;
+        background: rgba(26,122,175,0.04);
+        border: 1px solid var(--border-soft);
+        border-radius: 12px;
+    }
+
+    .pt-check-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        user-select: none;
+    }
+
+    .pt-check-label:hover { color: var(--azure); }
+
+    .pt-check {
+        width: 17px;
+        height: 17px;
+        flex-shrink: 0;
+        accent-color: var(--azure);
+        cursor: pointer;
+        margin: 0;
+    }
+
     .usr-save-btn {
         display: inline-flex; align-items: center; gap: 7px;
         padding: 10px 24px;
@@ -172,7 +207,7 @@
       <div class="usr-form-field">
         <label>Група доступу</label>
         <% groups = AccessGroup.all.map { |g| [g.name, g.id] } %>
-        <div class="usr-select-wrap"><%= form.select :access_group_id, options_for_select(groups, selected: @user.access_group_id), {}, class: 'form-control' %></div>
+        <div class="usr-select-wrap"><%= form.select :access_group_id, options_for_select(groups, selected: @user.access_group_id), { include_blank: '— Без групи (всі контрагенти) —' }, class: 'form-control' %></div>
       </div>
       <div class="usr-form-field">
         <label>Код УНФ</label>
@@ -197,6 +232,14 @@
         <label class="pt-check-label">
           <%= form.check_box :ignore_pics_products, class: "pt-check" %>
           <span>Не виводити зображення продукції</span>
+        </label>
+        <label class="pt-check-label">
+          <%= form.check_box :show_as_cards, class: "pt-check" %>
+          <span>Відображати товар у вигляді карток для мобільного пристрою</span>
+        </label>
+        <label class="pt-check-label">
+          <%= form.check_box :show_as_list_on_desktop, class: "pt-check" %>
+          <span>Відображати товар у вигляді списку на десктопі</span>
         </label>
       </div>
       <div class="usr-form-field">

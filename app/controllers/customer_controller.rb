@@ -8,19 +8,29 @@ class CustomerController < ApplicationController
   before_action :set_client
   before_action :set_price_type
 
+  helper_method :clients_tree_html
+
   def products_content
-    @products = fetch_products
+    @show_as_cards = use_card_view?
+    if @show_as_cards
+      @products = fetch_products
+    else
+      fetch_list_data
+    end
     respond_to do |format|
       format.js
     end
   end
 
   def index
-    @products = fetch_products
-    @products_tree = products_tree('00000000017')
-
+    @show_as_cards = use_card_view?
+    if @show_as_cards
+      @products = fetch_products
+      @products_tree = products_tree('00000000017')
+    else
+      fetch_list_data
+    end
     update_cart_client if cart_client_changed?
-
   end
 
   private
@@ -36,9 +46,11 @@ class CustomerController < ApplicationController
     @current_user = User.find_by(id: session[:user_id])
   end
   def set_clients
-    return @clients = Client.none unless @current_user&.access_group_id.present?
-
-    @clients = Client.where(access_group_id: @current_user.access_group_id).order(:name)
+    if @current_user&.access_group_id.present?
+      @clients = Client.where(access_group_id: @current_user.access_group_id).order(:name)
+    else
+      @clients = Client.order(:name)
+    end
   end
 
   def set_client_id
@@ -69,6 +81,34 @@ class CustomerController < ApplicationController
     scope = base_product_scope
     scope = apply_filters(scope)
     scope.page(params[:page])
+  end
+
+  def use_card_view?
+    if @current_user&.show_as_list_on_desktop?
+      false
+    elsif @current_user&.show_as_cards?
+      true
+    else
+      !mobile_request?
+    end
+  end
+
+  def mobile_request?
+    if cookies[:mv].present?
+      cookies[:mv] == '1'
+    else
+      request.user_agent.to_s =~ /Mobile|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
+    end
+  end
+
+  def fetch_list_data
+    @list_folders = Product.where(is_folder: true, not_active: false, deletion_mark: false)
+                           .order(:title)
+                           .to_a
+    scope = Product.where(is_folder: false, deletion_mark: false, not_active: false)
+    scope = filter_by_name(scope) if params[:Product_name].present?
+    scope = filter_by_empty_pryce(scope)
+    @list_products = scope.order(:title).to_a
   end
 
   def base_product_scope
@@ -166,5 +206,37 @@ class CustomerController < ApplicationController
     session[:selected_categories].include?(category_id.to_s)
   end
 
+  def clients_tree_html
+    return ''.html_safe if @clients.blank?
+    all = @clients.to_a
+    unf_set = all.map(&:unf_id).compact.to_set
+    roots = all.select { |c| c.parent_id.blank? || !unf_set.include?(c.parent_id) }
+    build_clients_subtree(roots, all)
+  end
+
+  def build_clients_subtree(nodes, all_clients)
+    return ''.html_safe if nodes.empty?
+    str = '<ul class="cpicker-list">'
+    nodes.sort_by { |c| [c.is_folder ? 0 : 1, c.name.to_s.downcase] }.each do |client|
+      escaped_name = CGI.escapeHTML(client.name.to_s)
+      if client.is_folder
+        children = all_clients.select { |c| c.parent_id == client.unf_id }
+        str << %(<li class="cpicker-folder" data-unf-id="#{CGI.escapeHTML(client.unf_id.to_s)}">)
+        str << %(<div class="cpicker-folder-row">)
+        str << %(<i class="fa fa-caret-right cpicker-caret"></i>)
+        str << %(<i class="fa fa-folder-o cpicker-folder-icon"></i>)
+        str << %(<span class="cpicker-folder-name">#{escaped_name}</span>)
+        str << %(</div>)
+        str << build_clients_subtree(children, all_clients)
+        str << %(</li>)
+      else
+        str << %(<li class="cpicker-item" data-id="#{client.id}" data-name="#{escaped_name}">)
+        str << %(<i class="fa fa-building-o"></i><span>#{escaped_name}</span>)
+        str << %(</li>)
+      end
+    end
+    str << '</ul>'
+    str.html_safe
+  end
 
 end
