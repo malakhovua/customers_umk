@@ -77,7 +77,7 @@
       </ul>
 
       <%# Дерево товарів — тільки в режимі карток %>
-      <% if @current_user&.show_as_cards? %>
+      <% if @show_as_cards %>
       <div class="sidebar-tree-wrap">
         <div class="sidebar-tree-label">
           Каталог продукції
