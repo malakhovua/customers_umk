@@ -368,9 +368,9 @@
       <th>Упаковка</th>
       <th>Од.</th>
       <th>Кількість</th>
-      <th>Ціна</th>
+      <% unless current_user.retailer? %><th>Ціна</th><% end %>
       <th>Ціна, роздріб</th>
-      <th>Сума</th>
+      <% unless current_user.retailer? %><th>Сума</th><% end %>
       <th>Сума роздріб</th>
       <th>Коментар</th>
     </tr>
@@ -384,9 +384,9 @@
         <td><%= item.pack&.name || '—' %></td>
         <td><%= item.unit_product&.name %></td>
         <td><%= item.qty %></td>
-        <td><%= sprintf("%.2f грн.", item.price.to_f) %></td>
+        <% unless current_user.retailer? %><td><%= sprintf("%.2f грн.", item.price.to_f) %></td><% end %>
         <td><%= sprintf("%.2f грн.", item.retail_price.to_f) %></td>
-        <td><strong><%= sprintf("%.2f грн.", item.sum.to_f) %></strong></td>
+        <% unless current_user.retailer? %><td><strong><%= sprintf("%.2f грн.", item.sum.to_f) %></strong></td><% end %>
         <td><%= sprintf("%.2f грн.", item.retail_sum.to_f) %></td>
         <td><%= item.comment.presence || '—' %></td>
       </tr>
@@ -417,18 +417,22 @@
           <span class="ei-item-label">Кількість</span>
           <span class="ei-item-value azure"><%= item.qty %></span>
         </div>
+        <% unless current_user.retailer? %>
         <div class="ei-item-row">
           <span class="ei-item-label">Ціна</span>
           <span class="ei-item-value"><%= sprintf("%.2f грн.", item.price.to_f) %></span>
         </div>
+        <% end %>
         <div class="ei-item-row">
           <span class="ei-item-label">Ціна, роздріб</span>
           <span class="ei-item-value"><%= sprintf("%.2f грн.", item.retail_price.to_f) %></span>
         </div>
+        <% unless current_user.retailer? %>
         <div class="ei-item-row">
           <span class="ei-item-label">Сума</span>
           <span class="ei-item-value green"><%= sprintf("%.2f грн.", item.sum.to_f) %></span>
         </div>
+        <% end %>
         <div class="ei-item-row">
           <span class="ei-item-label">Сума роздріб</span>
           <span class="ei-item-value"><%= sprintf("%.2f грн.", item.retail_sum.to_f) %></span>
@@ -449,12 +453,14 @@
 <div class="ei-summary">
   <div class="ei-summary-head">Підсумки накладної</div>
   <div class="ei-summary-body">
+    <% unless current_user.retailer? %>
     <div class="ei-summary-row">
       <span>Сума (оптова):</span>
       <div class="ei-summary-val azure">
         <%= sprintf("%.2f грн.", @expense_invoice.sum.to_f) %>
       </div>
     </div>
+    <% end %>
     <div class="ei-summary-row">
       <span>Сума (роздрібна):</span>
       <div class="ei-summary-val">

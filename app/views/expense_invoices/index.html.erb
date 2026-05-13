@@ -512,7 +512,7 @@
       <th>Група доступу</th>
       <th>Тип</th>
       <th>Замовлення</th>
-      <th>Сума</th>
+      <% unless current_user.retailer? %><th>Сума</th><% end %>
       <th>Сума роздріб</th>
       <th>Коментар</th>
     </tr>
@@ -549,7 +549,7 @@
             —
           <% end %>
         </td>
-        <td><span class="ei-price"><%= sprintf("%.2f грн.", ei.sum.to_f) %></span></td>
+        <% unless current_user.retailer? %><td><span class="ei-price"><%= sprintf("%.2f грн.", ei.sum.to_f) %></span></td><% end %>
         <td class="ei-muted"><%= sprintf("%.2f грн.", ei.retail_sum.to_f) %></td>
         <td class="ei-muted"><%= ei.comment.presence || "—" %></td>
       </tr>
@@ -578,10 +578,12 @@
             <span class="ei-card-value azure"><%= ei.access_group.name %></span>
           </div>
         <% end %>
+        <% unless current_user.retailer? %>
         <div class="ei-card-row">
           <span class="ei-card-label">Сума</span>
           <span class="ei-card-value"><%= sprintf("%.2f грн.", ei.sum.to_f) %></span>
         </div>
+        <% end %>
         <div class="ei-card-row">
           <span class="ei-card-label">Сума роздріб</span>
           <span class="ei-card-value"><%= sprintf("%.2f грн.", ei.retail_sum.to_f) %></span>

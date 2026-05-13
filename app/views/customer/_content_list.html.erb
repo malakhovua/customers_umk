@@ -56,7 +56,10 @@
   .plist-folder-children .plist-folder-children .plist-pack { padding-left: 60px; }
   .plist-folder-children .plist-folder-children .plist-folder-children .plist-pack { padding-left: 76px; }
 
-  /* ── Товар ─────────────────────────────────────── */
+  /* ── Заголовок таблиці (тільки десктоп) ────────── */
+  .plist-header { display: none; }
+
+  /* ── Товар ──────────────────────────────────────── */
   .plist-product {
     display: flex;
     align-items: center;
@@ -88,7 +91,7 @@
     flex-shrink: 0;
   }
 
-  /* ── Пакування ─────────────────────────────────── */
+  /* ── Пакування ──────────────────────────────────── */
   .plist-pack {
     display: flex;
     align-items: center;
@@ -101,11 +104,7 @@
 
   .plist-pack:hover { background: #EEF8FF; }
 
-  .plist-pack__arrow {
-    font-size: 11px;
-    color: #BAE0F5;
-    flex-shrink: 0;
-  }
+  .plist-pack__arrow { font-size: 11px; color: #BAE0F5; margin-right: 4px; }
 
   .plist-pack__name {
     flex: 1;
@@ -114,9 +113,6 @@
     font-weight: 500;
     color: #4A7A96;
     min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .plist-pack__price {
@@ -144,6 +140,46 @@
     transition: background 0.2s, transform 0.2s;
   }
 
+  /* ── Десктоп: вирівняні колонки ─────────────────── */
+  @media (min-width: 769px) {
+    .plist-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 12px;
+      border-bottom: 2px solid #BAE0F5;
+      background: #EAF5FC;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: #4A7A96;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    .plist-header__name   { flex: 1; max-width: 500px; }
+    .plist-header__price  { width: 140px; text-align: right; flex-shrink: 0; }
+    .plist-header__btn    { width: 44px;  flex-shrink: 0; }
+
+    .plist-product__name,
+    .plist-pack__name {
+      max-width: 500px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .plist-product__price,
+    .plist-pack__price {
+      width: 140px;
+      text-align: right;
+    }
+
+    .plist-btn { width: 44px; }
+  }
+
   .plist-btn:hover {
     background: rgba(26,122,175,0.18);
     transform: scale(1.08);
@@ -163,6 +199,11 @@
 </style>
 
 <div class="plist-wrap">
+  <div class="plist-header">
+    <span class="plist-header__name">Товар</span>
+    <span class="plist-header__price">Ціна</span>
+    <span class="plist-header__btn"></span>
+  </div>
   <% if params[:Product_name].present? %>
     <%= list_flat_html(@list_products) %>
   <% else %>

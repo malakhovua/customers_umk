@@ -7,7 +7,7 @@ class ExpenseInvoicesController < ApplicationController
     unless helpers.current_user_admin
       @expense_invoices = ExpenseInvoice.joins(:access_group)
                      .where(access_group: helpers.current_user.access_group)
-                     .order(id: :desc)
+                     .order('doc_date DESC')
     else
       @expense_invoices = ExpenseInvoice.all.order('doc_date DESC')
     end

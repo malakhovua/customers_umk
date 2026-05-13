@@ -66,8 +66,7 @@ module CustomerHelper
     product_packs(product).each do |pack|
       pack_price = sprintf('%0.02f грн.', Product.get_price(product.id, @price_type, pack.id))
       html << '<div class="plist-pack">'
-      html << '<i class="fa fa-level-down plist-pack__arrow"></i>'
-      html << "<span class=\"plist-pack__name\">#{ERB::Util.h(pack.name)}</span>"
+      html << "<span class=\"plist-pack__name\"><i class=\"fa fa-level-down plist-pack__arrow\"></i>#{ERB::Util.h(pack.name)}</span>"
       html << "<span class=\"plist-pack__price\">#{ERB::Util.h(pack_price)}</span>"
       html << list_cart_btn(product.id, pack.id, product.title, pack.name, 'шт', 'plist-btn green')
       html << '</div>'

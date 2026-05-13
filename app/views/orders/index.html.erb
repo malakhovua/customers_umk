@@ -560,17 +560,17 @@
       <th>Дата</th>
       <th>Вага</th>
       <th>Сума</th>
-      <th>Адреса</th>
+      <% unless current_user.retailer? %><th>Адреса</th><% end %>
       <th>Автор</th>
       <th>Коментар</th>
-      <th>Самовивіз</th>
-      <th>Сертифікат</th>
-      <th>Відстрочка</th>
+      <% unless current_user.retailer? %><th>Самовивіз</th><% end %>
+      <% unless current_user.retailer? %><th>Сертифікат</th><% end %>
+      <% unless current_user.retailer? %><th>Відстрочка</th><% end %>
       <th>Повернення</th>
-      <th>Поверн. товар</th>
+      <% unless current_user.retailer? %><th>Поверн. товар</th><% end %>
       <th>Переміщення</th>
       <th>Відпр. 1С</th>
-      <th>Час відпр.</th>
+      <% unless current_user.retailer? %><th>Час відпр.</th><% end %>
       <th></th>
     </tr>
     </thead>
@@ -586,16 +586,18 @@
           <td><%= order.date.strftime("%d.%m.%Y") rescue order.date %></td>
           <td><span class="orders-qty"><%= sprintf("%0.02f кг", order.total_quantity) %></span></td>
           <td><span class="orders-price"><%= sprintf("%0.02f грн.", order.total_price) %></span></td>
+          <% unless current_user.retailer? %>
           <td class="orders-muted">
             <%= order.address.nil? ? "—" : order.address.name + ' ' + order.shipping_address %>
           </td>
+          <% end %>
           <td class="orders-muted"><%= order.user.name %></td>
           <td class="orders-muted"><%= order.comments.presence || "—" %></td>
-          <td><%= order.pickup ? '<span class="orders-bool-yes"><i class="fa fa-check"></i> Так</span>'.html_safe : '<span class="orders-bool-no">—</span>'.html_safe %></td>
-          <td><%= order.certificate ? '<span class="orders-bool-yes"><i class="fa fa-check"></i> Так</span>'.html_safe : '<span class="orders-bool-no">—</span>'.html_safe %></td>
-          <td><%= order.postponement ? '<span class="orders-bool-yes"><i class="fa fa-check"></i> Так</span>'.html_safe : '<span class="orders-bool-no">—</span>'.html_safe %></td>
+          <% unless current_user.retailer? %><td><%= order.pickup ? '<span class="orders-bool-yes"><i class="fa fa-check"></i> Так</span>'.html_safe : '<span class="orders-bool-no">—</span>'.html_safe %></td><% end %>
+          <% unless current_user.retailer? %><td><%= order.certificate ? '<span class="orders-bool-yes"><i class="fa fa-check"></i> Так</span>'.html_safe : '<span class="orders-bool-no">—</span>'.html_safe %></td><% end %>
+          <% unless current_user.retailer? %><td><%= order.postponement ? '<span class="orders-bool-yes"><i class="fa fa-check"></i> Так</span>'.html_safe : '<span class="orders-bool-no">—</span>'.html_safe %></td><% end %>
           <td><%= order.return ? '<span class="orders-bool-yes"><i class="fa fa-check"></i> Так</span>'.html_safe : '<span class="orders-bool-no">—</span>'.html_safe %></td>
-          <td><%= order.return_item ? '<span class="orders-bool-yes"><i class="fa fa-check"></i> Так</span>'.html_safe : '<span class="orders-bool-no">—</span>'.html_safe %></td>
+          <% unless current_user.retailer? %><td><%= order.return_item ? '<span class="orders-bool-yes"><i class="fa fa-check"></i> Так</span>'.html_safe : '<span class="orders-bool-no">—</span>'.html_safe %></td><% end %>
           <td>
             <% if order.displacement %>
               <span class="orders-bool-yes"><i class="fa fa-check"></i> Так</span>
@@ -617,9 +619,11 @@
               </span>
             <% end %>
           </td>
+          <% unless current_user.retailer? %>
           <td class="orders-muted">
             <%= order.server_unf_date.present? ? order.server_unf_date.strftime("%d.%m.%Y %H:%M") : "—" %>
           </td>
+          <% end %>
           <td>
             <div class="orders-actions-cell">
               <% if order.server_unf.present? %>
@@ -671,7 +675,7 @@
             <span class="order-card-label">Сума</span>
             <span class="order-card-value"><%= sprintf("%0.02f грн.", order.total_price) %></span>
           </div>
-          <% if order.address.present? %>
+          <% if order.address.present? && !current_user.retailer? %>
             <div class="order-card-row">
               <span class="order-card-label">Адреса</span>
               <span class="order-card-value"><%= order.address.name %></span>
@@ -689,7 +693,7 @@
               <span class="order-card-value"><%= order.recipient_storage_place.title %></span>
             </div>
           <% end %>
-          <% bools = { 'Самовивіз' => order.pickup, 'Сертифікат' => order.certificate, 'Відстрочка' => order.postponement, 'Повернення' => order.return, 'Поверн. товар' => order.return_item, 'Переміщення' => order.displacement } %>
+          <% bools = current_user.retailer? ? { 'Повернення' => order.return, 'Переміщення' => order.displacement } : { 'Самовивіз' => order.pickup, 'Сертифікат' => order.certificate, 'Відстрочка' => order.postponement, 'Повернення' => order.return, 'Поверн. товар' => order.return_item, 'Переміщення' => order.displacement } %>
           <% active_bools = bools.select { |_, v| v } %>
           <% if active_bools.any? %>
             <div class="order-card-row" style="flex-wrap:wrap; gap:4px;">
