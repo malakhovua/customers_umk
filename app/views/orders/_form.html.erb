@@ -253,7 +253,7 @@
       <label class="order-label" style="margin-bottom:12px;">Опції замовлення</label>
       <div class="order-checks">
         <label class="order-check-label">
-          <%= check_box_tag 'order[return]', "1", @order.return %>
+          <%= check_box_tag 'order[return]', "1", @order[:return] %>
           Це повернення
         </label>
         <label class="order-check-label">

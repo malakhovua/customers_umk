@@ -5,6 +5,8 @@ class Order < ApplicationRecord
   belongs_to :user
   has_many :line_items, dependent: :destroy
 
+  validates :recipient_storage_place_id, presence: { message: "Оберіть склад отримувач для переміщення" }, if: :displacement
+
   paginates_per 20
   max_paginates_per 20
 
