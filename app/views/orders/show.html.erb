@@ -532,11 +532,12 @@
         </div>
         <div class="order-item-row">
           <span class="order-item-label">Ціна</span>
-          <span class="order-item-value"><%= sprintf("%.2f грн.", item.price) %></span>
+          <% eff_price = item.weight_price == 0 ? item.price : item.weight_price %>
+          <span class="order-item-value"><%= sprintf("%.2f грн.", eff_price) %></span>
         </div>
         <div class="order-item-row">
           <span class="order-item-label">Сума</span>
-          <span class="order-item-value green"><%= sprintf("%.2f грн.", item.recount * item.price) %></span>
+          <span class="order-item-value green"><%= sprintf("%.2f грн.", item.recount * eff_price) %></span>
         </div>
       </div>
     </div>

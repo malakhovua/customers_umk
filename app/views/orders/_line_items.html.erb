@@ -15,8 +15,9 @@
     <td><strong><%= line_item.amount %></strong></td>
     <% unit_ref = Unit.find(line_item.unit_id) %>
     <td><strong><%= unit_ref.name %></strong></td>
-    <td><strong><%= sprintf("%0.02f грн.", line_item.price) %></strong></td>
-    <td><strong><%= sprintf("%0.02f грн.", line_item.recount * line_item.price) %></strong></td>
+    <% eff_price = line_item.weight_price == 0 ? line_item.price : line_item.weight_price %>
+    <td><strong><%= sprintf("%0.02f грн.", eff_price) %></strong></td>
+    <td><strong><%= sprintf("%0.02f грн.", line_item.recount * eff_price) %></strong></td>
   </tr>
   <% n += 1 %>
 <% end %>
